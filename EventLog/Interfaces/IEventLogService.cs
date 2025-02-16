@@ -1,6 +1,5 @@
 using EventLog.Models;
 using EventLog.Models.Entities;
-using EventLog.Models.Enums;
 
 namespace EventLog.Interfaces;
 

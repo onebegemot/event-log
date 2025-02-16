@@ -2,5 +2,7 @@ namespace EventLog.Enums;
 
 public enum EventType
 {
-    UpdateApplicationEntity = 1
+    CreateApplicationEntity = 1,
+    UpdateApplicationEntity,
+    RemoveApplicationEntity,
 }

@@ -1,8 +1,6 @@
 ﻿using EventLog.DatabaseContext;
 using EventLog.Enums;
 using EventLog.Interfaces;
-using EventLog.Models.Entities.PropertyLogEntryModels;
-using EventLog.Models.Enums;
 using EventLog.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,37 +33,22 @@ public class Program
     private static IHost GetHost(string[] args)
     {
         var host = Host.Create(args);
+        
+        // todo: For manual
+        EventLogServiceConfigurator.UseCustomTypeDescriptions<ApplicationDbContext, EventType>(
+            configurationBuilder =>
+                {
+                    configurationBuilder
+                        .SetDatabaseContext(host.Services.GetRequiredService<ApplicationDbContext>())
+                        .AddEventTypeDescription(EventType.UpdateApplicationEntity, "Update Application Entity Text")
+                        .AddEventTypeDescription(EventType.RemoveApplicationEntity, "Remove Application Entity Text");
+                });
 
+        // Client non-required method
         ApplyApplicationPendingMigrations(host.Services);
-        FillEventLogHelperTablesMigrations(host);
 
         return host;
     }
-    
-    // todo: must be included into NuGet
-    private static void FillEventLogHelperTablesMigrations(IHost host)
-    {
-        using var scope = host.Services.CreateScope();
-        
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-        
-        context.Set<EventTypeDescription>().RemoveRange(context.Set<EventTypeDescription>().ToList());
-        context.Set<EventTypeDescription>().AddRange(EventLogHelper.GetEventTypeDescriptionEntities<EventType>(GetEnumId, GetDescription));
-        
-        context.Set<EventStatusDescription>().RemoveRange(context.Set<EventStatusDescription>().ToList());
-        context.Set<EventStatusDescription>().AddRange(EventLogHelper.GetEventStatusDescriptionEntities());
-        
-        context.SaveChanges();
-    }
-
-    private static int GetEnumId(EventType eventType) => (int)eventType;
-    
-    private static string GetDescription(EventType eventType) =>
-        eventType switch
-        {
-            EventType.UpdateApplicationEntity => "UpdateApplicationEntity",
-            _ => "UNKNOWN EVENT TYPE"
-        };
     
     private static void ApplyApplicationPendingMigrations(IServiceProvider servicesProvider)
     {

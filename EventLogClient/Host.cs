@@ -3,7 +3,6 @@ using EventLog.Enums;
 using EventLog.Extensions;
 using EventLog.Interfaces;
 using EventLog.Repository;
-using EventLog.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,8 +48,8 @@ internal class Host
             });
             
             services.AddScoped<ITestDataRepository, TestDataRepository>();
-            
-            services.ConfigureEventLog<ApplicationDbContext, EventType>();
+
+            services.AddEventLog<ApplicationDbContext, EventType>();
         });
         
         return hostBuilder;

@@ -8,13 +8,14 @@ namespace EventLog.Extensions;
 
 public static class ConfigureExtensions
 {
-    public static IServiceCollection ConfigureEventLog<TDbContext, TEventType>(this IServiceCollection services)
-        where TDbContext : DbContext
-        where TEventType : struct, Enum
+    public static IServiceCollection AddEventLog<TDbContext, TEventType>(
+        this IServiceCollection services)
+            where TDbContext : DbContext
+            where TEventType : struct, Enum
     {
         services.AddScoped<IEventLogService<TEventType>, EventLogService<TEventType>>();
         services.AddScoped<IEventLogEntryRepository<TEventType>, EventLogEntryRepository<TDbContext, TEventType>>();
-
+        
         return services;
     }
 }
