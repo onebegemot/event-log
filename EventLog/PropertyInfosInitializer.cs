@@ -7,6 +7,7 @@ namespace EventLog;
 
 internal static class PropertyInfosInitializer
 {
+    // Register property infos
     public static PropertyValues GetPropertyInfo<TEntity>(TEntity entity, PropertyType propertyType,
         Func<TEntity, string, object> getOriginalPropertyValue)
             where TEntity : IPkEntity =>
@@ -20,15 +21,12 @@ internal static class PropertyInfosInitializer
                     
                     _ => throw new NotImplementedException($"Entity type {nameof(TEntity)} was not recognized")
                 };
+
     
-    public static EntityType GetEntityType<TEntity>(EntityLogInfo<TEntity> logInfo)
-        where TEntity : IPkEntity =>
-        logInfo switch
-        {
-            EntityLogInfo<ApplicationEntity> => EntityType.ApplicationEntity,
-                
-            _ => throw new NotImplementedException($"The type {nameof(EntityLogInfo<TEntity>)} cannot be parsed into {nameof(EntityType)}")
-        };
+    
+    // Register client entity property and name getters
+    public static IReadOnlyDictionary<IPkEntity, IDictionary<PropertyType, PropertyInfo<IPkEntity>>> RegisteredPropertyGetters { get; }
+
     
     private static IDictionary<PropertyType, PropertyInfo<ApplicationEntity>> ApplicationTestDataEntity =
         new Dictionary<PropertyType, PropertyInfo<ApplicationEntity>>()

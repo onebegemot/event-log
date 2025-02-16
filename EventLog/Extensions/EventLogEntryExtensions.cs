@@ -6,11 +6,12 @@ namespace EventLog.Extensions;
 
 public static class EventLogEntryExtensions
 {
-    public static void SetFailedStatusAndAddFailureDetails<TEventType>(
-        this EventLogEntry<TEventType> model,
+    public static void SetFailedStatusAndAddFailureDetails<TEventType, TEntityType>(
+        this EventLogEntry<TEventType, TEntityType> model,
         EventStatus failedStatus, string description, string exceptionValue = null,
         bool explicitlyThrownException = false)
             where TEventType : struct, Enum
+            where TEntityType : struct, Enum
     {
         model.Status = failedStatus;
         model.ExplicitlyThrownException = explicitlyThrownException;

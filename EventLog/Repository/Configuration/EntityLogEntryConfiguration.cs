@@ -5,11 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventLog.Repository.Configuration;
 
-public class EntityLogEntryConfiguration<TEventType> :
-    IEntityTypeConfiguration<EntityLogEntry<TEventType>>
+public class EntityLogEntryConfiguration<TEventType, TEntityType> :
+    IEntityTypeConfiguration<EntityLogEntry<TEventType, TEntityType>>
         where TEventType : struct, Enum
+        where TEntityType : struct, Enum
 {
-    public void Configure(EntityTypeBuilder<EntityLogEntry<TEventType>> builder)
+    public void Configure(EntityTypeBuilder<EntityLogEntry<TEventType, TEntityType>> builder)
     {
         builder
             .ToTable(

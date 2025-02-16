@@ -6,21 +6,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.Service;
 
-public static class EventLogServiceConfigurator<TDbContext, TEventType>
-    where TDbContext : DbContext
+public static class EventLogServiceConfigurator<TEventType, TEntityType>
     where TEventType : struct, Enum
+    where TEntityType : struct, Enum
 {
-    public static void UseCustomTypeDescriptions(
-        Action<EventLogConfiguration<TDbContext, TEventType>> configurationBuilder = null)
+    private static IReadOnlyDictionary<Type, TEntityType> _entityTypes;
+    
+    public static void Configure<TDbContext>(Action<EventLogConfiguration<TDbContext, TEventType, TEntityType>> configurationBuilder = null)
+        where TDbContext : DbContext
     {
-        var configuration = CreateDefaultConfiguration();
+        var configuration = CreateDefaultConfiguration<TDbContext>();
         configurationBuilder?.Invoke(configuration);
+        
+        _entityTypes = configuration.EntityTypes;
+        
         TryFillCustomDescriptionTables(configuration);
     }
-
-    private static EventLogConfiguration<TDbContext, TEventType> CreateDefaultConfiguration()
+    
+    private static EventLogConfiguration<TDbContext, TEventType, TEntityType> CreateDefaultConfiguration<TDbContext>()
+        where TDbContext : DbContext
     {
-        var configuration = new EventLogConfiguration<TDbContext, TEventType>();
+        var configuration = new EventLogConfiguration<TDbContext, TEventType, TEntityType>();
 
         ((IEventLogConfigurator<TEventType>)configuration)
             .AddEventStatusDescription(EventStatus.Successful, "Successful")
@@ -30,10 +36,20 @@ public static class EventLogServiceConfigurator<TDbContext, TEventType>
         return configuration;
     }
     
-    private static void TryFillCustomDescriptionTables(
-        EventLogConfiguration<TDbContext, TEventType> configuration)
+    public static TEntityType GetEntityType<TEntity>(EntityLogInfo<TEntity> logInfo)
+        where TEntity : IPkEntity
     {
-        var context = configuration?.DatabaseContext;
+        if (_entityTypes.TryGetValue(logInfo.GetType(), out var entityType))
+            return entityType;
+        
+        throw new NotImplementedException(
+                $"The type {nameof(EntityLogInfo<TEntity>)} cannot be parsed into {nameof(TEntityType)}");
+    }
+    
+    private static void TryFillCustomDescriptionTables<TDbContext>(EventLogConfiguration<TDbContext, TEventType, TEntityType> configuration)
+        where TDbContext : DbContext
+    {
+        var context = configuration.DatabaseContext;
 
         if (context == null)
             return;

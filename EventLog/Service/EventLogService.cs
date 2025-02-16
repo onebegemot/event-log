@@ -8,18 +8,19 @@ using EventLog.Models.Enums;
 
 namespace EventLog.Service;
 
-public class EventLogService<TEventType> :
-    IEventLogService<TEventType>
+public class EventLogService<TEventType, TEntityType> :
+    IEventLogService<TEventType, TEntityType>
         where TEventType : struct, Enum
+        where TEntityType : struct, Enum
 {
-    private readonly IEventLogEntryRepository<TEventType> _eventLogEntryRepository;
+    private readonly IEventLogEntryRepository<TEventType, TEntityType> _eventLogEntryRepository;
     
-    public EventLogService(IEventLogEntryRepository<TEventType> eventLogEntryRepository)
+    public EventLogService(IEventLogEntryRepository<TEventType, TEntityType> eventLogEntryRepository)
     {
         _eventLogEntryRepository = eventLogEntryRepository;
     }
     
-    public static EventLogEntry<TEventType> CreateEventLogEntry(TEventType eventLogType,
+    public static EventLogEntry<TEventType, TEntityType> CreateEventLogEntry(TEventType eventLogType,
         int? initiatorId, string details = null) =>
         new ()
         {
@@ -30,7 +31,7 @@ public class EventLogService<TEventType> :
         };
     
     public async Task CreateEventLogEntryAndProcessUnitOfWorkAsync(TEventType eventLogType,
-        int? initiatorId, Func<EventLogEntry<TEventType>, Task> workUnitAction, string details)
+        int? initiatorId, Func<EventLogEntry<TEventType, TEntityType>, Task> workUnitAction, string details)
     {
         // Create initial EventLogEntry
         var eventLogEntry = CreateEventLogEntry(eventLogType, initiatorId, details);
@@ -52,7 +53,7 @@ public class EventLogService<TEventType> :
     }
     
     public async Task<TResult> CreateEventLogEntryAndProcessUnitOfWorkAsync<TResult>(TEventType eventLogType,
-        int? initiatorId, Func<EventLogEntry<TEventType>, Task<TResult>> workUnitAction, string details)
+        int? initiatorId, Func<EventLogEntry<TEventType, TEntityType>, Task<TResult>> workUnitAction, string details)
     {
         var eventLogEntry = CreateEventLogEntry(eventLogType, initiatorId, details);
         
@@ -73,17 +74,17 @@ public class EventLogService<TEventType> :
         }
     }
     
-    public static IEnumerable<LogEntityUnit<TEventType>> GetLogEntities<TEntity>(
+    public static IEnumerable<LogEntityUnit<TEventType, TEntityType>> GetLogEntities<TEntity>(
         Func<TEntity, string, object> getOriginalPropertyValue,
         EntityLogInfo<TEntity> logInfo)
             where TEntity : IPkEntity
     {
-        var entityType = PropertyInfosInitializer.GetEntityType(logInfo);
+        var entityType = EventLogServiceConfigurator<TEventType, TEntityType>.GetEntityType(logInfo);
 
         return logInfo.Entities
             .Select(entity =>
             {
-                var entityLogEntry = new EntityLogEntry<TEventType>()
+                var entityLogEntry = new EntityLogEntry<TEventType, TEntityType>()
                 {
                     ActionType = entity.Id == 0
                         ? ActionType.Create
@@ -94,19 +95,19 @@ public class EventLogService<TEventType> :
                 foreach (var property in logInfo.Properties)
                     AddPropertyLogEntries(entity, property, getOriginalPropertyValue, entityLogEntry);
 
-                return new LogEntityUnit<TEventType>(entity, entityLogEntry);
+                return new LogEntityUnit<TEventType, TEntityType>(entity, entityLogEntry);
             })
             .ToList();
     }
     
     public async Task ExecuteActionAndAddRelatedLogAsync(
-        Func<Task> repositoryActionAsync, EventLogEntry<TEventType> eventLogEntry,
-        params Func<IEnumerable<LogEntityUnit<TEventType>>>[] getLogEntitiesActions)
+        Func<Task> repositoryActionAsync, EventLogEntry<TEventType, TEntityType> eventLogEntry,
+        params Func<IEnumerable<LogEntityUnit<TEventType, TEntityType>>>[] getLogEntitiesActions)
     {
         ArgumentNullException.ThrowIfNull(repositoryActionAsync);
         ArgumentNullException.ThrowIfNull(eventLogEntry);
         
-        var logEntityUnits = new List<LogEntityUnit<TEventType>>();
+        var logEntityUnits = new List<LogEntityUnit<TEventType, TEntityType>>();
         
         foreach (var getLogEntitiesAction in getLogEntitiesActions)
             logEntityUnits.AddRange(getLogEntitiesAction());
@@ -128,11 +129,11 @@ public class EventLogService<TEventType> :
         await _eventLogEntryRepository.AddOrUpdateAsync(eventLogEntry, eventLogEntry.CreatedBy);
     }
 
-    private static bool EntityLogEntryFilter(EntityLogEntry<TEventType> entry) =>
+    private static bool EntityLogEntryFilter(EntityLogEntry<TEventType, TEntityType> entry) =>
         entry.HasPropertyLogEntries;
     
     private static void AddPropertyLogEntries<TEntity>(TEntity entity, PropertyType property,
-        Func<TEntity, string, object> getOriginalPropertyValue, EntityLogEntry<TEventType> entityLogEntry)
+        Func<TEntity, string, object> getOriginalPropertyValue, EntityLogEntry<TEventType, TEntityType> entityLogEntry)
             where TEntity : IPkEntity
     {
         var propertyValues = PropertyInfosInitializer.GetPropertyInfo(
@@ -146,7 +147,7 @@ public class EventLogService<TEventType> :
         switch (indicativeProperty)
         {
             case bool:
-                TryCreateAndAddPropertyLogEntry<BoolPropertyLogEntry<TEventType>, bool>(
+                TryCreateAndAddPropertyLogEntry<BoolPropertyLogEntry<TEventType, TEntityType>, bool>(
                     property, (bool)propertyValues.Original, (bool)propertyValues.New, entityLogEntry,
                     entityLogEntry.BoolPropertyLogEntries != null,
                     x => entityLogEntry.BoolPropertyLogEntries = x,
@@ -155,7 +156,7 @@ public class EventLogService<TEventType> :
                 break;
             
             case string:
-                TryCreateAndAddPropertyLogEntry<StringPropertyLogEntry<TEventType>, string>(
+                TryCreateAndAddPropertyLogEntry<StringPropertyLogEntry<TEventType, TEntityType>, string>(
                     property, (string)propertyValues.Original, (string)propertyValues.New, entityLogEntry,
                     entityLogEntry.StringPropertyLogEntries != null,
                     x => entityLogEntry.StringPropertyLogEntries = x,
@@ -164,7 +165,7 @@ public class EventLogService<TEventType> :
                 break;
             
             case int:
-                TryCreateAndAddPropertyLogEntry<Int32PropertyLogEntry<TEventType>, int>(
+                TryCreateAndAddPropertyLogEntry<Int32PropertyLogEntry<TEventType, TEntityType>, int>(
                     property, (int)propertyValues.Original, (int)propertyValues.New, entityLogEntry,
                     entityLogEntry.Int32PropertyLogEntries != null,
                     x => entityLogEntry.Int32PropertyLogEntries = x,
@@ -173,7 +174,7 @@ public class EventLogService<TEventType> :
                 break;
             
             case decimal:
-                TryCreateAndAddPropertyLogEntry<DecimalPropertyLogEntry<TEventType>, decimal>(
+                TryCreateAndAddPropertyLogEntry<DecimalPropertyLogEntry<TEventType, TEntityType>, decimal>(
                     property, (decimal)propertyValues.Original, (decimal)propertyValues.New, entityLogEntry,
                     entityLogEntry.DecimalPropertyLogEntries != null,
                     x => entityLogEntry.DecimalPropertyLogEntries = x,
@@ -188,9 +189,9 @@ public class EventLogService<TEventType> :
 
     private static void TryCreateAndAddPropertyLogEntry<TPropertyLogEntry, TLogValue>(
         PropertyType propertyType, TLogValue originalValue, TLogValue newValue,
-        EntityLogEntry<TEventType> entityLogEntry, bool isLogInitialized,
+        EntityLogEntry<TEventType, TEntityType> entityLogEntry, bool isLogInitialized,
         Action<ICollection<TPropertyLogEntry>> collectionSetter,Action<TPropertyLogEntry> addItem)
-            where TPropertyLogEntry : PropertyLogEntry<TLogValue, TEventType>, new()
+            where TPropertyLogEntry : PropertyLogEntry<TLogValue, TEventType, TEntityType>, new()
     {
         if (!IsNewEntity() && newValue != null && newValue.Equals(originalValue))
             return;
@@ -212,7 +213,7 @@ public class EventLogService<TEventType> :
         bool IsNewEntity() => entityLogEntry.ActionType == ActionType.Create;
     }
     
-    private async ValueTask ProcessUnhandledException(EventLogEntry<TEventType> eventLogEntry, Exception exception)
+    private async ValueTask ProcessUnhandledException(EventLogEntry<TEventType, TEntityType> eventLogEntry, Exception exception)
     {
         if (!eventLogEntry.ExplicitlyThrownException)
         {

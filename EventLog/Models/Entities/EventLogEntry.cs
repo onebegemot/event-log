@@ -4,12 +4,13 @@ using EventLog.Models.Enums;
 
 namespace EventLog.Models.Entities;
 
-public class EventLogEntry<TEventType> : ReadOnlyEntity
+public class EventLogEntry<TEventType, TEntityType> : ReadOnlyEntity
     where TEventType : struct, Enum
+    where TEntityType : struct, Enum
 {
     public TEventType EventType { get; set; }
     
-    public ICollection<EntityLogEntry<TEventType>> EntityLogEntries { get; set; }
+    public ICollection<EntityLogEntry<TEventType, TEntityType>> EntityLogEntries { get; set; }
 
     // public User User { get; set; }
     

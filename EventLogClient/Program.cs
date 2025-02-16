@@ -22,7 +22,7 @@ public class Program
 
         var host = GetHost(args);
         
-        var eventLogService = host.Services.GetRequiredService<IEventLogService<EventType>>();
+        var eventLogService = host.Services.GetRequiredService<IEventLogService<EventType, EntityType>>();
         var testDataRepository = host.Services.GetRequiredService<ITestDataRepository>();
 
         var testEventLog = new TestEventLog();
@@ -35,10 +35,13 @@ public class Program
     {
         var host = Host.Create(args);
         
-        // todo: For manual
-        EventLogServiceConfigurator<ApplicationDbContext, EventType>.UseCustomTypeDescriptions(
+        // todo: For documentation examples
+        EventLogServiceConfigurator<EventType, EntityType>.Configure<ApplicationDbContext>(
             configurationBuilder =>
                 {
+                    configurationBuilder
+                        .RegisterEntityType<ApplicationEntity>(EntityType.ApplicationEntity);
+                    
                     configurationBuilder
                         .SetDatabaseContext(host.Services.GetRequiredService<ApplicationDbContext>())
                         .AddEventTypeDescription(EventType.UpdateApplicationEntity, "Update Application Entity Text")
