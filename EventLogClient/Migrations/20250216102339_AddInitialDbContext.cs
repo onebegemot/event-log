@@ -6,13 +6,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EventLog.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class AddInitialDbContext : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "eventlog");
+
             migrationBuilder.CreateTable(
                 name: "EventLog",
+                schema: "eventlog",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -32,6 +36,7 @@ namespace EventLog.Migrations
 
             migrationBuilder.CreateTable(
                 name: "EventStatusDescriptions",
+                schema: "eventlog",
                 columns: table => new
                 {
                     EnumId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -44,6 +49,7 @@ namespace EventLog.Migrations
 
             migrationBuilder.CreateTable(
                 name: "EventTypeDescriptions",
+                schema: "eventlog",
                 columns: table => new
                 {
                     EnumId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -72,6 +78,7 @@ namespace EventLog.Migrations
 
             migrationBuilder.CreateTable(
                 name: "EntityLog",
+                schema: "eventlog",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -87,13 +94,15 @@ namespace EventLog.Migrations
                     table.ForeignKey(
                         name: "FK_EntityLog_EventLog_EventLogEntryId",
                         column: x => x.EventLogEntryId,
+                        principalSchema: "eventlog",
                         principalTable: "EventLog",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "BoolPropertyLog",
+                schema: "eventlog",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -108,13 +117,15 @@ namespace EventLog.Migrations
                     table.ForeignKey(
                         name: "FK_BoolPropertyLog_EntityLog_EntityLogEntryId",
                         column: x => x.EntityLogEntryId,
+                        principalSchema: "eventlog",
                         principalTable: "EntityLog",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "DecimalPropertyLog",
+                schema: "eventlog",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -129,13 +140,15 @@ namespace EventLog.Migrations
                     table.ForeignKey(
                         name: "FK_DecimalPropertyLog_EntityLog_EntityLogEntryId",
                         column: x => x.EntityLogEntryId,
+                        principalSchema: "eventlog",
                         principalTable: "EntityLog",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Int32PropertyLog",
+                schema: "eventlog",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -150,13 +163,15 @@ namespace EventLog.Migrations
                     table.ForeignKey(
                         name: "FK_Int32PropertyLog_EntityLog_EntityLogEntryId",
                         column: x => x.EntityLogEntryId,
+                        principalSchema: "eventlog",
                         principalTable: "EntityLog",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "StringPropertyLog",
+                schema: "eventlog",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -171,33 +186,39 @@ namespace EventLog.Migrations
                     table.ForeignKey(
                         name: "FK_StringPropertyLog_EntityLog_EntityLogEntryId",
                         column: x => x.EntityLogEntryId,
+                        principalSchema: "eventlog",
                         principalTable: "EntityLog",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BoolPropertyLog_EntityLogEntryId",
+                schema: "eventlog",
                 table: "BoolPropertyLog",
                 column: "EntityLogEntryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DecimalPropertyLog_EntityLogEntryId",
+                schema: "eventlog",
                 table: "DecimalPropertyLog",
                 column: "EntityLogEntryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EntityLog_EventLogEntryId",
+                schema: "eventlog",
                 table: "EntityLog",
                 column: "EventLogEntryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Int32PropertyLog_EntityLogEntryId",
+                schema: "eventlog",
                 table: "Int32PropertyLog",
                 column: "EntityLogEntryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StringPropertyLog_EntityLogEntryId",
+                schema: "eventlog",
                 table: "StringPropertyLog",
                 column: "EntityLogEntryId");
         }
@@ -206,31 +227,39 @@ namespace EventLog.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BoolPropertyLog");
+                name: "BoolPropertyLog",
+                schema: "eventlog");
 
             migrationBuilder.DropTable(
-                name: "DecimalPropertyLog");
+                name: "DecimalPropertyLog",
+                schema: "eventlog");
 
             migrationBuilder.DropTable(
-                name: "EventStatusDescriptions");
+                name: "EventStatusDescriptions",
+                schema: "eventlog");
 
             migrationBuilder.DropTable(
-                name: "EventTypeDescriptions");
+                name: "EventTypeDescriptions",
+                schema: "eventlog");
 
             migrationBuilder.DropTable(
-                name: "Int32PropertyLog");
+                name: "Int32PropertyLog",
+                schema: "eventlog");
 
             migrationBuilder.DropTable(
-                name: "StringPropertyLog");
+                name: "StringPropertyLog",
+                schema: "eventlog");
 
             migrationBuilder.DropTable(
                 name: "TestData");
 
             migrationBuilder.DropTable(
-                name: "EntityLog");
+                name: "EntityLog",
+                schema: "eventlog");
 
             migrationBuilder.DropTable(
-                name: "EventLog");
+                name: "EventLog",
+                schema: "eventlog");
         }
     }
 }

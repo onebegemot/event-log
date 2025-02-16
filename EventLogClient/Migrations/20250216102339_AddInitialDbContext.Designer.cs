@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventLog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250216094206_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250216102339_AddInitialDbContext")]
+    partial class AddInitialDbContext
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,7 +65,7 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EventLogEntryId");
 
-                    b.ToTable("EntityLog");
+                    b.ToTable("EntityLog", "eventlog");
                 });
 
             modelBuilder.Entity("EventLog.Models.Entities.EventLogEntry", b =>
@@ -97,7 +97,7 @@ namespace EventLog.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventLog");
+                    b.ToTable("EventLog", "eventlog");
                 });
 
             modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.BoolPropertyLogEntry", b =>
@@ -119,7 +119,7 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EntityLogEntryId");
 
-                    b.ToTable("BoolPropertyLog");
+                    b.ToTable("BoolPropertyLog", "eventlog");
                 });
 
             modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.DecimalPropertyLogEntry", b =>
@@ -141,7 +141,7 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EntityLogEntryId");
 
-                    b.ToTable("DecimalPropertyLog");
+                    b.ToTable("DecimalPropertyLog", "eventlog");
                 });
 
             modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.EventStatusDescription", b =>
@@ -154,7 +154,7 @@ namespace EventLog.Migrations
 
                     b.HasKey("EnumId");
 
-                    b.ToTable("EventStatusDescriptions");
+                    b.ToTable("EventStatusDescriptions", "eventlog");
                 });
 
             modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.EventTypeDescription", b =>
@@ -167,7 +167,7 @@ namespace EventLog.Migrations
 
                     b.HasKey("EnumId");
 
-                    b.ToTable("EventTypeDescriptions");
+                    b.ToTable("EventTypeDescriptions", "eventlog");
                 });
 
             modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.Int32PropertyLogEntry", b =>
@@ -189,7 +189,7 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EntityLogEntryId");
 
-                    b.ToTable("Int32PropertyLog");
+                    b.ToTable("Int32PropertyLog", "eventlog");
                 });
 
             modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.StringPropertyLogEntry", b =>
@@ -211,7 +211,7 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EntityLogEntryId");
 
-                    b.ToTable("StringPropertyLog");
+                    b.ToTable("StringPropertyLog", "eventlog");
                 });
 
             modelBuilder.Entity("EventLog.Models.Entities.EntityLogEntry", b =>
@@ -219,7 +219,7 @@ namespace EventLog.Migrations
                     b.HasOne("EventLog.Models.Entities.EventLogEntry", "EventLogEntry")
                         .WithMany("EntityLogEntries")
                         .HasForeignKey("EventLogEntryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("EventLogEntry");
@@ -230,7 +230,7 @@ namespace EventLog.Migrations
                     b.HasOne("EventLog.Models.Entities.EntityLogEntry", "EntityLogEntry")
                         .WithMany("BoolPropertyLogEntries")
                         .HasForeignKey("EntityLogEntryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("EntityLogEntry");
@@ -241,7 +241,7 @@ namespace EventLog.Migrations
                     b.HasOne("EventLog.Models.Entities.EntityLogEntry", "EntityLogEntry")
                         .WithMany("DecimalPropertyLogEntries")
                         .HasForeignKey("EntityLogEntryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("EntityLogEntry");
@@ -252,7 +252,7 @@ namespace EventLog.Migrations
                     b.HasOne("EventLog.Models.Entities.EntityLogEntry", "EntityLogEntry")
                         .WithMany("Int32PropertyLogEntries")
                         .HasForeignKey("EntityLogEntryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("EntityLogEntry");
@@ -263,7 +263,7 @@ namespace EventLog.Migrations
                     b.HasOne("EventLog.Models.Entities.EntityLogEntry", "EntityLogEntry")
                         .WithMany("StringPropertyLogEntries")
                         .HasForeignKey("EntityLogEntryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("EntityLogEntry");

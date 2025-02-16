@@ -31,6 +31,6 @@ public class EventLogDbContext<TDbContext> : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventLogDbContext<TDbContext>).Assembly);
     }
 }

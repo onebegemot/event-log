@@ -35,8 +35,8 @@ public class Program
     {
         var host = Host.Create(args);
 
-        FillEventLogHelperTablesMigrations(host);
         ApplyApplicationPendingMigrations(host.Services);
+        FillEventLogHelperTablesMigrations(host);
 
         return host;
     }
