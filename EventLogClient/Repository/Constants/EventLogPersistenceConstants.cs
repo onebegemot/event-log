@@ -4,7 +4,7 @@ internal class EventLogPersistenceConstants
 {
     public static string EventLogSchema => "eventlog";
     
-    public static string EventLogTableName => "EventLog";
+    public static string EventLogTableName => "EventLogClient";
     
     public static string EntityLogTableName => "EntityLog";
     

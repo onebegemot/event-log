@@ -23,7 +23,7 @@ internal class TestEventLog
         const int initiatorId = 9;
         
         eventLogEntry.Details = "Test TestEventLogActionAsync is executed";
-        Console.WriteLine("Test EventLog!");
+        Console.WriteLine("Test EventLogClient!");
 
         var testDate = new ApplicationEntity()
         {

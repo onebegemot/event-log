@@ -43,7 +43,7 @@ internal class Host
         {
             services.AddDbContext<EventLogDbContext>(options =>
             {
-                options.UseSqlite("Data Source=EventLog.db");
+                options.UseSqlite("Data Source=EventLogClient.db");
             });
             
             services.AddDbContext<ApplicationDbContext>(options =>

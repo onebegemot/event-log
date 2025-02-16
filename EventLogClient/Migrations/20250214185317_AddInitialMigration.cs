@@ -15,7 +15,7 @@ namespace EventLog.Migrations
                 name: "eventlog");
 
             migrationBuilder.CreateTable(
-                name: "EventLog",
+                name: "EventLogClient",
                 schema: "eventlog",
                 columns: table => new
                 {
@@ -79,7 +79,7 @@ namespace EventLog.Migrations
                         name: "FK_EntityLog_EventLog_EventLogEntryId",
                         column: x => x.EventLogEntryId,
                         principalSchema: "eventlog",
-                        principalTable: "EventLog",
+                        principalTable: "EventLogClient",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -239,7 +239,7 @@ namespace EventLog.Migrations
                 schema: "eventlog");
 
             migrationBuilder.DropTable(
-                name: "EventLog",
+                name: "EventLogClient",
                 schema: "eventlog");
         }
     }
