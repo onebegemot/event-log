@@ -4,7 +4,8 @@ using EventLog.Models.Enums;
 
 namespace EventLog.Models.Entities;
 
-public class EntityLogEntry : PkEntity
+public class EntityLogEntry<TEventType> : PkEntity
+    where TEventType : struct, Enum
 {
     public ActionType ActionType { get; set; }
     
@@ -14,15 +15,15 @@ public class EntityLogEntry : PkEntity
     
     public int EventLogEntryId { get; set; }
     
-    public EventLogEntry EventLogEntry { get; set; }
+    public EventLogEntry<TEventType> EventLogEntry { get; set; }
     
-    public ICollection<BoolPropertyLogEntry> BoolPropertyLogEntries { get; set; }
+    public ICollection<BoolPropertyLogEntry<TEventType>> BoolPropertyLogEntries { get; set; }
     
-    public ICollection<StringPropertyLogEntry> StringPropertyLogEntries { get; set; }
+    public ICollection<StringPropertyLogEntry<TEventType>> StringPropertyLogEntries { get; set; }
     
-    public ICollection<Int32PropertyLogEntry> Int32PropertyLogEntries { get; set; }
+    public ICollection<Int32PropertyLogEntry<TEventType>> Int32PropertyLogEntries { get; set; }
     
-    public ICollection<DecimalPropertyLogEntry> DecimalPropertyLogEntries { get; set; }
+    public ICollection<DecimalPropertyLogEntry<TEventType>> DecimalPropertyLogEntries { get; set; }
 
     public bool HasPropertyLogEntries =>
         (BoolPropertyLogEntries != null && BoolPropertyLogEntries.Any()) ||

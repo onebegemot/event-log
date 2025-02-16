@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EventLog.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.DatabaseContext;
 
-public class ApplicationDbContext : EventLogDbContext<ApplicationDbContext>
+public class ApplicationDbContext : EventLogDbContext<ApplicationDbContext, EventType>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

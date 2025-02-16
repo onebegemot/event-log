@@ -2,6 +2,7 @@ using EventLog.Models.Entities.Abstract;
 
 namespace EventLog.Models.Entities.PropertyLogEntryModels;
 
-public class StringPropertyLogEntry : PropertyLogEntry<string>
+public class StringPropertyLogEntry<TEventType> : PropertyLogEntry<string, TEventType>
+    where TEventType : struct, Enum
 {
 }

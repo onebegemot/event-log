@@ -1,4 +1,4 @@
-namespace EventLog.Models.Enums;
+namespace EventLog.Enums;
 
 public enum EventType
 {

@@ -1,24 +1,23 @@
 ﻿using EventLog.DatabaseContext;
+using EventLog.Enums;
 using EventLog.Interfaces;
 using EventLog.Models;
 using EventLog.Models.Entities;
-using EventLog.Models.Enums;
-using EventLog.Repository;
 using EventLog.Service;
 
 namespace EventLog;
 
 internal class TestEventLog
 {
-    public async Task TestAsync(IEventLogService eventLogService,
+    public async Task TestAsync(IEventLogService<EventType> eventLogService,
         ITestDataRepository testDataRepository, int initiatorId) =>
             await eventLogService.CreateEventLogEntryAndProcessUnitOfWorkAsync(
                 EventType.UpdateApplicationEntity, initiatorId,
                 eventLogEntry => TestEventLogActionAsync(
                     eventLogEntry, eventLogService, testDataRepository));
     
-    private async Task TestEventLogActionAsync(EventLogEntry eventLogEntry,
-        IEventLogService eventLogService, ITestDataRepository testDataRepository)
+    private async Task TestEventLogActionAsync(EventLogEntry<EventType> eventLogEntry,
+        IEventLogService<EventType> eventLogService, ITestDataRepository testDataRepository)
     {
         const int initiatorId = 9;
         
@@ -36,7 +35,7 @@ internal class TestEventLog
         await eventLogService.ExecuteActionAndAddRelatedLogAsync(
             () => testDataRepository.AddOrUpdateAsync(testDate),
             eventLogEntry,
-            () => EventLogService.GetLogEntities(testDataRepository.GetOriginalPropertyValue,
+            () => EventLogService<EventType>.GetLogEntities(testDataRepository.GetOriginalPropertyValue,
                 new EntityLogInfo<ApplicationEntity>(
                     new[] { testDate },
                     ObservableProperties.GetForApplicationEntity())));

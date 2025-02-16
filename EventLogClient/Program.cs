@@ -1,4 +1,5 @@
 ﻿using EventLog.DatabaseContext;
+using EventLog.Enums;
 using EventLog.Interfaces;
 using EventLog.Models.Entities.PropertyLogEntryModels;
 using EventLog.Models.Enums;
@@ -22,7 +23,7 @@ public class Program
 
         var host = GetHost(args);
         
-        var eventLogService = host.Services.GetRequiredService<IEventLogService>();
+        var eventLogService = host.Services.GetRequiredService<IEventLogService<EventType>>();
         var testDataRepository = host.Services.GetRequiredService<ITestDataRepository>();
 
         var testEventLog = new TestEventLog();
@@ -49,13 +50,22 @@ public class Program
         var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
         
         context.Set<EventTypeDescription>().RemoveRange(context.Set<EventTypeDescription>().ToList());
-        context.Set<EventTypeDescription>().AddRange(EventLogHelper.GetEventTypeDescriptionEntities());
+        context.Set<EventTypeDescription>().AddRange(EventLogHelper.GetEventTypeDescriptionEntities<EventType>(GetEnumId, GetDescription));
         
         context.Set<EventStatusDescription>().RemoveRange(context.Set<EventStatusDescription>().ToList());
         context.Set<EventStatusDescription>().AddRange(EventLogHelper.GetEventStatusDescriptionEntities());
         
         context.SaveChanges();
     }
+
+    private static int GetEnumId(EventType eventType) => (int)eventType;
+    
+    private static string GetDescription(EventType eventType) =>
+        eventType switch
+        {
+            EventType.UpdateApplicationEntity => "UpdateApplicationEntity",
+            _ => "UNKNOWN EVENT TYPE"
+        };
     
     private static void ApplyApplicationPendingMigrations(IServiceProvider servicesProvider)
     {

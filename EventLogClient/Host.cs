@@ -1,4 +1,5 @@
 ﻿using EventLog.DatabaseContext;
+using EventLog.Enums;
 using EventLog.Extensions;
 using EventLog.Interfaces;
 using EventLog.Repository;
@@ -49,7 +50,7 @@ internal class Host
             
             services.AddScoped<ITestDataRepository, TestDataRepository>();
             
-            services.ConfigureEventLog<ApplicationDbContext>();
+            services.ConfigureEventLog<ApplicationDbContext, EventType>();
         });
         
         return hostBuilder;
