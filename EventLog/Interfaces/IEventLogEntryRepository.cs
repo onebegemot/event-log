@@ -1,4 +1,5 @@
 using EventLog.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.Interfaces;
 

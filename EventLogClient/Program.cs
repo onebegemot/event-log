@@ -1,4 +1,4 @@
-﻿using EventLog.DbContext;
+﻿using EventLog.DatabaseContext;
 using EventLog.Interfaces;
 using EventLog.Models.Entities.PropertyLogEntryModels;
 using EventLog.Models.Enums;
@@ -21,6 +21,7 @@ public class Program
         const int initiatorId = 9;
 
         var host = GetHost(args);
+        
         var eventLogService = host.Services.GetRequiredService<IEventLogService>();
         var testDataRepository = host.Services.GetRequiredService<ITestDataRepository>();
 
@@ -34,7 +35,6 @@ public class Program
     {
         var host = Host.Create(args);
 
-        ApplyEventLogPendingMigrations(host.Services);
         FillEventLogHelperTablesMigrations(host);
         ApplyApplicationPendingMigrations(host.Services);
 
@@ -45,8 +45,8 @@ public class Program
     private static void FillEventLogHelperTablesMigrations(IHost host)
     {
         using var scope = host.Services.CreateScope();
-
-        var context = scope.ServiceProvider.GetService<EventLogDbContext>();
+        
+        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
         
         context.Set<EventTypeDescription>().RemoveRange(context.Set<EventTypeDescription>().ToList());
         context.Set<EventTypeDescription>().AddRange(EventLogHelper.GetEventTypeDescriptionEntities());
@@ -55,26 +55,6 @@ public class Program
         context.Set<EventStatusDescription>().AddRange(EventLogHelper.GetEventStatusDescriptionEntities());
         
         context.SaveChanges();
-    }
-    
-    private static void ApplyEventLogPendingMigrations(IServiceProvider servicesProvider)
-    {
-        using var scope = servicesProvider.CreateScope();
-        
-        var context = scope.ServiceProvider.GetRequiredService<EventLogDbContext>();
-        var pendingMigrationNames = context.Database.GetPendingMigrations().ToList();
-        
-        if (!pendingMigrationNames.Any())
-        {
-            Console.WriteLine("The EventLogDbContext database is up to date");
-            return;
-        }
-        
-        Console.WriteLine("Pending migrations: {0}", string.Join(", ", pendingMigrationNames));
-        
-        context.Database.Migrate();
-
-        Console.WriteLine("The EventLogDbContext database was successfully updated");
     }
     
     private static void ApplyApplicationPendingMigrations(IServiceProvider servicesProvider)

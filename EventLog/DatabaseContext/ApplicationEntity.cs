@@ -1,6 +1,6 @@
 using EventLog.Interfaces;
 
-namespace EventLog.DbContext;
+namespace EventLog.DatabaseContext;
 
 public class ApplicationEntity : IPkEntity
 {

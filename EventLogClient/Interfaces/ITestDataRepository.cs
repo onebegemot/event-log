@@ -1,4 +1,4 @@
-using EventLog.DbContext;
+using EventLog.DatabaseContext;
 
 namespace EventLog.Interfaces;
 

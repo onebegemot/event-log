@@ -1,4 +1,4 @@
-using EventLog.DbContext;
+using EventLog.DatabaseContext;
 using EventLog.Interfaces;
 using EventLog.Models;
 using EventLog.Models.Enums;

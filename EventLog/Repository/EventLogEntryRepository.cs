@@ -1,15 +1,17 @@
-using EventLog.DbContext;
+using EventLog.DatabaseContext;
 using EventLog.Interfaces;
 using EventLog.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.Repository;
 
-public class EventLogEntryRepository : IEventLogEntryRepository
+public class EventLogEntryRepository<TDbContext> :
+    IEventLogEntryRepository
+        where TDbContext : DbContext
 {
-    private readonly EventLogDbContext _dbContext;
+    private readonly TDbContext _dbContext;
 
-    public EventLogEntryRepository(EventLogDbContext dbContext)
+    public EventLogEntryRepository(TDbContext dbContext)
     {
         _dbContext = dbContext;
     }

@@ -2,11 +2,12 @@
 using EventLog.Models.Entities.PropertyLogEntryModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventLog.DbContext;
+namespace EventLog.DatabaseContext;
 
-public class EventLogDbContext : Microsoft.EntityFrameworkCore.DbContext
+public class EventLogDbContext<TDbContext> : DbContext
+    where TDbContext : DbContext
 {
-    public EventLogDbContext(DbContextOptions<EventLogDbContext> options)
+    public EventLogDbContext(DbContextOptions<TDbContext> options)
         : base(options)
     {
     }
@@ -30,6 +31,6 @@ public class EventLogDbContext : Microsoft.EntityFrameworkCore.DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventLogDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TDbContext).Assembly);
     }
 }
