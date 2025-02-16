@@ -1,6 +1,7 @@
 ﻿using EventLog.DatabaseContext;
 using EventLog.Enums;
 using EventLog.Interfaces;
+using EventLog.Models.Enums;
 using EventLog.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,13 +36,14 @@ public class Program
         var host = Host.Create(args);
         
         // todo: For manual
-        EventLogServiceConfigurator.UseCustomTypeDescriptions<ApplicationDbContext, EventType>(
+        EventLogServiceConfigurator<ApplicationDbContext, EventType>.UseCustomTypeDescriptions(
             configurationBuilder =>
                 {
                     configurationBuilder
                         .SetDatabaseContext(host.Services.GetRequiredService<ApplicationDbContext>())
                         .AddEventTypeDescription(EventType.UpdateApplicationEntity, "Update Application Entity Text")
-                        .AddEventTypeDescription(EventType.RemoveApplicationEntity, "Remove Application Entity Text");
+                        .AddEventTypeDescription(EventType.RemoveApplicationEntity, "Remove Application Entity Text")
+                        .AddEventStatusDescription(EventStatus.Successful, "Successfully completed");
                 });
 
         // Client non-required method

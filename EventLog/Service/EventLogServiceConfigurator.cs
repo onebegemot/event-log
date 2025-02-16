@@ -1,84 +1,71 @@
-﻿using EventLog.Models;
+﻿using EventLog.Interfaces;
+using EventLog.Models;
 using EventLog.Models.Entities.PropertyLogEntryModels;
 using EventLog.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.Service;
 
-public static class EventLogServiceConfigurator
+public static class EventLogServiceConfigurator<TDbContext, TEventType>
+    where TDbContext : DbContext
+    where TEventType : struct, Enum
 {
-    public static void UseCustomTypeDescriptions<TDbContext, TEventType>(
+    public static void UseCustomTypeDescriptions(
         Action<EventLogConfiguration<TDbContext, TEventType>> configurationBuilder = null)
-        where TDbContext : DbContext
-        where TEventType : struct, Enum
+    {
+        var configuration = CreateDefaultConfiguration();
+        configurationBuilder?.Invoke(configuration);
+        TryFillCustomDescriptionTables(configuration);
+    }
+
+    private static EventLogConfiguration<TDbContext, TEventType> CreateDefaultConfiguration()
     {
         var configuration = new EventLogConfiguration<TDbContext, TEventType>();
-        configurationBuilder?.Invoke(configuration);
-        
-        FillEnumTypeDescriptionTables(configuration);
+
+        ((IEventLogConfigurator<TEventType>)configuration)
+            .AddEventStatusDescription(EventStatus.Successful, "Successful")
+            .AddEventStatusDescription(EventStatus.HandledException, "Handled exception")
+            .AddEventStatusDescription(EventStatus.UnhandledException, "Unhandled exception");
+
+        return configuration;
     }
     
-    private static void FillEnumTypeDescriptionTables<TDbContext, TEventType>(
+    private static void TryFillCustomDescriptionTables(
         EventLogConfiguration<TDbContext, TEventType> configuration)
-        where TDbContext : DbContext
-        where TEventType : struct, Enum
     {
         var context = configuration?.DatabaseContext;
 
-        if (context != null)
-        {
-            context.Set<EventTypeDescription>().ExecuteDelete();
-            context.Set<EventTypeDescription>().AddRange(GetEventTypeDescriptions(configuration.EventTypeDescription));
+        if (context == null)
+            return;
+
+        var eventTypeDescriptions = GetCustomEnumDescriptions<TEventType, EventTypeDescription>(configuration.EventTypeDescription);
+        context.Set<EventTypeDescription>().ExecuteDelete();
+        context.Set<EventTypeDescription>().AddRange(eventTypeDescriptions);
+
+        var eventStatusDescriptions = GetCustomEnumDescriptions<EventStatus, EventStatusDescription>(configuration.EventStatusDescription);
+        context.Set<EventStatusDescription>().ExecuteDelete();
+        context.Set<EventStatusDescription>().AddRange(eventStatusDescriptions);
         
-            context.Set<EventStatusDescription>().ExecuteDelete();
-            context.Set<EventStatusDescription>().AddRange(GetEventStatusDescriptions());
-        
-            context.SaveChanges();
-        }
+        context.SaveChanges();
     }
     
-    private static IReadOnlyCollection<EventTypeDescription> GetEventTypeDescriptions<TEventType>(
-        IReadOnlyDictionary<TEventType, string> eventTypeDescriptions)
-        where TEventType : struct, Enum
+    private static IReadOnlyCollection<TDescriptiveEntity> GetCustomEnumDescriptions<TEnum, TDescriptiveEntity>(
+        IReadOnlyDictionary<TEnum, string> enumDescriptions)
+            where TDescriptiveEntity : BaseDescriptiveEntity, new()
+            where TEnum : struct, Enum
     {
-        var enumValues = Enum.GetValues<TEventType>();
-        var entities = new List<EventTypeDescription>(enumValues.Length);
+        var enumValues = Enum.GetValues<TEnum>();
+        var entities = new List<TDescriptiveEntity>(enumValues.Length);
         
         entities.AddRange(enumValues.Select(value =>
-            new EventTypeDescription()
+            new TDescriptiveEntity()
             {
                 EnumId = Convert.ToInt32(value),
-                Description = eventTypeDescriptions?.TryGetValue(value, out var description) ?? false
+                Description = enumDescriptions?.TryGetValue(value, out var description) ?? false
                     ? description
                     : Enum.GetName(value)
             }));
 
         return entities;
     }
-    
-    private static IReadOnlyCollection<EventStatusDescription> GetEventStatusDescriptions()
-    {
-        var enumValues = Enum.GetValues<EventStatus>();
-        var entities = new List<EventStatusDescription>(enumValues.Length);
-        
-        entities.AddRange(enumValues.Select(value =>
-            new EventStatusDescription()
-            {
-                EnumId = (int)value,
-                Description = GetDescription(value)
-            }));
-
-        return entities;
-    }
-    
-    private static string GetDescription(EventStatus eventType) =>
-        eventType switch
-        {
-            EventStatus.Successful => "Successful",
-            EventStatus.HandledException => "Handled exception",
-            EventStatus.UnhandledException => "Unhandled exception",
-            
-            _ => "UNKNOWN STATUS TYPE"
-        };
-    
 }
