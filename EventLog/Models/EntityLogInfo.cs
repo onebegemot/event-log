@@ -1,5 +1,4 @@
-using EventLog._NugetCode.Entities.Abstracts;
-using EventLog._NugetCode.Interfaces;
+using EventLog.Interfaces;
 using EventLog.Models.Enums;
 
 namespace EventLog.Models;

@@ -1,9 +1,9 @@
-using EventLog._NugetCode.Interfaces;
 using EventLog.DbContext;
+using EventLog.Interfaces;
 using EventLog.Models;
 using EventLog.Models.Enums;
 
-namespace EventLog._ClientCode;
+namespace EventLog;
 
 internal static class PropertyInfosInitializer
 {

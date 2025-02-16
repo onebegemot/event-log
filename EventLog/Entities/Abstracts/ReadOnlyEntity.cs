@@ -1,6 +1,4 @@
-﻿using EventLog._NugetCode.Interfaces;
-
-namespace EventLog._NugetCode.Entities.Abstracts;
+﻿namespace EventLog.Entities.Abstracts;
 
 public abstract class ReadOnlyEntity : PkEntity //, IReadOnlyEntity
 {

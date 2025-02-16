@@ -1,4 +1,4 @@
-using EventLog._NugetCode.Interfaces;
+using EventLog.Interfaces;
 
 namespace EventLog.Models;
 

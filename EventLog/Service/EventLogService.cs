@@ -1,6 +1,3 @@
-using EventLog._ClientCode;
-using EventLog._NugetCode.Entities.Abstracts;
-using EventLog._NugetCode.Interfaces;
 using EventLog.Extensions;
 using EventLog.Interfaces;
 using EventLog.Models;

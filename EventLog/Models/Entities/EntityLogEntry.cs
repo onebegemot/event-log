@@ -1,4 +1,4 @@
-using EventLog._NugetCode.Entities.Abstracts;
+using EventLog.Entities.Abstracts;
 using EventLog.Models.Entities.PropertyLogEntryModels;
 using EventLog.Models.Enums;
 

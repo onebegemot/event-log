@@ -1,4 +1,4 @@
-﻿namespace EventLog._NugetCode.Interfaces;
+﻿namespace EventLog.Interfaces;
 
 public interface IPkEntity
 {
