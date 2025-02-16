@@ -1,4 +1,5 @@
 ﻿using EventLog.DbContext;
+using EventLog.Extensions;
 using EventLog.Interfaces;
 using EventLog.Repository;
 using EventLog.Service;
@@ -51,9 +52,9 @@ internal class Host
                 options.UseSqlite("Data Source=Application.db");
             });
             
-            services.AddScoped<IEventLogService, EventLogService>();
-            services.AddScoped<IEventLogEntryRepository, EventLogEntryRepository>();
             services.AddScoped<ITestDataRepository, TestDataRepository>();
+
+            services.ConfigureEventLog();
         });
         
         return hostBuilder;
