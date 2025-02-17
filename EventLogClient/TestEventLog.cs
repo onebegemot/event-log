@@ -4,7 +4,6 @@ using EventLog.Interfaces;
 using EventLog.Models;
 using EventLog.Models.Entities;
 using EventLog.Models.Enums;
-using EventLog.Service;
 
 namespace EventLog;
 

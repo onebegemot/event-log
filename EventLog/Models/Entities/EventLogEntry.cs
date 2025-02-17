@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using EventLog.Entities.Abstracts;
+using EventLog.Models.Entities.Abstract;
 using EventLog.Models.Enums;
 
 namespace EventLog.Models.Entities;

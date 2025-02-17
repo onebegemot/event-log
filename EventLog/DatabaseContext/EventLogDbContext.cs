@@ -1,5 +1,5 @@
 ﻿using EventLog.Models.Entities;
-using EventLog.Models.Entities.PropertyLogEntryModels;
+using EventLog.Models.Entities.PropertyLogEntries;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.DatabaseContext;

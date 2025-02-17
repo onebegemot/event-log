@@ -1,12 +1,10 @@
-using EventLog.Entities.Abstracts;
-using EventLog.Models.Enums;
-
 namespace EventLog.Models.Entities.Abstract;
 
-public abstract class PropertyLogEntry<T, TEventType, TEntityType, TPropertyType> : PkEntity
-    where TEventType : struct, Enum
-    where TEntityType : struct, Enum
-    where TPropertyType : struct, Enum
+public abstract class PropertyLogEntry<T, TEventType, TEntityType, TPropertyType> :
+    PkEntity
+        where TEventType : struct, Enum
+        where TEntityType : struct, Enum
+        where TPropertyType : struct, Enum
 {
     public TPropertyType PropertyType { get; set; }
     

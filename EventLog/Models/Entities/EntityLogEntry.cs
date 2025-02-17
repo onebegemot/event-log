@@ -1,5 +1,5 @@
-using EventLog.Entities.Abstracts;
-using EventLog.Models.Entities.PropertyLogEntryModels;
+using EventLog.Models.Entities.Abstract;
+using EventLog.Models.Entities.PropertyLogEntries;
 using EventLog.Models.Enums;
 
 namespace EventLog.Models.Entities;

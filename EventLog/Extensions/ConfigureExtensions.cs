@@ -1,6 +1,5 @@
 ﻿using EventLog.Interfaces;
-using EventLog.Repository;
-using EventLog.Service;
+using EventLog.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
