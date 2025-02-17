@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLogClientByRef", "Even
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLog", "EventLog\EventLog.csproj", "{2211C2BC-F1F1-4778-A831-334A6C28024B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLogClientByNuget", "EventLogClientByNuget\EventLogClientByNuget.csproj", "{B76E8AB7-7625-4051-BF77-16E31B1FC4E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{2211C2BC-F1F1-4778-A831-334A6C28024B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2211C2BC-F1F1-4778-A831-334A6C28024B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2211C2BC-F1F1-4778-A831-334A6C28024B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B76E8AB7-7625-4051-BF77-16E31B1FC4E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B76E8AB7-7625-4051-BF77-16E31B1FC4E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B76E8AB7-7625-4051-BF77-16E31B1FC4E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B76E8AB7-7625-4051-BF77-16E31B1FC4E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
