@@ -1,14 +1,14 @@
 ﻿using EventLog.DatabaseContext;
-using EventLog.Enums;
 using EventLog.Extensions;
 using EventLog.Interfaces;
+using EventLog.Models.Enums;
 using EventLog.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace EventLog;
+namespace EventLog.Configuration;
 
 internal class Host
 {
@@ -44,7 +44,7 @@ internal class Host
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlite("Data Source=Application.db");
+                SqliteDbContextOptionsBuilderExtensions.UseSqlite(options, "Data Source=Application.db");
             });
             
             services.AddScoped<ITestDataRepository, TestDataRepository>();

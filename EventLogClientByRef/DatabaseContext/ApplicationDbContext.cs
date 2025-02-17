@@ -1,4 +1,5 @@
-﻿using EventLog.Enums;
+﻿using EventLog.Models.Entities;
+using EventLog.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.DatabaseContext;

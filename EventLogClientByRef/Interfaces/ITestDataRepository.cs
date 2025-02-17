@@ -1,4 +1,5 @@
 using EventLog.DatabaseContext;
+using EventLog.Models.Entities;
 
 namespace EventLog.Interfaces;
 

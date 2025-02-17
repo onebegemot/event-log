@@ -1,4 +1,4 @@
-namespace EventLog.Enums;
+namespace EventLog.Models.Enums;
 
 public enum PropertyType
 {

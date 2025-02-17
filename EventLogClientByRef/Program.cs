@@ -1,11 +1,12 @@
 ﻿using EventLog.DatabaseContext;
-using EventLog.Enums;
 using EventLog.Interfaces;
 using EventLog.Models.Configurations;
+using EventLog.Models.Entities;
 using EventLog.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Host = EventLog.Configuration.Host;
 
 namespace EventLog;
 

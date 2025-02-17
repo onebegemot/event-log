@@ -1,7 +1,6 @@
-﻿using EventLog.Interfaces;
-using EventLog.Interfaces.Entities;
+﻿using EventLog.Interfaces.Entities;
 
-namespace EventLog.DatabaseContext;
+namespace EventLog.Models.Entities;
 
 public class ApplicationOtherEntity : IPkEntity
 {
