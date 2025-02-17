@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.Repository;
 
-public class EventLogEntryRepository<TDbContext, TEventType, TEntityType> :
-    IEventLogEntryRepository<TEventType, TEntityType>
+public class EventLogEntryRepository<TDbContext, TEventType, TEntityType, TPropertyType> :
+    IEventLogEntryRepository<TEventType, TEntityType, TPropertyType>
         where TDbContext : DbContext
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
+        where TPropertyType : struct, Enum
 {
     private readonly TDbContext _dbContext;
 
@@ -17,17 +18,17 @@ public class EventLogEntryRepository<TDbContext, TEventType, TEntityType> :
         _dbContext = dbContext;
     }
 
-    public async Task<EventLogEntry<TEventType, TEntityType>> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
-        await _dbContext.Set<EventLogEntry<TEventType, TEntityType>>()
+    public async Task<EventLogEntry<TEventType, TEntityType, TPropertyType>> GetByIdAsync(int id, CancellationToken cancellationToken = default) =>
+        await _dbContext.Set<EventLogEntry<TEventType, TEntityType, TPropertyType>>()
             .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-    public async Task AddOrUpdateAsync(EventLogEntry<TEventType, TEntityType> entity, int? initiatorId,
+    public async Task AddOrUpdateAsync(EventLogEntry<TEventType, TEntityType, TPropertyType> entity, int? initiatorId,
         CancellationToken cancellationToken = default)
     {
         if (IsNew())
         {
             entity.CreatedBy = initiatorId;
-            await _dbContext.Set<EventLogEntry<TEventType, TEntityType>>().AddAsync(entity, cancellationToken);
+            await _dbContext.Set<EventLogEntry<TEventType, TEntityType, TPropertyType>>().AddAsync(entity, cancellationToken);
         }
         
         entity.CompletedAt = DateTime.UtcNow;

@@ -10,15 +10,15 @@ namespace EventLog;
 
 internal class TestEventLog
 {
-    public async Task TestAsync(IEventLogService<EventType, EntityType> eventLogService,
+    public async Task TestAsync(IEventLogService<EventType, EntityType, PropertyType> eventLogService,
         ITestDataRepository testDataRepository, int initiatorId) =>
             await eventLogService.CreateEventLogEntryAndProcessUnitOfWorkAsync(
                 EventType.UpdateApplicationEntity, initiatorId,
                 eventLogEntry => TestEventLogActionAsync(
                     eventLogEntry, eventLogService, testDataRepository));
     
-    private async Task TestEventLogActionAsync(EventLogEntry<EventType, EntityType> eventLogEntry,
-        IEventLogService<EventType, EntityType> eventLogService, ITestDataRepository testDataRepository)
+    private async Task TestEventLogActionAsync(EventLogEntry<EventType, EntityType, PropertyType> eventLogEntry,
+        IEventLogService<EventType, EntityType, PropertyType> eventLogService, ITestDataRepository testDataRepository)
     {
         const int initiatorId = 9;
         
@@ -36,8 +36,9 @@ internal class TestEventLog
         await eventLogService.ExecuteActionAndAddRelatedLogAsync(
             () => testDataRepository.AddOrUpdateAsync(testDate),
             eventLogEntry,
-            () => EventLogService<EventType, EntityType>.GetLogEntities(testDataRepository.GetOriginalPropertyValue,
-                new EntityLogInfo<ApplicationEntity>(
+            () => EventLogService<EventType, EntityType, PropertyType>.GetLogEntities(
+                testDataRepository.GetOriginalPropertyValue,
+                new EntityLogInfo<ApplicationEntity, PropertyType>(
                     new[] { testDate },
                     ObservableProperties.GetForApplicationEntity())));
     }

@@ -1,6 +1,6 @@
-using EventLog.Models.Enums;
+using EventLog.Enums;
 
-namespace EventLog.Service;
+namespace EventLog;
 
 public static class ObservableProperties
 {

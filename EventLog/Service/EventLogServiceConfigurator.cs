@@ -6,27 +6,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.Service;
 
-public static class EventLogServiceConfigurator<TEventType, TEntityType>
+public static class EventLogServiceConfigurator<TEventType, TEntityType, TPropertyType>
     where TEventType : struct, Enum
     where TEntityType : struct, Enum
+    where TPropertyType : struct, Enum
 {
     private static IReadOnlyDictionary<Type, TEntityType> _entityTypes;
+    private static IReadOnlyDictionary<TPropertyType, IPropertyInfo> _registeredProperties;
     
-    public static void Configure<TDbContext>(Action<EventLogConfiguration<TDbContext, TEventType, TEntityType>> configurationBuilder = null)
+    public static void Configure<TDbContext>(Action<EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropertyType>> configurationBuilder = null)
         where TDbContext : DbContext
     {
         var configuration = CreateDefaultConfiguration<TDbContext>();
         configurationBuilder?.Invoke(configuration);
         
         _entityTypes = configuration.EntityTypes;
+        _registeredProperties = configuration.Properties;
         
         TryFillCustomDescriptionTables(configuration);
     }
     
-    private static EventLogConfiguration<TDbContext, TEventType, TEntityType> CreateDefaultConfiguration<TDbContext>()
+    private static EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropertyType> CreateDefaultConfiguration<TDbContext>()
         where TDbContext : DbContext
     {
-        var configuration = new EventLogConfiguration<TDbContext, TEventType, TEntityType>();
+        var configuration = new EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropertyType>();
 
         ((IEventLogConfigurator<TEventType>)configuration)
             .AddEventStatusDescription(EventStatus.Successful, "Successful")
@@ -36,18 +39,36 @@ public static class EventLogServiceConfigurator<TEventType, TEntityType>
         return configuration;
     }
     
-    public static TEntityType GetEntityType<TEntity>(EntityLogInfo<TEntity> logInfo)
+    public static TEntityType GetEntityType<TEntity>(EntityLogInfo<TEntity, TPropertyType> logInfo)
         where TEntity : IPkEntity
     {
         if (_entityTypes.TryGetValue(logInfo.GetType(), out var entityType))
             return entityType;
         
-        throw new NotImplementedException(
-                $"The type {nameof(EntityLogInfo<TEntity>)} cannot be parsed into {nameof(TEntityType)}");
+        throw new NotImplementedException($"The type {nameof(EntityLogInfo<TEntity, TPropertyType>)} cannot be parsed into {nameof(TEntityType)}");
     }
     
-    private static void TryFillCustomDescriptionTables<TDbContext>(EventLogConfiguration<TDbContext, TEventType, TEntityType> configuration)
-        where TDbContext : DbContext
+    public static PropertyValues GetPropertyInfo<TEntity>(TEntity entity,
+        TPropertyType propertyType, Func<TEntity, string, object> getOriginalPropertyValue)
+            where TEntity : IPkEntity
+    {
+        if (_registeredProperties.TryGetValue(propertyType, out var propertyInfo))
+        {
+            // think about improve here
+            if (propertyInfo is PropertyInfo<TEntity> targetPropertyInfo)
+            {
+                return new PropertyValues(
+                    getOriginalPropertyValue(entity, targetPropertyInfo.Name),
+                    targetPropertyInfo.Getter(entity));
+            }
+        }
+                
+        throw new Exception($"Not found a registered property for the {nameof(TPropertyType)}.{propertyType}");
+    }
+    
+    private static void TryFillCustomDescriptionTables<TDbContext>(
+        EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropertyType> configuration)
+            where TDbContext : DbContext
     {
         var context = configuration.DatabaseContext;
 

@@ -3,7 +3,8 @@ using EventLog.Models.Enums;
 
 namespace EventLog.Models;
 
-public record EntityLogInfo<TEntity>(
+public record EntityLogInfo<TEntity, TPropertyType>(
     IEnumerable<TEntity> Entities,
-    params PropertyType[] Properties)
-        where TEntity : IPkEntity;
+    params TPropertyType[] Properties)
+        where TEntity : IPkEntity
+        where TPropertyType : struct, Enum;

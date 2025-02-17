@@ -4,15 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventLog.Models;
 
-public class EventLogConfiguration<TDbContext, TEventType, TEntityType> :
-    IEventLogConfigurator<TEventType>
+public class EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropertyType> :
+    IEventLogConfigurator<TEventType>,
+    IEntityConfigurator<TEntityType, TPropertyType>
         where TDbContext : DbContext
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
+        where TPropertyType : struct, Enum
 {
     private readonly Dictionary<TEventType, string> _eventTypeDescription = new();
     private readonly Dictionary<EventStatus, string> _eventStatusDescription = new();
     private readonly Dictionary<Type, TEntityType> _entityTypes = new();
+    private readonly Dictionary<TPropertyType, IPropertyInfo> _properties = new();
     
     private TDbContext _databaseContext;
     
@@ -21,7 +24,9 @@ public class EventLogConfiguration<TDbContext, TEventType, TEntityType> :
     public IReadOnlyDictionary<EventStatus, string> EventStatusDescription => _eventStatusDescription;
     
     public IReadOnlyDictionary<Type, TEntityType> EntityTypes => _entityTypes;
-
+    
+    public IReadOnlyDictionary<TPropertyType, IPropertyInfo> Properties => _properties;
+    
     public TDbContext DatabaseContext => _databaseContext;
     
     public IEventLogConfigurator<TEventType> SetDatabaseContext(TDbContext context)
@@ -44,10 +49,18 @@ public class EventLogConfiguration<TDbContext, TEventType, TEntityType> :
         return this;
     }
     
-    public EventLogConfiguration<TDbContext, TEventType, TEntityType> RegisterEntityType<TEntity>(TEntityType entityType)
-        where TEntity : IPkEntity
+    public IEntityConfigurator<TEntityType, TPropertyType> RegisterEntity<TEntity>(TEntityType entityType,
+        Action<IPropertyConfigurator<TEntity, TPropertyType>> propertyConfigurationBuilder)
+            where TEntity : IPkEntity
     {
-        _entityTypes[typeof(EntityLogInfo<TEntity>)] = entityType;
+        _entityTypes[typeof(EntityLogInfo<TEntity, TPropertyType>)] = entityType;
+
+        var propertyConfigurator = new PropertyConfiguration<TEntity, TPropertyType>();
+        propertyConfigurationBuilder(propertyConfigurator);
+
+        foreach (var property in propertyConfigurator.Properties)
+            _properties[property.Key] = property.Value;
+        
         return this;
     }
 }

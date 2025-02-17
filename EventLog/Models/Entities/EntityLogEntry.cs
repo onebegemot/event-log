@@ -4,9 +4,10 @@ using EventLog.Models.Enums;
 
 namespace EventLog.Models.Entities;
 
-public class EntityLogEntry<TEventType, TEntityType> : PkEntity
+public class EntityLogEntry<TEventType, TEntityType, TPropertyType> : PkEntity
     where TEventType : struct, Enum
     where TEntityType : struct, Enum
+    where TPropertyType : struct, Enum
 {
     public ActionType ActionType { get; set; }
     
@@ -16,15 +17,15 @@ public class EntityLogEntry<TEventType, TEntityType> : PkEntity
     
     public int EventLogEntryId { get; set; }
     
-    public EventLogEntry<TEventType, TEntityType> EventLogEntry { get; set; }
+    public EventLogEntry<TEventType, TEntityType, TPropertyType> EventLogEntry { get; set; }
     
-    public ICollection<BoolPropertyLogEntry<TEventType, TEntityType>> BoolPropertyLogEntries { get; set; }
+    public ICollection<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>> BoolPropertyLogEntries { get; set; }
     
-    public ICollection<StringPropertyLogEntry<TEventType, TEntityType>> StringPropertyLogEntries { get; set; }
+    public ICollection<StringPropertyLogEntry<TEventType, TEntityType, TPropertyType>> StringPropertyLogEntries { get; set; }
     
-    public ICollection<Int32PropertyLogEntry<TEventType, TEntityType>> Int32PropertyLogEntries { get; set; }
+    public ICollection<Int32PropertyLogEntry<TEventType, TEntityType, TPropertyType>> Int32PropertyLogEntries { get; set; }
     
-    public ICollection<DecimalPropertyLogEntry<TEventType, TEntityType>> DecimalPropertyLogEntries { get; set; }
+    public ICollection<DecimalPropertyLogEntry<TEventType, TEntityType, TPropertyType>> DecimalPropertyLogEntries { get; set; }
 
     public bool HasPropertyLogEntries =>
         (BoolPropertyLogEntries != null && BoolPropertyLogEntries.Any()) ||

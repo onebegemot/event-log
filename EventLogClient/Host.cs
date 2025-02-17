@@ -49,7 +49,7 @@ internal class Host
             
             services.AddScoped<ITestDataRepository, TestDataRepository>();
 
-            services.AddEventLog<ApplicationDbContext, EventType, EntityType>();
+            services.AddEventLog<ApplicationDbContext, EventType, EntityType, PropertyType>();
         });
         
         return hostBuilder;
