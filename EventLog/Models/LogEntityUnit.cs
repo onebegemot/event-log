@@ -1,4 +1,3 @@
-using EventLog.Interfaces;
 using EventLog.Interfaces.Entities;
 using EventLog.Models.Entities;
 

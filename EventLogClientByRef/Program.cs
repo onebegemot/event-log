@@ -43,12 +43,17 @@ public class Program
         EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<ApplicationDbContext>(
             configurationBuilder => configurationBuilder
                 .UseCustomTypeDescriptions(
-                    host.Services.GetRequiredService<ApplicationDbContext>(), options => options
-                        .AddEventTypeDescription(EventType.UpdateApplicationEntity, "Update Application Entity Text")
-                        .AddEventTypeDescription(EventType.RemoveApplicationEntity, "Remove Application Entity Text")
-                        .AddEventStatusDescription(EventStatus.Successful, "Successfully completed"))
+                    host.Services.GetRequiredService<ApplicationDbContext>(),
+                    options => options
+                        .AddEventTypeDescription(EventType.UpdateApplicationEntity,
+                            "Update Application Entity Text")
+                        .AddEventTypeDescription(EventType.RemoveApplicationEntity,
+                            "Remove Application Entity Text")
+                        .AddEventStatusDescription(EventStatus.Successful,
+                            "Successfully completed"))
                 .RegisterEntity<ApplicationEntity>(
-                    EntityType.ApplicationEntity, options => options
+                    EntityType.ApplicationEntity,
+                    options => options
                         .RegisterProperty(PropertyType.ApplicationEntityTestDate,
                             x => x.TestDate, nameof(ApplicationEntity.TestDate))
                         .RegisterProperty(PropertyType.ApplicationEntityTestString,
@@ -58,7 +63,8 @@ public class Program
                         .RegisterProperty(PropertyType.ApplicationEntityTestInt32,
                             x => x.TestInt32, nameof(ApplicationEntity.TestInt32)))
                 .RegisterEntity<ApplicationOtherEntity>(
-                    EntityType.ApplicationOtherEntity, options => options
+                    EntityType.ApplicationOtherEntity,
+                    options => options
                         .RegisterProperty(PropertyType.ApplicationOtherEntityTestDecimal,
                             x => x.TestDecimal, nameof(ApplicationOtherEntity.TestDecimal))));
 
