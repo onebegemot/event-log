@@ -9,6 +9,16 @@ public class EventLogEntry<TEventType, TEntityType, TPropertyType> : ReadOnlyEnt
     where TEntityType : struct, Enum
     where TPropertyType : struct, Enum
 {
+    public EventLogEntry()
+    {
+    }
+    
+    public EventLogEntry(TEventType eventType)
+    {
+        EventType = eventType;
+        CreatedAt = DateTime.UtcNow;
+    }
+    
     public TEventType EventType { get; set; }
     
     public ICollection<EntityLogEntry<TEventType, TEntityType, TPropertyType>> EntityLogEntries { get; set; }

@@ -12,5 +12,7 @@ EventLogDbContext<ApplicationDbContext, EventType, EntityType, PropertyType>
     {
     }
     
-    public DbSet<ApplicationEntity> TestData { get; set; }
+    public DbSet<ApplicationEntity> ApplicationEntities { get; set; }
+    
+    public DbSet<ApplicationOtherEntity> ApplicationOtherEntities { get; set; }
 }

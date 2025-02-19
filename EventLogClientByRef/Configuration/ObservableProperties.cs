@@ -11,4 +11,10 @@ public static class ObservableProperties
             PropertyType.ApplicationEntityTestBool,
             PropertyType.ApplicationEntityTestInt32
         };
+    
+    public static PropertyType[] GetForApplicationOtherEntity() =>
+        new []
+        {
+            PropertyType.ApplicationOtherEntityTestDecimal
+        };
 }

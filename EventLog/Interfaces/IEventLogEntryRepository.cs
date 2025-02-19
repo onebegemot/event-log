@@ -8,5 +8,5 @@ public interface IEventLogEntryRepository<TEventType, TEntityType, TPropertyType
     where TPropertyType : struct, Enum
 {
     Task AddOrUpdateAsync(EventLogEntry<TEventType, TEntityType, TPropertyType> entity,
-        int? initiatorId, CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default);
 }

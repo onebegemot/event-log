@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventLog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250216102339_AddInitialDbContext")]
+    [Migration("20250219102243_AddInitialDbContext")]
     partial class AddInitialDbContext
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace EventLog.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.18");
 
-            modelBuilder.Entity("EventLog.DatabaseContext.ApplicationEntity", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.ApplicationEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -40,10 +40,24 @@ namespace EventLog.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TestData");
+                    b.ToTable("ApplicationEntities");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.EntityLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.ApplicationOtherEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("TestDecimal")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationOtherEntities");
+                });
+
+            modelBuilder.Entity("EventLog.Models.Entities.EntityLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,10 +79,10 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EventLogEntryId");
 
-                    b.ToTable("EntityLog", "eventlog");
+                    b.ToTable("EntityLog");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.EventLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.EventLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,10 +111,10 @@ namespace EventLog.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventLog", "eventlog");
+                    b.ToTable("EventLog");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.BoolPropertyLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.BoolPropertyLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -119,10 +133,10 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EntityLogEntryId");
 
-                    b.ToTable("BoolPropertyLog", "eventlog");
+                    b.ToTable("BoolPropertyLog");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.DecimalPropertyLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.DecimalPropertyLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -141,10 +155,10 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EntityLogEntryId");
 
-                    b.ToTable("DecimalPropertyLog", "eventlog");
+                    b.ToTable("DecimalPropertyLog");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.EventStatusDescription", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.EventStatusDescription", b =>
                 {
                     b.Property<int>("EnumId")
                         .HasColumnType("INTEGER");
@@ -157,7 +171,7 @@ namespace EventLog.Migrations
                     b.ToTable("EventStatusDescriptions", "eventlog");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.EventTypeDescription", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.EventTypeDescription", b =>
                 {
                     b.Property<int>("EnumId")
                         .HasColumnType("INTEGER");
@@ -170,7 +184,7 @@ namespace EventLog.Migrations
                     b.ToTable("EventTypeDescriptions", "eventlog");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.Int32PropertyLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.Int32PropertyLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -189,10 +203,10 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EntityLogEntryId");
 
-                    b.ToTable("Int32PropertyLog", "eventlog");
+                    b.ToTable("Int32PropertyLog");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.StringPropertyLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.StringPropertyLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,65 +225,65 @@ namespace EventLog.Migrations
 
                     b.HasIndex("EntityLogEntryId");
 
-                    b.ToTable("StringPropertyLog", "eventlog");
+                    b.ToTable("StringPropertyLog");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.EntityLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.EntityLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
-                    b.HasOne("EventLog.Models.Entities.EventLogEntry", "EventLogEntry")
+                    b.HasOne("EventLog.Models.Entities.EventLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", "EventLogEntry")
                         .WithMany("EntityLogEntries")
                         .HasForeignKey("EventLogEntryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("EventLogEntry");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.BoolPropertyLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.BoolPropertyLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
-                    b.HasOne("EventLog.Models.Entities.EntityLogEntry", "EntityLogEntry")
+                    b.HasOne("EventLog.Models.Entities.EntityLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", "EntityLogEntry")
                         .WithMany("BoolPropertyLogEntries")
                         .HasForeignKey("EntityLogEntryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("EntityLogEntry");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.DecimalPropertyLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.DecimalPropertyLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
-                    b.HasOne("EventLog.Models.Entities.EntityLogEntry", "EntityLogEntry")
+                    b.HasOne("EventLog.Models.Entities.EntityLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", "EntityLogEntry")
                         .WithMany("DecimalPropertyLogEntries")
                         .HasForeignKey("EntityLogEntryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("EntityLogEntry");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.Int32PropertyLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.Int32PropertyLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
-                    b.HasOne("EventLog.Models.Entities.EntityLogEntry", "EntityLogEntry")
+                    b.HasOne("EventLog.Models.Entities.EntityLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", "EntityLogEntry")
                         .WithMany("Int32PropertyLogEntries")
                         .HasForeignKey("EntityLogEntryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("EntityLogEntry");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntryModels.StringPropertyLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.PropertyLogEntries.StringPropertyLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
-                    b.HasOne("EventLog.Models.Entities.EntityLogEntry", "EntityLogEntry")
+                    b.HasOne("EventLog.Models.Entities.EntityLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", "EntityLogEntry")
                         .WithMany("StringPropertyLogEntries")
                         .HasForeignKey("EntityLogEntryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("EntityLogEntry");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.EntityLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.EntityLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
                     b.Navigation("BoolPropertyLogEntries");
 
@@ -280,7 +294,7 @@ namespace EventLog.Migrations
                     b.Navigation("StringPropertyLogEntries");
                 });
 
-            modelBuilder.Entity("EventLog.Models.Entities.EventLogEntry", b =>
+            modelBuilder.Entity("EventLog.Models.Entities.EventLogEntry<EventLog.Models.Enums.EventType, EventLog.Models.Enums.EntityType, EventLog.Models.Enums.PropertyType>", b =>
                 {
                     b.Navigation("EntityLogEntries");
                 });

@@ -19,15 +19,16 @@ public class Program
 
     private static async Task TestEventLog(string[] args)
     {
-        const int initiatorId = 9;
-
         var host = GetHost(args);
         
         var eventLogService = host.Services.GetRequiredService<IEventLogService<EventType, EntityType, PropertyType>>();
-        var testDataRepository = host.Services.GetRequiredService<ITestDataRepository>();
+        var applicationEntityRepository = host.Services.GetRequiredService<IApplicationEntityRepository>();
+        var applicationOtherEntityRepository = host.Services.GetRequiredService<IApplicationOtherEntityRepository>();
 
         var testEventLog = new TestEventLog();
-        await testEventLog.TestAsync(eventLogService, testDataRepository, initiatorId);
+        
+        await testEventLog.TestMultipleLoggingIntoOneEventLogScopeAsync(eventLogService,
+            applicationEntityRepository, applicationOtherEntityRepository);
     }
     
     #region Service methods
@@ -45,9 +46,9 @@ public class Program
                 .UseCustomTypeDescriptions(
                     host.Services.GetRequiredService<ApplicationDbContext>(),
                     options => options
-                        .AddEventTypeDescription(EventType.UpdateApplicationEntity,
+                        .AddEventTypeDescription(EventType.RunTestMethod,
                             "Update Application Entity Text")
-                        .AddEventTypeDescription(EventType.RemoveApplicationEntity,
+                        .AddEventTypeDescription(EventType.ApplicationShutdown,
                             "Remove Application Entity Text")
                         .AddEventStatusDescription(EventStatus.Successful,
                             "Successfully completed"))

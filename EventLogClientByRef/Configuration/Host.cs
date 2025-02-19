@@ -47,7 +47,8 @@ internal class Host
                 SqliteDbContextOptionsBuilderExtensions.UseSqlite(options, "Data Source=Application.db");
             });
             
-            services.AddScoped<ITestDataRepository, TestDataRepository>();
+            services.AddScoped<IApplicationEntityRepository, ApplicationEntityRepository>();
+            services.AddScoped<IApplicationOtherEntityRepository, ApplicationOtherEntityRepository>();
 
             services.AddEventLog<ApplicationDbContext, EventType, EntityType, PropertyType>();
         });

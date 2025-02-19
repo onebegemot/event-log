@@ -18,13 +18,14 @@ public class EventLogEntryRepository<TDbContext, TEventType, TEntityType, TPrope
         _dbContext = dbContext;
     }
     
-    public async Task AddOrUpdateAsync(EventLogEntry<TEventType, TEntityType, TPropertyType> entity, int? initiatorId,
+    public async Task AddOrUpdateAsync(EventLogEntry<TEventType, TEntityType, TPropertyType> entity,
         CancellationToken cancellationToken = default)
     {
         if (IsNew())
         {
-            entity.CreatedBy = initiatorId;
-            await _dbContext.Set<EventLogEntry<TEventType, TEntityType, TPropertyType>>().AddAsync(entity, cancellationToken);
+            await _dbContext
+                .Set<EventLogEntry<TEventType, TEntityType, TPropertyType>>()
+                .AddAsync(entity, cancellationToken);
         }
         
         entity.CompletedAt = DateTime.UtcNow;

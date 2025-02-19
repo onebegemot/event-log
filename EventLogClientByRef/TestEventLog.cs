@@ -8,22 +8,54 @@ namespace EventLog;
 
 internal class TestEventLog
 {
-    public async Task TestAsync(IEventLogService<EventType, EntityType, PropertyType> eventLogService,
-        ITestDataRepository testDataRepository, int initiatorId) =>
-            await eventLogService.CreateEventLogEntryAndProcessUnitOfWorkAsync(
-                EventType.UpdateApplicationEntity, initiatorId,
-                eventLogEntry => TestEventLogActionAsync(
-                    eventLogEntry, eventLogService, testDataRepository));
-    
-    private async Task TestEventLogActionAsync(EventLogEntry<EventType, EntityType, PropertyType> eventLogEntry,
-        IEventLogService<EventType, EntityType, PropertyType> eventLogService, ITestDataRepository testDataRepository)
+    public async Task TestMultipleLoggingIntoOneEventLogScopeAsync(
+        IEventLogService<EventType, EntityType, PropertyType> eventLogService,
+        IApplicationEntityRepository applicationEntityRepository,
+        IApplicationOtherEntityRepository applicationOtherEntityRepository) =>
+            await eventLogService.CreateEventScopeAndRun(EventType.RunTestMethod,
+                eventLogScope => TestEventLogActionAsync(eventLogScope,
+                    applicationEntityRepository, applicationOtherEntityRepository));
+
+    public async Task TestOnceLoggingIntoOneEventLogScopeAsync(
+        IEventLogService<EventType, EntityType, PropertyType> eventLogService,
+        IApplicationEntityRepository applicationEntityRepository)
+    {
+        var applicationEntity = new ApplicationEntity();
+        
+        await eventLogService.CreateEventScopeAndRun(EventType.RunTestMethod,
+            eventLogScope =>
+            {
+                const int initiatorId = 9;
+                
+                eventLogScope.EventLogEntry.CreatedBy = initiatorId;
+                eventLogScope.EventLogEntry.Details = "OnceLogging => OneEventLogScope";
+                eventLogScope.EventLogEntry.FailureDetails = "-- empty --";
+                
+                return eventLogScope
+                    .SaveAndLogEntitiesAsync(
+                        () => applicationEntityRepository.AddOrUpdateAsync(applicationEntity),
+                        options => options
+                            .AddEntityLogging(
+                                applicationEntityRepository.GetOriginalPropertyValue,
+                                new[] { applicationEntity },
+                                ObservableProperties.GetForApplicationEntity));
+            });
+    }
+
+    private async Task TestEventLogActionAsync(
+        EventLogScope<EventType, EntityType, PropertyType> eventLogScope,
+        IApplicationEntityRepository applicationEntityRepository,
+        IApplicationOtherEntityRepository applicationOtherEntityRepository)
     {
         const int initiatorId = 9;
         
-        eventLogEntry.Details = "Test TestEventLogActionAsync is executed";
+        eventLogScope.EventLogEntry.CreatedBy = initiatorId;
+        eventLogScope.EventLogEntry.Details = "MultipleLogging => OneEventLogScope";
+        eventLogScope.EventLogEntry.FailureDetails = "-- empty --";
+        
         Console.WriteLine("Test EventLogClient!");
 
-        var testDate = new ApplicationEntity()
+        var applicationEntity = new ApplicationEntity()
         {
             TestBool = true,
             TestDate = DateTime.Now,
@@ -31,13 +63,23 @@ internal class TestEventLog
             TestString = DateTime.Now.Year.ToString()
         };
         
-        await eventLogService.ExecuteActionAndAddRelatedLogAsync(
-            () => testDataRepository.AddOrUpdateAsync(testDate),
-            eventLogEntry,
-            () => EventLogService<EventType, EntityType, PropertyType>.GetLogEntities(
-                testDataRepository.GetOriginalPropertyValue,
-                new EntityLogInfo<ApplicationEntity, PropertyType>(
-                    new[] { testDate },
-                    ObservableProperties.GetForApplicationEntity())));
+        var applicationOtherEntity = new ApplicationOtherEntity()
+        {
+            TestDecimal = (decimal)23.24
+        };
+        
+        await eventLogScope.SaveAndLogEntitiesAsync(
+            () => Task.WhenAll(
+                applicationEntityRepository.AddOrUpdateAsync(applicationEntity),
+                applicationOtherEntityRepository.AddOrUpdateAsync(applicationOtherEntity)),
+            options => options
+                .AddEntityLogging(
+                    applicationEntityRepository.GetOriginalPropertyValue,
+                    new[] { applicationEntity },
+                    ObservableProperties.GetForApplicationEntity)
+                .AddEntityLogging(
+                    applicationOtherEntityRepository.GetOriginalPropertyValue,
+                    new[] { applicationOtherEntity },
+                    ObservableProperties.GetForApplicationOtherEntity));
     }
 }
