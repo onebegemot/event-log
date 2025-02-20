@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using EventLog.Models.Entities.Abstract;
-using EventLog.Models.Enums;
+using AHWS.EventLog.Models.Entities.Abstract;
+using AHWS.EventLog.Models.Enums;
 
-namespace EventLog.Models.Entities;
+namespace AHWS.EventLog.Models.Entities;
 
 public class EventLogEntry<TEventType, TEntityType, TPropertyType> : ReadOnlyEntity
     where TEventType : struct, Enum

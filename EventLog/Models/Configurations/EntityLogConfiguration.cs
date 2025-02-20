@@ -1,11 +1,11 @@
-﻿using EventLog.Interfaces.Configurators;
-using EventLog.Interfaces.Entities;
-using EventLog.Models.Entities;
-using EventLog.Models.Entities.Abstract;
-using EventLog.Models.Entities.PropertyLogEntries;
-using EventLog.Models.Enums;
+﻿using AHWS.EventLog.Interfaces.Configurators;
+using AHWS.EventLog.Interfaces.Entities;
+using AHWS.EventLog.Models.Entities;
+using AHWS.EventLog.Models.Entities.Abstract;
+using AHWS.EventLog.Models.Entities.PropertyLogEntries;
+using AHWS.EventLog.Models.Enums;
 
-namespace EventLog.Models.Configurations;
+namespace AHWS.EventLog.Models.Configurations;
 
 public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
     IEntityLogConfigurator<TEventType, TEntityType, TPropertyType>

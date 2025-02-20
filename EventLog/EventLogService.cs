@@ -1,10 +1,10 @@
-using EventLog.Extensions;
-using EventLog.Interfaces;
-using EventLog.Models;
-using EventLog.Models.Entities;
-using EventLog.Models.Enums;
+using AHWS.EventLog.Extensions;
+using AHWS.EventLog.Interfaces;
+using AHWS.EventLog.Models;
+using AHWS.EventLog.Models.Entities;
+using AHWS.EventLog.Models.Enums;
 
-namespace EventLog;
+namespace AHWS.EventLog;
 
 public class EventLogService<TEventType, TEntityType, TPropertyType> :
     IEventLogService<TEventType, TEntityType, TPropertyType>

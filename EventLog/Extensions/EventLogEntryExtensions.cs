@@ -1,8 +1,8 @@
 using System.Text;
-using EventLog.Models.Entities;
-using EventLog.Models.Enums;
+using AHWS.EventLog.Models.Entities;
+using AHWS.EventLog.Models.Enums;
 
-namespace EventLog.Extensions;
+namespace AHWS.EventLog.Extensions;
 
 public static class EventLogEntryExtensions
 {

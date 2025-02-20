@@ -1,8 +1,8 @@
-using EventLog.Interfaces;
-using EventLog.Models.Entities;
+using AHWS.EventLog.Interfaces;
+using AHWS.EventLog.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventLog.Repositories;
+namespace AHWS.EventLog.Repositories;
 
 public class EventLogEntryRepository<TDbContext, TEventType, TEntityType, TPropertyType> :
     IEventLogEntryRepository<TEventType, TEntityType, TPropertyType>

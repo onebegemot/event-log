@@ -1,9 +1,9 @@
-using EventLog.Models.Entities;
-using EventLog.Repositories.Constants;
+using AHWS.EventLog.Models.Entities;
+using AHWS.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventLog.Repositories.Configuration;
+namespace AHWS.EventLog.Repositories.Configuration;
 
 public class EntityLogEntryConfiguration<TEventType, TEntityType, TPropertyType> :
     IEntityTypeConfiguration<EntityLogEntry<TEventType, TEntityType, TPropertyType>>

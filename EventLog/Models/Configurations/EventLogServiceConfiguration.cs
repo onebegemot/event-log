@@ -1,10 +1,10 @@
-﻿using EventLog.Interfaces;
-using EventLog.Interfaces.Entities;
-using EventLog.Models.Entities.PropertyLogEntries;
-using EventLog.Models.Enums;
+﻿using AHWS.EventLog.Interfaces;
+using AHWS.EventLog.Interfaces.Entities;
+using AHWS.EventLog.Models.Entities.PropertyLogEntries;
+using AHWS.EventLog.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventLog.Models.Configurations;
+namespace AHWS.EventLog.Models.Configurations;
 
 public static class EventLogServiceConfiguration<TEventType, TEntityType, TPropertyType>
     where TEventType : struct, Enum

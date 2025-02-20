@@ -1,8 +1,8 @@
-using EventLog.Models.Entities.Abstract;
-using EventLog.Models.Entities.PropertyLogEntries;
-using EventLog.Models.Enums;
+using AHWS.EventLog.Models.Entities.Abstract;
+using AHWS.EventLog.Models.Entities.PropertyLogEntries;
+using AHWS.EventLog.Models.Enums;
 
-namespace EventLog.Models.Entities;
+namespace AHWS.EventLog.Models.Entities;
 
 public class EntityLogEntry<TEventType, TEntityType, TPropertyType> : PkEntity
     where TEventType : struct, Enum

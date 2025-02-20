@@ -1,4 +1,4 @@
-namespace EventLog.Models.Entities.Abstract;
+namespace AHWS.EventLog.Models.Entities.Abstract;
 
 public abstract class PkEntity // : IPkEntity
 {

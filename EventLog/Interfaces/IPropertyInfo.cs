@@ -1,4 +1,4 @@
-namespace EventLog.Interfaces;
+namespace AHWS.EventLog.Interfaces;
 
 public interface IPropertyInfo
 {

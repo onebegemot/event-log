@@ -1,7 +1,7 @@
-using EventLog.Interfaces.Entities;
-using EventLog.Models.Entities;
+using AHWS.EventLog.Interfaces.Entities;
+using AHWS.EventLog.Models.Entities;
 
-namespace EventLog.Models;
+namespace AHWS.EventLog.Models;
 
 public class LogEntityUnit<TEventType, TEntityType, TPropertyType>
     where TEventType : struct, Enum

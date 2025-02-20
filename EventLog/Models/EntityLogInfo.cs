@@ -1,6 +1,6 @@
-using EventLog.Interfaces.Entities;
+using AHWS.EventLog.Interfaces.Entities;
 
-namespace EventLog.Models;
+namespace AHWS.EventLog.Models;
 
 public record EntityLogInfo<TEntity, TPropertyType>(
     IEnumerable<TEntity> Entities,

@@ -1,4 +1,4 @@
-namespace EventLog.Interfaces.Entities;
+namespace AHWS.EventLog.Interfaces.Entities;
 
 public interface IReadOnlyEntity : IPkEntity
 {

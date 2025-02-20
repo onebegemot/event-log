@@ -4,12 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <RootNamespace>AHWS.EventLog</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
     <!--Nuget properties-->
-    <PackageId>AH.EventLog</PackageId>
-    <Version>1.2.0</Version>
+    <PackageId>AHWS.EventLog</PackageId>
+    <Version>1.2.1</Version>
     <Authors>Alex Holenko</Authors>
   </PropertyGroup>
 

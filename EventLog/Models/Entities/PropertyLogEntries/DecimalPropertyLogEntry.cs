@@ -1,6 +1,6 @@
-using EventLog.Models.Entities.Abstract;
+using AHWS.EventLog.Models.Entities.Abstract;
 
-namespace EventLog.Models.Entities.PropertyLogEntries;
+namespace AHWS.EventLog.Models.Entities.PropertyLogEntries;
 
 public class DecimalPropertyLogEntry<TEventType, TEntityType, TPropertyType> :
     PropertyLogEntry<decimal, TEventType, TEntityType, TPropertyType>

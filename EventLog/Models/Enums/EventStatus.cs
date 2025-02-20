@@ -1,4 +1,4 @@
-namespace EventLog.Models.Enums;
+namespace AHWS.EventLog.Models.Enums;
 
 public enum EventStatus
 {

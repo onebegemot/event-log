@@ -1,6 +1,6 @@
-﻿using EventLog.Interfaces.Entities;
+﻿using AHWS.EventLog.Interfaces.Entities;
 
-namespace EventLog.Interfaces.Configurators;
+namespace AHWS.EventLog.Interfaces.Configurators;
 
 public interface IEntityLogConfigurator<TEventType, TEntityType, in TPropertyType>
     where TEventType : struct, Enum
