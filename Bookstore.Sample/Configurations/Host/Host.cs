@@ -18,23 +18,18 @@ internal class Host
     {
         var host = CreateHostBuilder(args).Build();
         
-        // Client non-required method
-        ApplyApplicationPendingMigrations(host.Services);
+        ApplyPendingMigrations(host.Services);
         
-        // todo: For documentation examples
         EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
             configurationBuilder => configurationBuilder
                 .UseCustomTypeDescriptions(
                     host.Services.GetRequiredService<BookstoreDbContext>(),
                     options => options
-                        .AddEventTypeDescription(EventType.RunTestMethod,
-                            "Update Application Entity Text")
-                        .AddEventTypeDescription(EventType.ApplicationShutdown,
-                            "Remove Application Entity Text")
-                        .AddEventStatusDescription(EventStatus.Successful,
-                            "Successfully completed"))
-                .RegisterEntity<BookEntity>(
-                    EntityType.ApplicationEntity,
+                        .AddEventTypeDescription(EventType.AddBooksOnShelf,
+                            "Add books on shelf")
+                        .AddEventTypeDescription(EventType.UpdateBooksOnShelf,
+                            "Update books on shelf"))
+                .RegisterEntity<BookEntity>(EntityType.Book,
                     options => options
                         .RegisterProperty(PropertyType.BookTitle,
                             x => x.Title, nameof(BookEntity.Title))
@@ -44,8 +39,7 @@ internal class Host
                             x => x.IsAvailable, nameof(BookEntity.IsAvailable))
                         .RegisterProperty(PropertyType.BookLikeCount,
                             x => x.LikeCount, nameof(BookEntity.LikeCount)))
-                .RegisterEntity<ShelfEntity>(
-                    EntityType.ApplicationOtherEntity,
+                .RegisterEntity<ShelfEntity>(EntityType.Shelf,
                     options => options
                         .RegisterProperty(PropertyType.ShelfHeight,
                             x => x.Height, nameof(ShelfEntity.Height))));
@@ -56,54 +50,30 @@ internal class Host
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
         var hostBuilder = new HostBuilder();
-        
-        // hostBuilder.ConfigureHostConfiguration(config =>
-        // {
-        //     config.AddEnvironmentVariables("DOTNET_");
-        // });
-        
-        hostBuilder.ConfigureAppConfiguration((hostingContext, config) =>
-        {
-            // var env = hostingContext.HostingEnvironment;
-            //
-            // config
-            //     .AddJsonFile("Configurations/configurations.json", false, false)
-            //     .AddJsonFile($"Configurations/configurations.{env.EnvironmentName}.json", true, false);
-            //
-            // config.AddEnvironmentVariables();
 
-            if (args != null)
-            {
-                config.AddCommandLine(args);
-            }
-        });
-
-        hostBuilder.ConfigureServices((context, services) =>
+        hostBuilder.ConfigureServices((_, services) =>
         {
             services.AddDbContext<BookstoreDbContext>(options =>
             {
-                SqliteDbContextOptionsBuilderExtensions.UseSqlite(options, "Data Source=Bookstore.db");
+                options.UseSqlite("Data Source=Bookstore.db");
             });
-            
-            services.AddScoped<IBookRepository, BookRepository>();
-            services.AddScoped<IShelfRepository, ShelfRepository>();
 
             services.AddEventLog<BookstoreDbContext, EventType, EntityType, PropertyType>();
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IShelfRepository, ShelfRepository>();
         });
         
         return hostBuilder;
     }
     
-    private static void ApplyApplicationPendingMigrations(IServiceProvider servicesProvider)
+    private static void ApplyPendingMigrations(IServiceProvider servicesProvider)
     {
-        using var scope = servicesProvider.CreateScope();
-        
-        var context = scope.ServiceProvider.GetRequiredService<BookstoreDbContext>();
+        var context = servicesProvider.GetRequiredService<BookstoreDbContext>();
         var pendingMigrationNames = context.Database.GetPendingMigrations().ToList();
         
         if (!pendingMigrationNames.Any())
         {
-            Console.WriteLine("The ApplicationDbContext database is up to date");
+            Console.WriteLine("The Bookstore database is up to date.");
             return;
         }
         
@@ -111,6 +81,6 @@ internal class Host
         
         context.Database.Migrate();
 
-        Console.WriteLine("The ApplicationDbContext database was successfully updated");
+        Console.WriteLine("The Bookstore database was successfully updated.");
     }
 }

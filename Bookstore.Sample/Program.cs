@@ -1,6 +1,7 @@
 ﻿using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Models;
 using Bookstore.Sample.Configurations;
+using Bookstore.Sample.Models;
 using EventLog.Models.Entities;
 using EventLog.Repository.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +31,7 @@ internal class Program
         };
     
     private static  async Task TestMultipleLoggingIntoOneEventLogScopeAsync(ResolvedServices services) =>
-        await services.EventLog.CreateEventScopeAndRun(EventType.RunTestMethod,
+        await services.EventLog.CreateEventScopeAndRun(EventType.AddBooksOnShelf,
             eventLogScope => TestEventLogActionAsync(eventLogScope, services));
 
     private static async Task TestEventLogActionAsync(
@@ -70,14 +71,14 @@ internal class Program
                 .AddEntityLogging(
                     services.ShelfRepository.GetOriginalPropertyValue,
                     new[] { applicationOtherEntity },
-                    ObservableProperties.GetForApplicationShelfEntity));
+                    ObservableProperties.GetForShelfEntity));
     }
     
     private static async Task TestOnceLoggingIntoOneEventLogScopeAsync(ResolvedServices services)
     {
         var applicationEntity = new BookEntity();
         
-        await services.EventLog.CreateEventScopeAndRun(EventType.RunTestMethod,
+        await services.EventLog.CreateEventScopeAndRun(EventType.UpdateBooksOnShelf,
             eventLogScope =>
             {
                 const int initiatorId = 9;

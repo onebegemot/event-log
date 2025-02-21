@@ -2,7 +2,7 @@
 using Bookstore.Sample.Configurations;
 using EventLog.Repository.Interfaces;
 
-namespace EventLog.Models.Entities;
+namespace Bookstore.Sample.Models;
 
 public class ResolvedServices
 {

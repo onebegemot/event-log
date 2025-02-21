@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Bookstore.Sample.Configuration.DatabaseContext;
 
 public class BookstoreDbContext :
-EventLogDbContext<BookstoreDbContext, EventType, EntityType, PropertyType>
+    EventLogDbContext<BookstoreDbContext, EventType, EntityType, PropertyType>
 {
     public BookstoreDbContext(DbContextOptions<BookstoreDbContext> options)
         : base(options)

@@ -10,7 +10,7 @@ public static class ObservableProperties
             PropertyType.BookLikeCount
         };
     
-    public static PropertyType[] GetForApplicationShelfEntity() =>
+    public static PropertyType[] GetForShelfEntity() =>
         new []
         {
             PropertyType.ShelfHeight
