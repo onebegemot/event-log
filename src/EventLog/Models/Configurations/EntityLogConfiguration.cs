@@ -19,15 +19,15 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
     
     public IEntityLogConfigurator<TEventType, TEntityType, TPropertyType> AddEntityLogging<TEntity>(
         Func<TEntity, string, object> getOriginalPropertyValue, IEnumerable<TEntity> entities,
-        params TPropertyType[] propertyTypes)
+        Func<TPropertyType[]> getObservableProperties)
             where TEntity : IPkEntity
     {
         ArgumentNullException.ThrowIfNull(getOriginalPropertyValue);
         ArgumentNullException.ThrowIfNull(entities);
-        ArgumentNullException.ThrowIfNull(propertyTypes);
+        ArgumentNullException.ThrowIfNull(getObservableProperties);
         
         var logEntityUnits = GetLogEntities(getOriginalPropertyValue,
-            new EntityLogInfo<TEntity, TPropertyType>(entities, propertyTypes));
+            new EntityLogInfo<TEntity, TPropertyType>(entities, getObservableProperties()));
         
         _logEntityUnits.AddRange(logEntityUnits);
         

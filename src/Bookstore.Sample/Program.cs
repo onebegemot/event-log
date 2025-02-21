@@ -20,39 +20,14 @@ internal static class Program
         const int userId = 3;
         const int bookCount = 2;
         
-        // await CreateBooksOneByOneInSingleEventScopeWithoutEntityLog(userId, bookCount, services);
-        // await CreateBooksAndAddToShelfOneByOneInDedicatedEventScope(userId, bookCount, services);
-        // await CreateBooksAndAddToShelfOneByOneInSingleEventScope(userId, bookCount, services);
-        // await CreateBookAndThenUpdateBookInDedicatedEventScope(userId, services);
-        // await CreateBooksAndThrowUnhandledException(userId, bookCount, services);
-        // await CreateBooksAndThrowHandledException(userId, services);
+        await CreateBooksOneByOneInSingleEventScopeWithoutEntityLog(userId, bookCount, services);
+        await CreateBooksAndAddToShelfOneByOneInDedicatedEventScope(userId, bookCount, services);
+        await CreateBooksAndAddToShelfOneByOneInSingleEventScope(userId, bookCount, services);
+        await CreateBookAndThenUpdateBookInDedicatedEventScope(userId, services);
+        await CreateBooksAndThrowUnhandledException(userId, bookCount, services);
+        await CreateBooksAndThrowHandledException(userId, services);
 
-        await Test(userId, services);
-        
         Console.WriteLine("Completed...");
-    }
-
-    private static async Task Test(int userId, ResolvedServices services)
-    {
-        var book = CreateBookEntity();
-
-        await services.EventLog.CreateEventScopeAndRun(
-            EventType.AddBooksOnShelf,
-            async eventLogScope =>
-            {
-                eventLogScope.EventLogEntry.CreatedBy = userId;
-                eventLogScope.EventLogEntry.Details = "Adding a book";
-            
-                await eventLogScope.SaveAndLogEntitiesAsync(
-                    () => services.BookRepository.AddOrUpdateAsync(book),
-                    options => options
-                        .AddEntityLogging(
-                            services.BookRepository.GetOriginalPropertyValue,
-                            new[] { book },
-                            PropertyType.BookTitle,
-                            PropertyType.BookIsAvailable,
-                            PropertyType.BookLikeCount));
-            });
     }
 
     private static ResolvedServices GetServices(IServiceProvider serviceProvider) =>
@@ -126,7 +101,7 @@ internal static class Program
                         options => options
                             .AddEntityLogging(
                                 services.ShelfRepository.GetOriginalPropertyValue,
-                                new[] { shelf }, ObservableProperties.GetForShelfEntity()));
+                                new[] { shelf }, ObservableProperties.GetForShelfEntity));
 
                     for (var index = 0; index < bookCount; index++)
                     {
@@ -138,7 +113,7 @@ internal static class Program
                             options => options
                                 .AddEntityLogging(
                                     services.BookRepository.GetOriginalPropertyValue,
-                                    new[] { book }, ObservableProperties.GetForBookEntity()));
+                                    new[] { book }, ObservableProperties.GetForBookEntity));
                     }
                 });
     
@@ -169,7 +144,7 @@ internal static class Program
                     options => options
                         .AddEntityLogging(
                             services.ShelfRepository.GetOriginalPropertyValue,
-                            new[] { shelf }, ObservableProperties.GetForShelfEntity()));
+                            new[] { shelf }, ObservableProperties.GetForShelfEntity));
             });
         
         for (var index = 0; index < bookCount; index++)
@@ -189,7 +164,7 @@ internal static class Program
                         options => options
                             .AddEntityLogging(
                                 services.BookRepository.GetOriginalPropertyValue,
-                                new[] { book }, ObservableProperties.GetForBookEntity()));
+                                new[] { book }, ObservableProperties.GetForBookEntity));
                 });
         }
     }
@@ -221,7 +196,7 @@ internal static class Program
                     options => options
                         .AddEntityLogging(
                             services.BookRepository.GetOriginalPropertyValue,
-                            new[] { book }, ObservableProperties.GetForBookEntity()));
+                            new[] { book }, ObservableProperties.GetForBookEntity));
             });
 
         book.Title += " - Revision_1";
@@ -238,7 +213,7 @@ internal static class Program
                     options => options
                         .AddEntityLogging(
                             services.BookRepository.GetOriginalPropertyValue,
-                            new[] { book }, ObservableProperties.GetForBookEntity()));
+                            new[] { book }, ObservableProperties.GetForBookEntity));
             });
         
         await services.EventLog.CreateEventScopeAndRun(
@@ -253,7 +228,7 @@ internal static class Program
                     options => options
                         .AddEntityLogging(
                             services.BookRepository.GetOriginalPropertyValue,
-                            new[] { book }, ObservableProperties.GetForBookEntity()));
+                            new[] { book }, ObservableProperties.GetForBookEntity));
             });
     }
     
@@ -278,7 +253,7 @@ internal static class Program
                         options => options
                             .AddEntityLogging(
                                 services.BookRepository.GetOriginalPropertyValue,
-                                new[] { CreateBookEntity() }, ObservableProperties.GetForBookEntity()));
+                                new[] { CreateBookEntity() }, ObservableProperties.GetForBookEntity));
                 });
     
     // Register event, entity, and property levels records for books and throw handled exception
@@ -305,7 +280,7 @@ internal static class Program
                     options => options
                         .AddEntityLogging(
                             services.BookRepository.GetOriginalPropertyValue,
-                            new[] { book1 }, ObservableProperties.GetForBookEntity()));
+                            new[] { book1 }, ObservableProperties.GetForBookEntity));
 
                 var book2 = CreateBookEntity();
 
@@ -316,7 +291,7 @@ internal static class Program
                         options => options
                             .AddEntityLogging(
                                 services.BookRepository.GetOriginalPropertyValue,
-                                new[] { book2 }, ObservableProperties.GetForBookEntity()));
+                                new[] { book2 }, ObservableProperties.GetForBookEntity));
                 }
                 catch (Exception exception)
                 {
