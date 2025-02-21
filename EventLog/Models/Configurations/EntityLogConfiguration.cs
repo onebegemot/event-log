@@ -9,19 +9,23 @@ namespace AHSW.EventLog.Models.Configurations;
 
 public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
     IEntityLogConfigurator<TEventType, TEntityType, TPropertyType>
-    where TEventType : struct, Enum
-    where TEntityType : struct, Enum
-    where TPropertyType : struct, Enum
+        where TEventType : struct, Enum
+        where TEntityType : struct, Enum
+        where TPropertyType : struct, Enum
 {
     private readonly List<LogEntityUnit<TEventType, TEntityType, TPropertyType>> _logEntityUnits = new();
 
-    public IEnumerable<LogEntityUnit<TEventType, TEntityType, TPropertyType>> LogEntityUnits => _logEntityUnits;
+    public IReadOnlyCollection<LogEntityUnit<TEventType, TEntityType, TPropertyType>> LogEntityUnits => _logEntityUnits;
     
     public IEntityLogConfigurator<TEventType, TEntityType, TPropertyType> AddEntityLogging<TEntity>(
         Func<TEntity, string, object> getOriginalPropertyValue, IEnumerable<TEntity> entities,
         Func<TPropertyType[]> getObservableProperties)
-        where TEntity : IPkEntity
+            where TEntity : IPkEntity
     {
+        ArgumentNullException.ThrowIfNull(getOriginalPropertyValue);
+        ArgumentNullException.ThrowIfNull(entities);
+        ArgumentNullException.ThrowIfNull(getObservableProperties);
+        
         var logEntityUnits = GetLogEntities(getOriginalPropertyValue,
             new EntityLogInfo<TEntity, TPropertyType>(entities, getObservableProperties()));
         
@@ -32,7 +36,7 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
     
     private static IEnumerable<LogEntityUnit<TEventType, TEntityType, TPropertyType>> GetLogEntities<TEntity>(
         Func<TEntity, string, object> getOriginalPropertyValue, EntityLogInfo<TEntity, TPropertyType> logInfo)
-        where TEntity : IPkEntity
+            where TEntity : IPkEntity
     {
         var entityType = EventLogServiceConfiguration<TEventType, TEntityType, TPropertyType>.GetEntityType(logInfo);
 
@@ -47,8 +51,11 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
                     EntityType = entityType
                 };
 
-                foreach (var property in logInfo.Properties)
-                    AddPropertyLogEntries(entity, property, getOriginalPropertyValue, entityLogEntry);
+                if (logInfo.Properties != null)
+                {
+                    foreach (var property in logInfo.Properties)
+                        AddPropertyLogEntries(entity, property, getOriginalPropertyValue, entityLogEntry);
+                }
 
                 return new LogEntityUnit<TEventType, TEntityType, TPropertyType>(entity, entityLogEntry);
             })

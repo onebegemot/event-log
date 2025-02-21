@@ -10,5 +10,5 @@ public interface IEntityLogConfigurator<TEventType, TEntityType, in TPropertyTyp
     IEntityLogConfigurator<TEventType, TEntityType, TPropertyType> AddEntityLogging<TEntity>(
         Func<TEntity, string, object> getOriginalPropertyValue, IEnumerable<TEntity> entities,
         Func<TPropertyType[]> getObservableProperties)
-        where TEntity : IPkEntity;
+            where TEntity : IPkEntity;
 }

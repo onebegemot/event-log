@@ -29,22 +29,25 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
     /// <param name="repositoryActionAsync">A repository action which will be executed and logged</param>
     /// <param name="optionsBuilder"></param>
     public async Task SaveAndLogEntitiesAsync(Func<Task> repositoryActionAsync,
-        Action<EntityLogConfiguration<TEventType, TEntityType, TPropertyType>> optionsBuilder)
+        Action<EntityLogConfiguration<TEventType, TEntityType, TPropertyType>> optionsBuilder = null)
     {
         ArgumentNullException.ThrowIfNull(repositoryActionAsync);
         
         var entityLogConfiguration = new EntityLogConfiguration<TEventType, TEntityType, TPropertyType>();
-        optionsBuilder(entityLogConfiguration);
+        optionsBuilder?.Invoke(entityLogConfiguration);
         var logEntityUnits = entityLogConfiguration.LogEntityUnits;
         
         await repositoryActionAsync();
 
-        EventLogEntry.EntityLogEntries = EventLogEntry.EntityLogEntries == null
-            ? GetFilteredEntityLogEntries(logEntityUnits)
-                .ToList()
-            : EventLogEntry.EntityLogEntries
-                .Concat(GetFilteredEntityLogEntries(logEntityUnits))
-                .ToList();
+        if (logEntityUnits.Any())
+        {
+            EventLogEntry.EntityLogEntries = EventLogEntry.EntityLogEntries == null
+                ? GetFilteredEntityLogEntries(logEntityUnits)
+                    .ToList()
+                : EventLogEntry.EntityLogEntries
+                    .Concat(GetFilteredEntityLogEntries(logEntityUnits))
+                    .ToList();
+        }
         
         await _eventLogEntryRepository.AddOrUpdateAsync(EventLogEntry);
 

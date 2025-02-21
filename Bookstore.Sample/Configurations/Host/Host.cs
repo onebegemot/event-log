@@ -12,11 +12,11 @@ namespace Bookstore.Sample.Configurations;
 
 internal static class Host
 {
-    public static IHost Create(string[] args)
+    public static IHost Create(bool recreateDatabase)
     {
-        var host = CreateHostBuilder(args).Build();
+        var host = CreateHostBuilder().Build();
         
-        ApplyPendingMigrations(host.Services);
+        ApplyPendingMigrations(host.Services, recreateDatabase);
         
         EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
             configurationBuilder => configurationBuilder
@@ -45,7 +45,7 @@ internal static class Host
         return host;
     }
 
-    private static IHostBuilder CreateHostBuilder(string[] args)
+    private static IHostBuilder CreateHostBuilder()
     {
         var hostBuilder = new HostBuilder();
 
@@ -64,9 +64,16 @@ internal static class Host
         return hostBuilder;
     }
     
-    private static void ApplyPendingMigrations(IServiceProvider servicesProvider)
+    private static void ApplyPendingMigrations(IServiceProvider servicesProvider, bool recreateDatabase)
     {
         var context = servicesProvider.GetRequiredService<BookstoreDbContext>();
+
+        if (recreateDatabase)
+        {
+            context.Database.EnsureDeleted();
+            Console.WriteLine("The Bookstore database is deleted.");
+        }
+        
         var pendingMigrationNames = context.Database.GetPendingMigrations().ToList();
         
         if (!pendingMigrationNames.Any())
