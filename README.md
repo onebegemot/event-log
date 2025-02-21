@@ -14,7 +14,7 @@ The concept behind using EventLog is gathering information of application activi
 - Analyze what happens in the application throw API invokation and data changing for any kind of internal investigation
 
 As an example imagine the following code is an API endpoint which creates a domain model Book and saves it in the storage.
-As a wrapper the <b>EventLog<b> records the ```AddBooksOnShelf``` event, add some details info into the ```EventLogEntry```, executes the initial repository method simultaneously adding an ```EntityLogEntry``` related to the ```EventLogEntry```, and record the ```Book``` property value states.
+As a wrapper the <b>EventLog</b> records the ```AddBooksOnShelf``` event, add some details info into the ```EventLogEntry```, executes the initial repository method simultaneously adding an ```EntityLogEntry``` related to the ```EventLogEntry```, and record the ```Book``` property value states.
 
 ```cs
 var book = CreateBookEntity();
@@ -36,27 +36,23 @@ await services.EventLog.CreateEventScopeAndRun(
 		    PropertyType.BookLikeCount));
     });
 ```
-As a result <b>EventLog<b> tables will contain the following data:
-<img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EventLog_Raw.png"/>
-<br />
-Figure 1.1 - EventLog table content
-<br />
-<br />
-<img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EntityLog_Raw.png"/>
-<br />
-Figure 1.2 - EntityLog table content
-<br />
-<br />
-<img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/StringPropertyLog_Raw.png"/>
-<br />
-Figure 1.3 - StringPropertyLog table content
-<br />
-<br />
-<img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/Int32PropertyLog_Raw.png"/>
-<br />
-Figure 1.4 - Int32PropertyLog table content
-<br />
-<br />
+As a result <b>EventLog</b> tables will contain the following data:
+| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EventLog_Raw.png"/> | 
+|:--:| 
+| <b>Figure 1.1 - EventLog table content</b> |
+
+| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EntityLog_Raw.png"/> | 
+|:--:| 
+| <b>Figure 1.2 - EntityLog table content</b> |
+
+| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/StringPropertyLog_Raw.png"/> | 
+|:--:| 
+| <b>Figure 1.3 - StringPropertyLog table content</b> |
+
+| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/Int32PropertyLog_Raw.png"/> | 
+|:--:| 
+| <b>Figure 1.4 - Int32PropertyLog table content</b> |
+
 Using join queries the output might be more user-friendly:
 
 ### Sample Project
