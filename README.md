@@ -37,7 +37,26 @@ await services.EventLog.CreateEventScopeAndRun(
     });
 ```
 As a result <b>EventLog<b> tables will contain the following data:
-
+<img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EventLog_Raw.png"/>
+<br />
+Figure 1.1 - EventLog table content
+<br />
+<br />
+<img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EntityLog_Raw.png"/>
+<br />
+Figure 1.2 - EntityLog table content
+<br />
+<br />
+<img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/StringPropertyLog_Raw.png"/>
+<br />
+Figure 1.3 - StringPropertyLog table content
+<br />
+<br />
+<img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/Int32PropertyLog_Raw.png"/>
+<br />
+Figure 1.4 - Int32PropertyLog table content
+<br />
+<br />
 Using join queries the output might be more user-friendly:
 
 ### Sample Project
