@@ -1,6 +1,6 @@
 namespace Bookstore.Sample.Configurations;
 
-public enum EntityType
+internal enum EntityType
 {
     Book = 1,
     Shelf

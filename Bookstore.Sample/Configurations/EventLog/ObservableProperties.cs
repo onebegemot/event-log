@@ -1,6 +1,6 @@
 ﻿namespace Bookstore.Sample.Configurations;
 
-public static class ObservableProperties
+internal static class ObservableProperties
 {
     public static PropertyType[] GetForBookEntity() =>
         new []

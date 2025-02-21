@@ -1,11 +1,10 @@
-﻿using Bookstore.Sample.Configuration.DatabaseContext;
-using EventLog.Models.Entities;
-using EventLog.Repository.Abstracts;
-using EventLog.Repository.Interfaces;
+﻿using Bookstore.Sample.DatabaseContext;
+using Bookstore.Sample.Interfaces;
+using Bookstore.Sample.Models;
 
-namespace Bookstore.Sample.Configuration.Repository;
+namespace Bookstore.Sample.Repository;
 
-public class ShelfRepository :
+internal class ShelfRepository :
     BaseRepository<ShelfEntity>,
     IShelfRepository
 {

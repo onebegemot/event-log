@@ -1,11 +1,11 @@
 ﻿using AHSW.EventLog.DatabaseContext;
 using Bookstore.Sample.Configurations;
-using EventLog.Models.Entities;
+using Bookstore.Sample.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookstore.Sample.Configuration.DatabaseContext;
+namespace Bookstore.Sample.DatabaseContext;
 
-public class BookstoreDbContext :
+internal class BookstoreDbContext :
     EventLogDbContext<BookstoreDbContext, EventType, EntityType, PropertyType>
 {
     public BookstoreDbContext(DbContextOptions<BookstoreDbContext> options)

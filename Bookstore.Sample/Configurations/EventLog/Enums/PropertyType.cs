@@ -1,6 +1,6 @@
 namespace Bookstore.Sample.Configurations;
 
-public enum PropertyType
+internal enum PropertyType
 {
     BookTitle = 1,
     BookPublished,

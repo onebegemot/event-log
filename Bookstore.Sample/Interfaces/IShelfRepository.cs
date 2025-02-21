@@ -1,7 +1,7 @@
-﻿using EventLog.Models.Entities;
+﻿using Bookstore.Sample.Models;
 
-namespace EventLog.Repository.Interfaces;
+namespace Bookstore.Sample.Interfaces;
 
-public interface IShelfRepository : IBaseRepository<ShelfEntity>
+internal interface IShelfRepository : IBaseRepository<ShelfEntity>
 {
 }

@@ -1,8 +1,6 @@
-using EventLog.Models.Entities.Abstracts;
+namespace Bookstore.Sample.Models;
 
-namespace EventLog.Models.Entities;
-
-public class BookEntity : BaseEntity
+internal class BookEntity : BaseEntity
 {
     public string Title { get; set; }
     

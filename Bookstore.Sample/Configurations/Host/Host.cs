@@ -1,18 +1,16 @@
 ﻿using AHSW.EventLog.Extensions;
 using AHSW.EventLog.Models.Configurations;
-using AHSW.EventLog.Models.Enums;
-using Bookstore.Sample.Configuration.DatabaseContext;
-using Bookstore.Sample.Configuration.Repository;
-using EventLog.Models.Entities;
-using EventLog.Repository.Interfaces;
+using Bookstore.Sample.DatabaseContext;
+using Bookstore.Sample.Repository;
+using Bookstore.Sample.Interfaces;
+using Bookstore.Sample.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Bookstore.Sample.Configurations;
 
-internal class Host
+internal static class Host
 {
     public static IHost Create(string[] args)
     {

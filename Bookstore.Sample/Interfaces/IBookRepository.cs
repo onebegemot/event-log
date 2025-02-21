@@ -1,7 +1,7 @@
-using EventLog.Models.Entities;
+using Bookstore.Sample.Models;
 
-namespace EventLog.Repository.Interfaces;
+namespace Bookstore.Sample.Interfaces;
 
-public interface IBookRepository : IBaseRepository<BookEntity>
+internal interface IBookRepository : IBaseRepository<BookEntity>
 {
 }

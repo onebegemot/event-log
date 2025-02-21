@@ -1,15 +1,13 @@
 ﻿using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Models;
 using Bookstore.Sample.Configurations;
+using Bookstore.Sample.Interfaces;
 using Bookstore.Sample.Models;
-using EventLog.Models.Entities;
-using EventLog.Repository.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Host = Bookstore.Sample.Configurations.Host;
 
 namespace Bookstore.Sample;
 
-internal class Program
+internal static class Program
 {
     public static async Task Main(string[] args)
     {

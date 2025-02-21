@@ -1,10 +1,10 @@
 ﻿using AHSW.EventLog.Interfaces;
 using Bookstore.Sample.Configurations;
-using EventLog.Repository.Interfaces;
+using Bookstore.Sample.Interfaces;
 
 namespace Bookstore.Sample.Models;
 
-public class ResolvedServices
+internal class ResolvedServices
 {
     public IEventLogService<EventType, EntityType, PropertyType> EventLog { get; init; }
     
