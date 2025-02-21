@@ -33,10 +33,12 @@ await services.EventLog.CreateEventScopeAndRun(
 		    services.BookRepository.GetOriginalPropertyValue,
 		    new[] { book },
 		    PropertyType.BookTitle,
-		    PropertyType.BookIsAvailable,
 		    PropertyType.BookLikeCount));
     });
 ```
+As a result <b>EventLog<b> tables will contain the following data:
+
+Using join queries the output might be more user-friendly:
 
 ### Sample Project
 [Bookstore](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample) is a sample console application to demonstrate they way of configuring EventLog. and most often use cases. 
