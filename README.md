@@ -1,3 +1,7 @@
+<a href="https://github.com/cat-begemot/event-log/tree/master/src/EventLog">
+	<img width="150" height="150" src="https://github.com/cat-begemot/event-log/blob/master/images/logo.png"/>
+</a>
+
 ## Event Log
 EventLog is a library which identifies application events, record diagnostical and statistical info about it and store in relational database for further analys. In scope of an application event, there is the ability to track state of application domain models.
 
