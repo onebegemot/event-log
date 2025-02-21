@@ -1,4 +1,4 @@
-﻿using AHWS.EventLog.Interfaces;
+﻿using AHSW.EventLog.Interfaces;
 using Bookstore.Sample.Configurations;
 using EventLog.Repository.Interfaces;
 

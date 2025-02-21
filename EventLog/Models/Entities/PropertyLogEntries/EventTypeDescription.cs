@@ -1,4 +1,4 @@
-namespace AHWS.EventLog.Models.Entities.PropertyLogEntries;
+namespace AHSW.EventLog.Models.Entities.PropertyLogEntries;
 
 public class EventTypeDescription : BaseDescriptiveEntity
 {

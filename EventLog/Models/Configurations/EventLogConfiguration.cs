@@ -1,10 +1,10 @@
-﻿using AHWS.EventLog.Interfaces;
-using AHWS.EventLog.Interfaces.Configurators;
-using AHWS.EventLog.Interfaces.Entities;
-using AHWS.EventLog.Models.Enums;
+﻿using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Interfaces.Configurators;
+using AHSW.EventLog.Interfaces.Entities;
+using AHSW.EventLog.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
-namespace AHWS.EventLog.Models.Configurations;
+namespace AHSW.EventLog.Models.Configurations;
 
 public class EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropertyType> :
     IEntityConfigurator<TEntityType, TPropertyType>

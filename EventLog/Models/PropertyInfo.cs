@@ -1,6 +1,6 @@
-using AHWS.EventLog.Interfaces;
+using AHSW.EventLog.Interfaces;
 
-namespace AHWS.EventLog.Models;
+namespace AHSW.EventLog.Models;
 
 internal record PropertyInfo<TEntity>(Func<TEntity, object> Getter, string Name) :
     IPropertyInfo;

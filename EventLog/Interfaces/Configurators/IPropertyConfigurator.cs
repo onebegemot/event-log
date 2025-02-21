@@ -1,6 +1,6 @@
-using AHWS.EventLog.Interfaces.Entities;
+using AHSW.EventLog.Interfaces.Entities;
 
-namespace AHWS.EventLog.Interfaces.Configurators;
+namespace AHSW.EventLog.Interfaces.Configurators;
 
 public interface IPropertyConfigurator<out TEntity, in TPropertyType>
     where TEntity : IPkEntity

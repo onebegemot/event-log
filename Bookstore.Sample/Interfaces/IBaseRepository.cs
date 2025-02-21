@@ -1,4 +1,4 @@
-using AHWS.EventLog.Interfaces.Entities;
+using AHSW.EventLog.Interfaces.Entities;
 
 namespace EventLog.Repository.Interfaces;
 

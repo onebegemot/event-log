@@ -1,5 +1,5 @@
-﻿using AHWS.EventLog.Interfaces;
-using AHWS.EventLog.Models;
+﻿using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Models;
 using Bookstore.Sample.Configurations;
 using EventLog.Models.Entities;
 using EventLog.Repository.Interfaces;

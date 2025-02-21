@@ -1,4 +1,4 @@
-namespace AHWS.EventLog.Repositories.Constants;
+namespace AHSW.EventLog.Repositories.Constants;
 
 internal class EventLogPersistenceConstants
 {

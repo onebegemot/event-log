@@ -1,8 +1,8 @@
-using AHWS.EventLog.Interfaces;
-using AHWS.EventLog.Interfaces.Configurators;
-using AHWS.EventLog.Interfaces.Entities;
+using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Interfaces.Configurators;
+using AHSW.EventLog.Interfaces.Entities;
 
-namespace AHWS.EventLog.Models.Configurations;
+namespace AHSW.EventLog.Models.Configurations;
 
 public class PropertyConfiguration<TEntity, TPropertyType> :
     IPropertyConfigurator<TEntity, TPropertyType>

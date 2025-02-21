@@ -1,4 +1,4 @@
-﻿namespace AHWS.EventLog.Interfaces.Entities;
+﻿namespace AHSW.EventLog.Interfaces.Entities;
 
 public interface IPkEntity
 {

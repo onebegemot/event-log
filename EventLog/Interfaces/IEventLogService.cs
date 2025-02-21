@@ -1,6 +1,6 @@
-using AHWS.EventLog.Models;
+using AHSW.EventLog.Models;
 
-namespace AHWS.EventLog.Interfaces;
+namespace AHSW.EventLog.Interfaces;
 
 public interface IEventLogService<TEventType, TEntityType, TPropertyType>
     where TEventType : struct, Enum

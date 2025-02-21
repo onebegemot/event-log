@@ -1,4 +1,4 @@
-﻿using AHWS.EventLog.DatabaseContext;
+﻿using AHSW.EventLog.DatabaseContext;
 using Bookstore.Sample.Configurations;
 using EventLog.Models.Entities;
 using Microsoft.EntityFrameworkCore;

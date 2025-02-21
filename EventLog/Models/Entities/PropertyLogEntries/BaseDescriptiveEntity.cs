@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AHWS.EventLog.Models.Entities.PropertyLogEntries;
+namespace AHSW.EventLog.Models.Entities.PropertyLogEntries;
 
 public abstract class BaseDescriptiveEntity
 {

@@ -1,6 +1,6 @@
-﻿using AHWS.EventLog.Extensions;
-using AHWS.EventLog.Models.Configurations;
-using AHWS.EventLog.Models.Enums;
+﻿using AHSW.EventLog.Extensions;
+using AHSW.EventLog.Models.Configurations;
+using AHSW.EventLog.Models.Enums;
 using Bookstore.Sample.Configuration.DatabaseContext;
 using Bookstore.Sample.Configuration.Repository;
 using EventLog.Models.Entities;

@@ -1,8 +1,8 @@
-﻿using AHWS.EventLog.Models.Entities;
-using AHWS.EventLog.Models.Entities.PropertyLogEntries;
+﻿using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Models.Entities.PropertyLogEntries;
 using Microsoft.EntityFrameworkCore;
 
-namespace AHWS.EventLog.DatabaseContext;
+namespace AHSW.EventLog.DatabaseContext;
 
 public class EventLogDbContext<TDbContext, TEventType, TEntityType, TPropertyType> : DbContext
     where TDbContext : DbContext

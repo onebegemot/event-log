@@ -1,7 +1,7 @@
-using AHWS.EventLog.Interfaces.Configurators;
-using AHWS.EventLog.Models.Enums;
+using AHSW.EventLog.Interfaces.Configurators;
+using AHSW.EventLog.Models.Enums;
 
-namespace AHWS.EventLog.Models.Configurations;
+namespace AHSW.EventLog.Models.Configurations;
 
 public class TypeDescriptionsConfiguration<TEventType> :
     ITypeDescriptionsConfigurator<TEventType>

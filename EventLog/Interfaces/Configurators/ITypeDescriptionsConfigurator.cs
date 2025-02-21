@@ -1,6 +1,6 @@
-using AHWS.EventLog.Models.Enums;
+using AHSW.EventLog.Models.Enums;
 
-namespace AHWS.EventLog.Interfaces.Configurators;
+namespace AHSW.EventLog.Interfaces.Configurators;
 
 public interface ITypeDescriptionsConfigurator<in TEventType>
     where TEventType : struct, Enum

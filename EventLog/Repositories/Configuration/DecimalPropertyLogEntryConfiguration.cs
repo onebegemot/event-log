@@ -1,9 +1,9 @@
-using AHWS.EventLog.Models.Entities.PropertyLogEntries;
-using AHWS.EventLog.Repositories.Constants;
+using AHSW.EventLog.Models.Entities.PropertyLogEntries;
+using AHSW.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AHWS.EventLog.Repositories.Configuration;
+namespace AHSW.EventLog.Repositories.Configuration;
 
 public class DecimalPropertyLogEntryConfiguration<TEventType, TEntityType, TPropertyType> :
     IEntityTypeConfiguration<DecimalPropertyLogEntry<TEventType, TEntityType, TPropertyType>>

@@ -1,8 +1,8 @@
-﻿using AHWS.EventLog.Interfaces;
-using AHWS.EventLog.Models.Configurations;
-using AHWS.EventLog.Models.Entities;
+﻿using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Models.Configurations;
+using AHSW.EventLog.Models.Entities;
 
-namespace AHWS.EventLog.Models;
+namespace AHSW.EventLog.Models;
 
 public class EventLogScope<TEventType, TEntityType, TPropertyType>
     where TEventType : struct, Enum

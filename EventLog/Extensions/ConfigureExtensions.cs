@@ -1,9 +1,9 @@
-﻿using AHWS.EventLog.Interfaces;
-using AHWS.EventLog.Repositories;
+﻿using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AHWS.EventLog.Extensions;
+namespace AHSW.EventLog.Extensions;
 
 public static class ConfigureExtensions
 {

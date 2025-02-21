@@ -1,3 +1,3 @@
-namespace AHWS.EventLog.Models;
+namespace AHSW.EventLog.Models;
 
 public record PropertyValues(object Original, object New);

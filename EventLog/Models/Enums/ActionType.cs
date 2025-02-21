@@ -1,4 +1,4 @@
-namespace AHWS.EventLog.Models.Enums;
+namespace AHSW.EventLog.Models.Enums;
 
 public enum ActionType
 {
