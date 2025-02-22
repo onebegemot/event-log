@@ -10,8 +10,16 @@
   <PropertyGroup>
     <!--Nuget properties-->
     <PackageId>AHSW.EventLog</PackageId>
-    <Version>1.2.2</Version>
+    <Version>1.2.3</Version>
     <Authors>Alex Holenko</Authors>
+    
+    <AssemblyTitle>Library for capturing application events, storing diagnostic data, and tracking domain model states</AssemblyTitle>
+    <Title>Library for capturing application events, storing diagnostic data, and tracking domain model states</Title>
+    <Description>
+      See https://github.com/cat-begemot/event-log/blob/master/README.md for more information
+
+      EventLog is a library that identifies application events, records diagnostic and statistical information about them, and stores them in a relational database for further analysis. Within the scope of an application event, it has the ability to track the state of application domain models.
+    </Description>
   </PropertyGroup>
 
   <ItemGroup>
