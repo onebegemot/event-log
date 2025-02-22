@@ -1,3 +1,5 @@
+![LastNuGetVersion](https://img.shields.io/nuget/v/AHSW.EventLog)
+
 <a href="https://github.com/cat-begemot/event-log/tree/master/src/EventLog">
 	<img width="150" height="150" src="https://github.com/cat-begemot/event-log/blob/master/images/logo-1.png"/>
 </a>
