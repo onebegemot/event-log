@@ -6,7 +6,7 @@
 </a>
 
 ## Event Log
-EventLog is a library which identifies application events, record diagnostical and statistical info about it and store in relational database for further analys. In scope of an application event, there is the ability to track state of application domain models.
+EventLog is a library that identifies application events, records diagnostic and statistical information about them, and stores them in a relational database for further analysis. Within the scope of an application event, it has the ability to track the state of application domain models.
 
 The concept behind using EventLog is gathering information of application activity and domain models mutation for different purposes. Some possible example of using:
 - Monitoring helth state for a long running application
