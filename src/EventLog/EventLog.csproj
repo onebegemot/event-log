@@ -18,8 +18,8 @@
     <Description>
       EventLog is a library that identifies application events, records diagnostic and statistical information about them, and stores them in a relational database for further analysis. Within the scope of an application event, it has the ability to track the state of application domain models.
     </Description>
-    <PackageIcon>https://github.com/cat-begemot/event-log/blob/master/images/logo-1.png</PackageIcon>
-    <PackageReadmeFile>https://github.com/cat-begemot/event-log/blob/master/README.md</PackageReadmeFile>
+    <PackageIcon>logo-1.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/cat-begemot/event-log</RepositoryUrl>
   </PropertyGroup>
 
@@ -30,5 +30,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.18" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\images\logo-1.png" Pack="true" PackagePath="\"/>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>
