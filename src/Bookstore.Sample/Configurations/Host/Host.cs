@@ -16,12 +16,14 @@ internal static class Host
     {
         var host = CreateHostBuilder().Build();
         
-        ApplyPendingMigrations(host.Services, recreateDatabase);
+        using var scope = host.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<BookstoreDbContext>();
+        
+        ApplyPendingMigrations(context, recreateDatabase);
         
         EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
             configurationBuilder => configurationBuilder
-                .UseCustomTypeDescriptions(
-                    host.Services.GetRequiredService<BookstoreDbContext>(),
+                .UseCustomTypeDescriptions(context,
                     options => options
                         .AddEventTypeDescription(EventType.AddBooksOnShelf,
                             "Add books on shelf")
@@ -64,10 +66,8 @@ internal static class Host
         return hostBuilder;
     }
     
-    private static void ApplyPendingMigrations(IServiceProvider servicesProvider, bool recreateDatabase)
+    private static void ApplyPendingMigrations(BookstoreDbContext context, bool recreateDatabase)
     {
-        var context = servicesProvider.GetRequiredService<BookstoreDbContext>();
-
         if (recreateDatabase)
         {
             context.Database.EnsureDeleted();
