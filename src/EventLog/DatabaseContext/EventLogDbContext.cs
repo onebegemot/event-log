@@ -1,14 +1,17 @@
-﻿using AHSW.EventLog.Models.Entities;
+﻿using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Models.Entities.PropertyLogEntries;
 using Microsoft.EntityFrameworkCore;
 
 namespace AHSW.EventLog.DatabaseContext;
 
-public class EventLogDbContext<TDbContext, TEventType, TEntityType, TPropertyType> : DbContext
-    where TDbContext : DbContext
-    where TEventType : struct, Enum
-    where TEntityType : struct, Enum
-    where TPropertyType : struct, Enum
+public class EventLogDbContext<TDbContext, TEventType, TEntityType, TPropertyType> :
+    DbContext,
+    IEventLogDbContext<TEventType, TEntityType, TPropertyType>
+        where TDbContext : DbContext
+        where TEventType : struct, Enum
+        where TEntityType : struct, Enum
+        where TPropertyType : struct, Enum
 {
     public EventLogDbContext(DbContextOptions<TDbContext> options)
         : base(options)
