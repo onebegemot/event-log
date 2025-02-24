@@ -18,5 +18,9 @@ internal class EventLogPersistenceConstants
     
     public static string EventTypeDescriptionsTableName => "EventTypeDescriptions";
     
+    public static string EntityTypeDescriptionsTableName => "EntityTypeDescriptions";
+    
+    public static string PropertyTypeDescriptionsTableName => "PropertyTypeDescriptions";
+    
     public static string EventStatusDescriptionsTableName => "EventStatusDescriptions";
 }

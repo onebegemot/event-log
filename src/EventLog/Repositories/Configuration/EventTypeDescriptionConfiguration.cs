@@ -15,3 +15,25 @@ public class EventTypeDescriptionConfiguration : IEntityTypeConfiguration<EventT
                 EventLogPersistenceConstants.EventLogSchema);
     }
 }
+
+public class EntityTypeDescriptionConfiguration : IEntityTypeConfiguration<EntityTypeDescription>
+{
+    public void Configure(EntityTypeBuilder<EntityTypeDescription> builder)
+    {
+        builder
+            .ToTable(
+                EventLogPersistenceConstants.EntityTypeDescriptionsTableName,
+                EventLogPersistenceConstants.EventLogSchema);
+    }
+}
+
+public class PropertyTypeDescriptionConfiguration : IEntityTypeConfiguration<PropertyTypeDescription>
+{
+    public void Configure(EntityTypeBuilder<PropertyTypeDescription> builder)
+    {
+        builder
+            .ToTable(
+                EventLogPersistenceConstants.PropertyTypeDescriptionsTableName,
+                EventLogPersistenceConstants.EventLogSchema);
+    }
+}
