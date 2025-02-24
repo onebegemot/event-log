@@ -31,8 +31,12 @@ public class EventLogDbContext<TDbContext, TEventType, TEntityType, TPropertyTyp
     public DbSet<DecimalPropertyLogEntry<TEventType, TEntityType, TPropertyType>> DecimalPropertyLog { get; set; }
 
     public DbSet<EventTypeDescription> EventTypeDescriptions { get; set; }
-        
+    
     public DbSet<EventStatusDescription> EventStatusDescriptions { get; set; }
+    
+    public DbSet<EntityTypeDescription> EntityTypeDescriptions { get; set; }
+    
+    public DbSet<PropertyTypeDescription> PropertyTypeDescriptions { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

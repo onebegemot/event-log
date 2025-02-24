@@ -1,5 +1,6 @@
 ﻿using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Interfaces.Entities;
+using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Models.Entities.PropertyLogEntries;
 using AHSW.EventLog.Models.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         _entityTypes = configuration.EntityTypes;
         _registeredProperties = configuration.Properties;
         
-        TryFillCustomDescriptionTables(configuration);
+        FillCustomDescriptionTables(configuration);
     }
     
     public static TEntityType GetEntityType<TEntity>(EntityLogInfo<TEntity, TPropertyType> logInfo)
@@ -54,7 +55,7 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         throw new Exception($"Not found a registered property for the {nameof(TPropertyType)}.{propertyType}");
     }
     
-    private static void TryFillCustomDescriptionTables<TDbContext>(
+    private static void FillCustomDescriptionTables<TDbContext>(
         EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropertyType> configuration)
             where TDbContext : DbContext
     {
@@ -63,15 +64,23 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         if (context == null)
             return;
 
-        var eventTypeDescriptions = GetCustomEnumDescriptions<TEventType, EventTypeDescription>(configuration.EventTypeDescription);
-        context.Set<EventTypeDescription>().ExecuteDelete();
-        context.Set<EventTypeDescription>().AddRange(eventTypeDescriptions);
-
-        var eventStatusDescriptions = GetCustomEnumDescriptions<EventStatus, EventStatusDescription>(configuration.EventStatusDescription);
-        context.Set<EventStatusDescription>().ExecuteDelete();
-        context.Set<EventStatusDescription>().AddRange(eventStatusDescriptions);
+        UpdateStorage<TEventType, EventTypeDescription>(configuration.EventTypeDescriptions);
+        UpdateStorage<TEntityType, EntityTypeDescription>(configuration.EntityTypeDescriptions);
+        UpdateStorage<TPropertyType, PropertyTypeDescription>(configuration.PropertyTypeDescriptions);
+        UpdateStorage<EventStatus, EventStatusDescription>(configuration.EventStatusDescriptions);
         
         context.SaveChanges();
+
+        return;
+        
+        void UpdateStorage<TEnum, TDescriptiveEntity>(IReadOnlyDictionary<TEnum, string> descriptions)
+            where TDescriptiveEntity : BaseDescriptiveEntity, new()
+            where TEnum : struct, Enum
+        {
+            var descriptionEntities = GetCustomEnumDescriptions<TEnum, TDescriptiveEntity>(descriptions);
+            context.Set<TDescriptiveEntity>().ExecuteDelete();
+            context.Set<TDescriptiveEntity>().AddRange(descriptionEntities);
+        }
     }
     
     private static IReadOnlyCollection<TDescriptiveEntity> GetCustomEnumDescriptions<TEnum, TDescriptiveEntity>(
