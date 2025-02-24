@@ -28,7 +28,8 @@ internal static class Host
                         .AddEventTypeDescription(EventType.AddBooksOnShelf,
                             "Add books on shelf")
                         .AddEventTypeDescription(EventType.UpdateBooksOnShelf,
-                            "Update books on shelf"))
+                            "Update books on shelf")
+                )
                 .RegisterEntity<BookEntity>(EntityType.Book,
                     options => options
                         .RegisterProperty(PropertyType.BookTitle,
@@ -38,11 +39,14 @@ internal static class Host
                         .RegisterProperty(PropertyType.BookIsAvailable,
                             x => x.IsAvailable, nameof(BookEntity.IsAvailable))
                         .RegisterProperty(PropertyType.BookLikeCount,
-                            x => x.LikeCount, nameof(BookEntity.LikeCount)))
+                            x => x.LikeCount, nameof(BookEntity.LikeCount))
+                )
                 .RegisterEntity<ShelfEntity>(EntityType.Shelf,
                     options => options
                         .RegisterProperty(PropertyType.ShelfHeight,
-                            x => x.Height, nameof(ShelfEntity.Height))));
+                            x => x.Height, nameof(ShelfEntity.Height))
+                )
+        );
         
         return host;
     }
