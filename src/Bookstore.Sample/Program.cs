@@ -1,11 +1,12 @@
 ﻿using AHSW.EventLog.Extensions;
 using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Models.Configurations;
 using AHSW.EventLog.Models.Enums;
 using Bookstore.Sample.Configurations;
+using Bookstore.Sample.DatabaseContext;
 using Bookstore.Sample.Interfaces;
 using Bookstore.Sample.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Bookstore.Sample;
 
@@ -14,11 +15,45 @@ internal static class Program
     public static async Task Main()
     {
         const bool recreateDatabase = true;
-        
-        var services = GetServices(Host.Create(recreateDatabase).Services);
-
         const int userId = 3;
         const int bookCount = 2;
+        
+        var host = Host.Create(recreateDatabase, context =>
+        {
+            EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
+                configurationBuilder => configurationBuilder
+                    .UseCustomTypeDescriptions(context,
+                        options => options
+                            .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books on a shelf")
+                            .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books on a shelf")
+                            .AddEntityTypeDescription(EntityType.Book, "Book_v1")
+                            .AddEntityTypeDescription(EntityType.Shelf, "Shelf_v1")
+                            .AddPropertyTypeDescription(PropertyType.BookTitle, "Book => Title")
+                            .AddPropertyTypeDescription(PropertyType.BookPublished, "Book => Published")
+                            .AddPropertyTypeDescription(PropertyType.BookIsAvailable, "Book => IsAvailable")
+                            .AddPropertyTypeDescription(PropertyType.BookLikeCount, "Book => LikeCount")
+                            .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Shelf => Height")
+                    )
+                    .RegisterEntity<BookEntity>(EntityType.Book,
+                        options => options
+                            .RegisterProperty(PropertyType.BookTitle,
+                                x => x.Title, nameof(BookEntity.Title))
+                            .RegisterProperty(PropertyType.BookPublished,
+                                x => x.Published, nameof(BookEntity.Published))
+                            .RegisterProperty(PropertyType.BookIsAvailable,
+                                x => x.IsAvailable, nameof(BookEntity.IsAvailable))
+                            .RegisterProperty(PropertyType.BookLikeCount,
+                                x => x.LikeCount, nameof(BookEntity.LikeCount))
+                    )
+                    .RegisterEntity<ShelfEntity>(EntityType.Shelf,
+                        options => options
+                            .RegisterProperty(PropertyType.ShelfHeight,
+                                x => x.Height, nameof(ShelfEntity.Height))
+                    )
+            );
+        });
+        
+        var services = GetServices(host.Services);
         
         await CreateBooksOneByOneInSingleEventScopeWithoutEntityLog(userId, bookCount, services);
         await CreateBooksAndAddToShelfOneByOneInDedicatedEventScope(userId, bookCount, services);
@@ -262,7 +297,7 @@ internal static class Program
                     eventLogScope.EventLogEntry.Details = $"Adding {bookCount} books";
                 
                     await eventLogScope.SaveAndLogEntitiesAsync(
-                        () => throw new Exception("An exception occurred..."),
+                        () => throw new Exception("A test exception occurred... Just proceed the application execution."),
                         options => options
                             .AddEntityLogging(
                                 services.BookRepository.GetOriginalPropertyValue,

@@ -1,9 +1,7 @@
 ﻿using AHSW.EventLog.Extensions;
-using AHSW.EventLog.Models.Configurations;
 using Bookstore.Sample.DatabaseContext;
-using Bookstore.Sample.Repository;
 using Bookstore.Sample.Interfaces;
-using Bookstore.Sample.Models;
+using Bookstore.Sample.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,7 +10,7 @@ namespace Bookstore.Sample.Configurations;
 
 internal static class Host
 {
-    public static IHost Create(bool recreateDatabase)
+    public static IHost Create(bool recreateDatabase, Action<BookstoreDbContext> configureEventLog)
     {
         var host = CreateHostBuilder().Build();
         
@@ -20,33 +18,8 @@ internal static class Host
         var context = scope.ServiceProvider.GetRequiredService<BookstoreDbContext>();
         
         ApplyPendingMigrations(context, recreateDatabase);
-        
-        EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
-            configurationBuilder => configurationBuilder
-                .UseCustomTypeDescriptions(context,
-                    options => options
-                        .AddEventTypeDescription(EventType.AddBooksOnShelf,
-                            "Add books on a shelf")
-                        .AddEventTypeDescription(EventType.UpdateBooksOnShelf,
-                            "Update books on a shelf")
-                )
-                .RegisterEntity<BookEntity>(EntityType.Book,
-                    options => options
-                        .RegisterProperty(PropertyType.BookTitle,
-                            x => x.Title, nameof(BookEntity.Title))
-                        .RegisterProperty(PropertyType.BookPublished,
-                            x => x.Published, nameof(BookEntity.Published))
-                        .RegisterProperty(PropertyType.BookIsAvailable,
-                            x => x.IsAvailable, nameof(BookEntity.IsAvailable))
-                        .RegisterProperty(PropertyType.BookLikeCount,
-                            x => x.LikeCount, nameof(BookEntity.LikeCount))
-                )
-                .RegisterEntity<ShelfEntity>(EntityType.Shelf,
-                    options => options
-                        .RegisterProperty(PropertyType.ShelfHeight,
-                            x => x.Height, nameof(ShelfEntity.Height))
-                )
-        );
+
+        configureEventLog(context);
         
         return host;
     }
