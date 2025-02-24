@@ -26,9 +26,9 @@ internal static class Host
                 .UseCustomTypeDescriptions(context,
                     options => options
                         .AddEventTypeDescription(EventType.AddBooksOnShelf,
-                            "Add books on shelf")
+                            "Add books on a shelf")
                         .AddEventTypeDescription(EventType.UpdateBooksOnShelf,
-                            "Update books on shelf")
+                            "Update books on a shelf")
                 )
                 .RegisterEntity<BookEntity>(EntityType.Book,
                     options => options
