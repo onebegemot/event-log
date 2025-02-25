@@ -30,6 +30,7 @@ internal static class Program
                             .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
                             .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
                             .AddPropertyTypeDescription(PropertyType.BookPublished, "Published")
+                            .AddPropertyTypeDescription(PropertyType.BookFirstSale, "FirstSale")
                             .AddPropertyTypeDescription(PropertyType.BookIsAvailable, "IsAvailable")
                             .AddPropertyTypeDescription(PropertyType.BookLikeCount, "LikeCount")
                             .AddPropertyTypeDescription(PropertyType.BookPrice, "Price")
@@ -41,6 +42,8 @@ internal static class Program
                                 x => x.Title, nameof(BookEntity.Title))
                             .RegisterProperty(PropertyType.BookPublished,
                                 x => x.Published, nameof(BookEntity.Published))
+                            .RegisterProperty(PropertyType.BookFirstSale,
+                                x => x.FirstSale, nameof(BookEntity.FirstSale))
                             .RegisterProperty(PropertyType.BookIsAvailable,
                                 x => x.IsAvailable, nameof(BookEntity.IsAvailable))
                             .RegisterProperty(PropertyType.BookLikeCount,
@@ -248,9 +251,10 @@ internal static class Program
 
         book.Title += " - Revision_1";
         book.Published = DateTime.UtcNow;
+        book.FirstSale = DateTime.UtcNow.AddDays(1);
         book.IsAvailable = !book.IsAvailable;
         book.LikeCount = Random.Shared.Next(1, 100);
-        book.Price = Random.Shared.Next(1, 10000) / 100;
+        book.Price = null;
         
         await services.EventLog.CreateEventScopeAndRun(
             EventType.UpdateBooksOnShelf,

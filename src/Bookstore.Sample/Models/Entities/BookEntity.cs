@@ -6,9 +6,11 @@ internal class BookEntity : BaseEntity
     
     public DateTime Published { get; set; }
     
+    public DateTime? FirstSale { get; set; }
+    
     public bool IsAvailable { get; set; }
     
-    public double Price { get; set; }
+    public double? Price { get; set; }
     
     public int LikeCount { get; set; }
 

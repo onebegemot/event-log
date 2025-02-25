@@ -3,6 +3,7 @@ using System;
 using Bookstore.Sample.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bookstore.Sample.Migrations
 {
     [DbContext(typeof(BookstoreDbContext))]
-    partial class BookstoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250225102706_UpdateEventLogTables_2")]
+    partial class UpdateEventLogTables_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.18");
@@ -125,7 +128,7 @@ namespace Bookstore.Sample.Migrations
                     b.Property<int>("PropertyType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool?>("Value")
+                    b.Property<bool>("Value")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -169,7 +172,7 @@ namespace Bookstore.Sample.Migrations
                     b.Property<int>("PropertyType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal?>("Value")
+                    b.Property<decimal>("Value")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -191,7 +194,7 @@ namespace Bookstore.Sample.Migrations
                     b.Property<int>("PropertyType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("Value")
+                    b.Property<double>("Value")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
@@ -213,7 +216,7 @@ namespace Bookstore.Sample.Migrations
                     b.Property<int>("PropertyType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Value")
+                    b.Property<int>("Value")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -273,7 +276,7 @@ namespace Bookstore.Sample.Migrations
                     b.Property<int>("LikeCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("Price")
+                    b.Property<double>("Price")
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("Published")
