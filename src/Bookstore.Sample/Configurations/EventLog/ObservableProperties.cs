@@ -6,6 +6,8 @@ internal static class ObservableProperties
         new []
         {
             PropertyType.BookTitle,
+            PropertyType.BookCondition,
+            PropertyType.BookLabels,
             PropertyType.BookPublished,
             PropertyType.BookFirstSale,
             PropertyType.BookIsAvailable,

@@ -29,6 +29,8 @@ internal static class Program
                             .AddEntityTypeDescription(EntityType.Book, "Book")
                             .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
                             .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
+                            .AddPropertyTypeDescription(PropertyType.BookCondition, "Condition")
+                            .AddPropertyTypeDescription(PropertyType.BookLabels, "Labels")
                             .AddPropertyTypeDescription(PropertyType.BookPublished, "Published")
                             .AddPropertyTypeDescription(PropertyType.BookFirstSale, "FirstSale")
                             .AddPropertyTypeDescription(PropertyType.BookIsAvailable, "IsAvailable")
@@ -40,6 +42,10 @@ internal static class Program
                         options => options
                             .RegisterProperty(PropertyType.BookTitle,
                                 x => x.Title, nameof(BookEntity.Title))
+                            .RegisterProperty(PropertyType.BookCondition,
+                                x => (int)x.Condition, nameof(BookEntity.Condition))
+                            .RegisterProperty(PropertyType.BookLabels,
+                                x => (int?)x.Labels, nameof(BookEntity.Labels))
                             .RegisterProperty(PropertyType.BookPublished,
                                 x => x.Published, nameof(BookEntity.Published))
                             .RegisterProperty(PropertyType.BookFirstSale,
@@ -250,6 +256,8 @@ internal static class Program
         );
 
         book.Title += " - Revision_1";
+        book.Condition = Condition.Used;
+        book.Labels = null;
         book.Published = DateTime.UtcNow;
         book.FirstSale = DateTime.UtcNow.AddDays(1);
         book.IsAvailable = !book.IsAvailable;
@@ -371,6 +379,8 @@ internal static class Program
         new()
         {
             Title = $"EventLog Manual - {Random.Shared.Next(1, 100)} Edition",
+            Condition = Condition.New,
+            Labels = Labels.Bestseller | Labels.Discount,
             Published = DateTime.UtcNow,
             IsAvailable = true,
             LikeCount = Random.Shared.Next(1, 100),

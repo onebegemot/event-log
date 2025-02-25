@@ -4,6 +4,10 @@ internal class BookEntity : BaseEntity
 {
     public string Title { get; set; }
     
+    public Condition Condition { get; set; }
+    
+    public Labels? Labels { get; set; }
+    
     public DateTime Published { get; set; }
     
     public DateTime? FirstSale { get; set; }
