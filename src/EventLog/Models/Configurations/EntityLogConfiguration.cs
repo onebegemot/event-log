@@ -73,12 +73,15 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
         
         if (indicativeProperty == null)
             return;
+
+        if (indicativeProperty is Enum)
+            indicativeProperty = NullableCast<int>(indicativeProperty);
         
         switch (indicativeProperty)
         {
             case bool:
                 TryCreateAndAddPropertyLogEntry<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>, bool?>(
-                    property, (bool?)propertyValues.Original, (bool?)propertyValues.New, entityLogEntry,
+                    property, NullableCast<bool>(propertyValues.Original), NullableCast<bool>(propertyValues.New), entityLogEntry,
                     entityLogEntry.BoolPropertyLogEntries != null,
                     x => entityLogEntry.BoolPropertyLogEntries = x,
                     x => entityLogEntry.BoolPropertyLogEntries.Add(x));
@@ -87,7 +90,7 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
             
             case DateTime:
                 TryCreateAndAddPropertyLogEntry<DateTimePropertyLogEntry<TEventType, TEntityType, TPropertyType>, DateTime?>(
-                    property, (DateTime?)propertyValues.Original, (DateTime?)propertyValues.New, entityLogEntry,
+                    property, NullableCast<DateTime>(propertyValues.Original), NullableCast<DateTime>(propertyValues.New), entityLogEntry,
                     entityLogEntry.DateTimePropertyLogEntries != null,
                     x => entityLogEntry.DateTimePropertyLogEntries = x,
                     x => entityLogEntry.DateTimePropertyLogEntries.Add(x));
@@ -105,7 +108,7 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
             
             case int:
                 TryCreateAndAddPropertyLogEntry<Int32PropertyLogEntry<TEventType, TEntityType, TPropertyType>, int?>(
-                    property, (int?)propertyValues.Original, (int?)propertyValues.New, entityLogEntry,
+                    property, NullableCast<int>(propertyValues.Original), NullableCast<int>(propertyValues.New), entityLogEntry,
                     entityLogEntry.Int32PropertyLogEntries != null,
                     x => entityLogEntry.Int32PropertyLogEntries = x,
                     x => entityLogEntry.Int32PropertyLogEntries.Add(x));
@@ -114,7 +117,7 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
             
             case double:
                 TryCreateAndAddPropertyLogEntry<DoublePropertyLogEntry<TEventType, TEntityType, TPropertyType>, double?>(
-                    property, (double?)propertyValues.Original, (double?)propertyValues.New, entityLogEntry,
+                    property, NullableCast<double>(propertyValues.Original), NullableCast<double>(propertyValues.New), entityLogEntry,
                     entityLogEntry.DoublePropertyLogEntries != null,
                     x => entityLogEntry.DoublePropertyLogEntries = x,
                     x => entityLogEntry.DoublePropertyLogEntries.Add(x));
@@ -160,4 +163,8 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
 
         bool IsNewEntity() => entityLogEntry.ActionType == ActionType.Create;
     }
+    
+    private static TValue? NullableCast<TValue>(object value)
+        where TValue : struct =>
+            value != null ? (TValue)value : null;
 }
