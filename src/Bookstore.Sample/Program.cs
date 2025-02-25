@@ -26,13 +26,14 @@ internal static class Program
                         options => options
                             .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books on a shelf")
                             .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books on a shelf")
-                            .AddEntityTypeDescription(EntityType.Book, "Book_v1")
-                            .AddEntityTypeDescription(EntityType.Shelf, "Shelf_v1")
-                            .AddPropertyTypeDescription(PropertyType.BookTitle, "Book => Title")
-                            .AddPropertyTypeDescription(PropertyType.BookPublished, "Book => Published")
-                            .AddPropertyTypeDescription(PropertyType.BookIsAvailable, "Book => IsAvailable")
-                            .AddPropertyTypeDescription(PropertyType.BookLikeCount, "Book => LikeCount")
-                            .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Shelf => Height")
+                            .AddEntityTypeDescription(EntityType.Book, "Book")
+                            .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
+                            .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
+                            .AddPropertyTypeDescription(PropertyType.BookPublished, "Published")
+                            .AddPropertyTypeDescription(PropertyType.BookIsAvailable, "IsAvailable")
+                            .AddPropertyTypeDescription(PropertyType.BookLikeCount, "LikeCount")
+                            .AddPropertyTypeDescription(PropertyType.BookPrice, "Price")
+                            .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Height")
                     )
                     .RegisterEntity<BookEntity>(EntityType.Book,
                         options => options
@@ -44,6 +45,8 @@ internal static class Program
                                 x => x.IsAvailable, nameof(BookEntity.IsAvailable))
                             .RegisterProperty(PropertyType.BookLikeCount,
                                 x => x.LikeCount, nameof(BookEntity.LikeCount))
+                            .RegisterProperty(PropertyType.BookPrice,
+                                x => x.Price, nameof(BookEntity.Price))
                     )
                     .RegisterEntity<ShelfEntity>(EntityType.Shelf,
                         options => options
@@ -244,6 +247,10 @@ internal static class Program
         );
 
         book.Title += " - Revision_1";
+        book.Published = DateTime.UtcNow;
+        book.IsAvailable = !book.IsAvailable;
+        book.LikeCount = Random.Shared.Next(1, 100);
+        book.Price = Random.Shared.Next(1, 10000) / 100;
         
         await services.EventLog.CreateEventScopeAndRun(
             EventType.UpdateBooksOnShelf,
@@ -362,6 +369,7 @@ internal static class Program
             Title = $"EventLog Manual - {Random.Shared.Next(1, 100)} Edition",
             Published = DateTime.UtcNow,
             IsAvailable = true,
-            LikeCount = Random.Shared.Next(1, 100)
+            LikeCount = Random.Shared.Next(1, 100),
+            Price = Random.Shared.Next(1, 10000) / 100
         };
 }

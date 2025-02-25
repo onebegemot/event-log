@@ -6,8 +6,10 @@ internal static class ObservableProperties
         new []
         {
             PropertyType.BookTitle,
+            PropertyType.BookPublished,
             PropertyType.BookIsAvailable,
-            PropertyType.BookLikeCount
+            PropertyType.BookLikeCount,
+            PropertyType.BookPrice
         };
     
     public static PropertyType[] GetForShelfEntity() =>

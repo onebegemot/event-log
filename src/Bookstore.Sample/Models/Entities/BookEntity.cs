@@ -8,6 +8,8 @@ internal class BookEntity : BaseEntity
     
     public bool IsAvailable { get; set; }
     
+    public double Price { get; set; }
+    
     public int LikeCount { get; set; }
 
     public int? ShelfId { get; set; }

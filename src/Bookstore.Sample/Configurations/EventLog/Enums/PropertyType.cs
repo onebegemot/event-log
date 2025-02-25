@@ -7,6 +7,7 @@ internal enum PropertyType
     BookPublished = 1002,
     BookIsAvailable = 1003,
     BookLikeCount = 1004,
+    BookPrice = 1005,
     
     // Shelf = 2000
     ShelfHeight = 2001
