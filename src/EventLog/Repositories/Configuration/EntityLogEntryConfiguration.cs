@@ -25,6 +25,12 @@ public class EntityLogEntryConfiguration<TEventType, TEntityType, TPropertyType>
             .OnDelete(DeleteBehavior.Restrict);
         
         builder
+            .HasMany(x => x.DateTimePropertyLogEntries)
+            .WithOne(x => x.EntityLogEntry)
+            .HasForeignKey(x => x.EntityLogEntryId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder
             .HasMany(x => x.StringPropertyLogEntries)
             .WithOne(x => x.EntityLogEntry)
             .HasForeignKey(x => x.EntityLogEntryId)
@@ -32,6 +38,12 @@ public class EntityLogEntryConfiguration<TEventType, TEntityType, TPropertyType>
         
         builder
             .HasMany(x => x.Int32PropertyLogEntries)
+            .WithOne(x => x.EntityLogEntry)
+            .HasForeignKey(x => x.EntityLogEntryId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder
+            .HasMany(x => x.DoublePropertyLogEntries)
             .WithOne(x => x.EntityLogEntry)
             .HasForeignKey(x => x.EntityLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);

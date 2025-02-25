@@ -1,6 +1,6 @@
 namespace AHSW.EventLog.Repositories.Constants;
 
-internal class EventLogPersistenceConstants
+internal static class EventLogPersistenceConstants
 {
     public static string EventLogSchema => "eventlog";
     
@@ -10,9 +10,13 @@ internal class EventLogPersistenceConstants
     
     public static string BoolPropertyLogTableName => "BoolPropertyLog";
     
+    public static string DateTimePropertyLogTableName => "DateTimePropertyLog";
+    
     public static string StringPropertyLogTableName => "StringPropertyLog";
     
     public static string Int32PropertyLogTableName => "Int32PropertyLog";
+    
+    public static string DoublePropertyLogTableName => "DoublePropertyLog";
     
     public static string DecimalPropertyLogTableName => "DecimalPropertyLog";
     

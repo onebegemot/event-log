@@ -15,9 +15,13 @@ public interface IEventLogDbContext<TEventType, TEntityType, TPropertyType>
     
     DbSet<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>> BoolPropertyLog { get; set; }
     
+    DbSet<DateTimePropertyLogEntry<TEventType, TEntityType, TPropertyType>> DateTimePropertyLog { get; set; }
+    
     DbSet<StringPropertyLogEntry<TEventType, TEntityType, TPropertyType>> StringPropertyLog { get; set; }
     
     DbSet<Int32PropertyLogEntry<TEventType, TEntityType, TPropertyType>> Int32PropertyLog { get; set; }
+    
+    DbSet<DoublePropertyLogEntry<TEventType, TEntityType, TPropertyType>> DoublePropertyLog { get; set; }
     
     DbSet<DecimalPropertyLogEntry<TEventType, TEntityType, TPropertyType>> DecimalPropertyLog { get; set; }
 }

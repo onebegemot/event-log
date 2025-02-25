@@ -85,6 +85,15 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
                 
                 break;
             
+            case DateTime:
+                TryCreateAndAddPropertyLogEntry<DateTimePropertyLogEntry<TEventType, TEntityType, TPropertyType>, DateTime>(
+                    property, (DateTime)propertyValues.Original, (DateTime)propertyValues.New, entityLogEntry,
+                    entityLogEntry.DateTimePropertyLogEntries != null,
+                    x => entityLogEntry.DateTimePropertyLogEntries = x,
+                    x => entityLogEntry.DateTimePropertyLogEntries.Add(x));
+                
+                break;
+            
             case string:
                 TryCreateAndAddPropertyLogEntry<StringPropertyLogEntry<TEventType, TEntityType, TPropertyType>, string>(
                     property, (string)propertyValues.Original, (string)propertyValues.New, entityLogEntry,
@@ -100,6 +109,15 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
                     entityLogEntry.Int32PropertyLogEntries != null,
                     x => entityLogEntry.Int32PropertyLogEntries = x,
                     x => entityLogEntry.Int32PropertyLogEntries.Add(x));
+                
+                break;
+            
+            case double:
+                TryCreateAndAddPropertyLogEntry<DoublePropertyLogEntry<TEventType, TEntityType, TPropertyType>, double>(
+                    property, (double)propertyValues.Original, (double)propertyValues.New, entityLogEntry,
+                    entityLogEntry.DoublePropertyLogEntries != null,
+                    x => entityLogEntry.DoublePropertyLogEntries = x,
+                    x => entityLogEntry.DoublePropertyLogEntries.Add(x));
                 
                 break;
             
@@ -121,7 +139,7 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
         TPropertyType propertyType, TLogValue originalValue, TLogValue newValue,
         EntityLogEntry<TEventType, TEntityType, TPropertyType> entityLogEntry, bool isLogInitialized,
         Action<ICollection<TPropertyLogEntry>> collectionSetter,Action<TPropertyLogEntry> addItem)
-        where TPropertyLogEntry : PropertyLogEntry<TLogValue, TEventType, TEntityType, TPropertyType>, new()
+            where TPropertyLogEntry : PropertyLogEntry<TLogValue, TEventType, TEntityType, TPropertyType>, new()
     {
         if (!IsNewEntity() && newValue != null && newValue.Equals(originalValue))
             return;
