@@ -1,6 +1,6 @@
 namespace AHSW.EventLog.Repositories.Constants;
 
-internal static class EventLogPersistenceConstants
+public static class EventLogPersistenceConstants
 {
     public static string EventLogSchema => "eventlog";
     
