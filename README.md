@@ -172,7 +172,9 @@ services.AddEventLog<BookstoreDbContext, EventType, EntityType, PropertyType>();
 
 ### Configure EventLog service on the application startup
 See more detail example in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
+
 Setting up enum member custom names is a convenient way to make look of SQL query results more user-friendly.
+
 All observable properties and appropriate entities must be resigtered in the service configuration.
 ```cs
 EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
@@ -202,6 +204,7 @@ EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<Book
 
 ### Add EventLog recording
 See more examples in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
+
 All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Inside this method entities must be only updated in repository and saves.
 ```cs
         var book = CreateBookEntity();
@@ -225,6 +228,6 @@ All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Ins
 ```
 
 ### Use SQL queries for log investigation
-Samples of SQL queries can be found [here](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts)
+Samples of SQL queries can be found [here](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts).
 
 ### Use log tables in any way in code for extend application functionality
