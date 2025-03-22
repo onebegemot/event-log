@@ -1,4 +1,5 @@
 ﻿using AHSW.EventLog.Models.Entities.PropertyLogEntries;
+using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace AHSW.EventLog.Repositories.Configuration;
 
 public class DateTimePropertyLogEntryConfiguration<TEventType, TEntityType, TPropertyType> :
+    BaseConfiguration,
     IEntityTypeConfiguration<DateTimePropertyLogEntry<TEventType, TEntityType, TPropertyType>>
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
@@ -17,5 +19,7 @@ public class DateTimePropertyLogEntryConfiguration<TEventType, TEntityType, TPro
             .ToTable(
                 EventLogPersistenceConstants.DateTimePropertyLogTableName,
                 EventLogPersistenceConstants.EventLogSchema);
+        
+        MapEnumTypeToaColumnType(builder.Property(x => x.PropertyType));
     }
 }

@@ -1,6 +1,6 @@
 namespace AHSW.EventLog.Models.Enums;
 
-public enum EventStatus
+public enum EventStatus : byte
 {
     Successful = 1,
     HandledException = 2,

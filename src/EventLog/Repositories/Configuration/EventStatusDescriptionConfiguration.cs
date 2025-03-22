@@ -1,17 +1,23 @@
 using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Models.Enums;
+using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AHSW.EventLog.Repositories.Configuration;
 
-public class EventStatusDescriptionConfiguration : IEntityTypeConfiguration<EventStatusDescription>
+public class EventStatusDescriptionConfiguration :
+    BaseConfiguration,
+    IEntityTypeConfiguration<EventStatusDescription<EventStatus>>
 {
-    public void Configure(EntityTypeBuilder<EventStatusDescription> builder)
+    public void Configure(EntityTypeBuilder<EventStatusDescription<EventStatus>> builder)
     {
         builder
             .ToTable(
                 EventLogPersistenceConstants.EventStatusDescriptionsTableName,
                 EventLogPersistenceConstants.EventLogSchema);
+        
+        MapEnumTypeToaColumnType(builder.Property(x => x.EnumId));
     }
 }

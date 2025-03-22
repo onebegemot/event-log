@@ -82,54 +82,54 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
             case bool:
                 TryCreateAndAddPropertyLogEntry<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>, bool?>(
                     property, NullableCast<bool>(propertyValues.Original), NullableCast<bool>(propertyValues.New), entityLogEntry,
-                    entityLogEntry.BoolPropertyLogEntries != null,
-                    x => entityLogEntry.BoolPropertyLogEntries = x,
-                    x => entityLogEntry.BoolPropertyLogEntries.Add(x));
+                    entityLogEntry.BoolPropertyLog != null,
+                    x => entityLogEntry.BoolPropertyLog = x,
+                    x => entityLogEntry.BoolPropertyLog.Add(x));
                 
                 break;
             
             case DateTime:
                 TryCreateAndAddPropertyLogEntry<DateTimePropertyLogEntry<TEventType, TEntityType, TPropertyType>, DateTime?>(
                     property, NullableCast<DateTime>(propertyValues.Original), NullableCast<DateTime>(propertyValues.New), entityLogEntry,
-                    entityLogEntry.DateTimePropertyLogEntries != null,
-                    x => entityLogEntry.DateTimePropertyLogEntries = x,
-                    x => entityLogEntry.DateTimePropertyLogEntries.Add(x));
+                    entityLogEntry.DateTimePropertyLog != null,
+                    x => entityLogEntry.DateTimePropertyLog = x,
+                    x => entityLogEntry.DateTimePropertyLog.Add(x));
                 
                 break;
             
             case string:
                 TryCreateAndAddPropertyLogEntry<StringPropertyLogEntry<TEventType, TEntityType, TPropertyType>, string>(
                     property, (string)propertyValues.Original, (string)propertyValues.New, entityLogEntry,
-                    entityLogEntry.StringPropertyLogEntries != null,
-                    x => entityLogEntry.StringPropertyLogEntries = x,
-                    x => entityLogEntry.StringPropertyLogEntries.Add(x));
+                    entityLogEntry.StringPropertyLog != null,
+                    x => entityLogEntry.StringPropertyLog = x,
+                    x => entityLogEntry.StringPropertyLog.Add(x));
                 
                 break;
             
             case int:
                 TryCreateAndAddPropertyLogEntry<Int32PropertyLogEntry<TEventType, TEntityType, TPropertyType>, int?>(
                     property, NullableCast<int>(propertyValues.Original), NullableCast<int>(propertyValues.New), entityLogEntry,
-                    entityLogEntry.Int32PropertyLogEntries != null,
-                    x => entityLogEntry.Int32PropertyLogEntries = x,
-                    x => entityLogEntry.Int32PropertyLogEntries.Add(x));
+                    entityLogEntry.Int32PropertyLog != null,
+                    x => entityLogEntry.Int32PropertyLog = x,
+                    x => entityLogEntry.Int32PropertyLog.Add(x));
                 
                 break;
             
             case double:
                 TryCreateAndAddPropertyLogEntry<DoublePropertyLogEntry<TEventType, TEntityType, TPropertyType>, double?>(
                     property, NullableCast<double>(propertyValues.Original), NullableCast<double>(propertyValues.New), entityLogEntry,
-                    entityLogEntry.DoublePropertyLogEntries != null,
-                    x => entityLogEntry.DoublePropertyLogEntries = x,
-                    x => entityLogEntry.DoublePropertyLogEntries.Add(x));
+                    entityLogEntry.DoublePropertyLog != null,
+                    x => entityLogEntry.DoublePropertyLog = x,
+                    x => entityLogEntry.DoublePropertyLog.Add(x));
                 
                 break;
             
             case decimal:
                 TryCreateAndAddPropertyLogEntry<DecimalPropertyLogEntry<TEventType, TEntityType, TPropertyType>, decimal?>(
                     property, (decimal?)propertyValues.Original, (decimal?)propertyValues.New, entityLogEntry,
-                    entityLogEntry.DecimalPropertyLogEntries != null,
-                    x => entityLogEntry.DecimalPropertyLogEntries = x,
-                    x => entityLogEntry.DecimalPropertyLogEntries.Add(x));
+                    entityLogEntry.DecimalPropertyLog != null,
+                    x => entityLogEntry.DecimalPropertyLog = x,
+                    x => entityLogEntry.DecimalPropertyLog.Add(x));
                 
                 break;
             

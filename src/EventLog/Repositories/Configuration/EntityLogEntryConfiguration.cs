@@ -1,4 +1,5 @@
 using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace AHSW.EventLog.Repositories.Configuration;
 
 public class EntityLogEntryConfiguration<TEventType, TEntityType, TPropertyType> :
+    BaseConfiguration,
     IEntityTypeConfiguration<EntityLogEntry<TEventType, TEntityType, TPropertyType>>
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
@@ -19,39 +21,42 @@ public class EntityLogEntryConfiguration<TEventType, TEntityType, TPropertyType>
                 EventLogPersistenceConstants.EventLogSchema);
         
         builder
-            .HasMany(x => x.BoolPropertyLogEntries)
+            .HasMany(x => x.BoolPropertyLog)
             .WithOne(x => x.EntityLogEntry)
             .HasForeignKey(x => x.EntityLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);
         
         builder
-            .HasMany(x => x.DateTimePropertyLogEntries)
+            .HasMany(x => x.DateTimePropertyLog)
             .WithOne(x => x.EntityLogEntry)
             .HasForeignKey(x => x.EntityLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);
         
         builder
-            .HasMany(x => x.StringPropertyLogEntries)
+            .HasMany(x => x.StringPropertyLog)
             .WithOne(x => x.EntityLogEntry)
             .HasForeignKey(x => x.EntityLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);
         
         builder
-            .HasMany(x => x.Int32PropertyLogEntries)
+            .HasMany(x => x.Int32PropertyLog)
             .WithOne(x => x.EntityLogEntry)
             .HasForeignKey(x => x.EntityLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);
         
         builder
-            .HasMany(x => x.DoublePropertyLogEntries)
+            .HasMany(x => x.DoublePropertyLog)
             .WithOne(x => x.EntityLogEntry)
             .HasForeignKey(x => x.EntityLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);
         
         builder
-            .HasMany(x => x.DecimalPropertyLogEntries)
+            .HasMany(x => x.DecimalPropertyLog)
             .WithOne(x => x.EntityLogEntry)
             .HasForeignKey(x => x.EntityLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        MapEnumTypeToaColumnType(builder.Property(x => x.EntityType));
+        MapEnumTypeToaColumnType(builder.Property(x => x.ActionType));
     }
 }

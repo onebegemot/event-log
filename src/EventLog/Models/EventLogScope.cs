@@ -41,10 +41,10 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
 
         if (logEntityUnits.Any())
         {
-            EventLogEntry.EntityLogEntries = EventLogEntry.EntityLogEntries == null
+            EventLogEntry.EntityLog = EventLogEntry.EntityLog == null
                 ? GetFilteredEntityLogEntries(logEntityUnits)
                     .ToList()
-                : EventLogEntry.EntityLogEntries
+                : EventLogEntry.EntityLog
                     .Concat(GetFilteredEntityLogEntries(logEntityUnits))
                     .ToList();
         }

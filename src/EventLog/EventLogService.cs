@@ -30,10 +30,11 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
                     eventLogEntry, _eventLogEntryRepository));
             
-            eventLogEntry.Status ??= EventStatus.Successful;
+            eventLogEntry.Status = EventStatus.Successful;
             
             await _eventLogEntryRepository.AddOrUpdateAsync(eventLogEntry);
         }
+        // todo: handle CancellationToken
         catch (Exception exception)
         {
             await ProcessUnhandledException(eventLogEntry, exception);
@@ -52,7 +53,7 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
                     eventLogEntry, _eventLogEntryRepository));
             
-            eventLogEntry.Status ??= EventStatus.Successful;
+            eventLogEntry.Status = EventStatus.Successful;
             
             await _eventLogEntryRepository.AddOrUpdateAsync(eventLogEntry);
 

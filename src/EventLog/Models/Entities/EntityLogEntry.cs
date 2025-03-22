@@ -19,23 +19,23 @@ public class EntityLogEntry<TEventType, TEntityType, TPropertyType> : PkEntity
     
     public EventLogEntry<TEventType, TEntityType, TPropertyType> EventLogEntry { get; set; }
     
-    public ICollection<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>> BoolPropertyLogEntries { get; set; }
+    public ICollection<BoolPropertyLogEntry<TEventType, TEntityType, TPropertyType>> BoolPropertyLog { get; set; }
     
-    public ICollection<DateTimePropertyLogEntry<TEventType, TEntityType, TPropertyType>> DateTimePropertyLogEntries { get; set; }
+    public ICollection<DateTimePropertyLogEntry<TEventType, TEntityType, TPropertyType>> DateTimePropertyLog { get; set; }
     
-    public ICollection<StringPropertyLogEntry<TEventType, TEntityType, TPropertyType>> StringPropertyLogEntries { get; set; }
+    public ICollection<StringPropertyLogEntry<TEventType, TEntityType, TPropertyType>> StringPropertyLog { get; set; }
     
-    public ICollection<Int32PropertyLogEntry<TEventType, TEntityType, TPropertyType>> Int32PropertyLogEntries { get; set; }
+    public ICollection<Int32PropertyLogEntry<TEventType, TEntityType, TPropertyType>> Int32PropertyLog { get; set; }
     
-    public ICollection<DoublePropertyLogEntry<TEventType, TEntityType, TPropertyType>> DoublePropertyLogEntries { get; set; }
+    public ICollection<DoublePropertyLogEntry<TEventType, TEntityType, TPropertyType>> DoublePropertyLog { get; set; }
     
-    public ICollection<DecimalPropertyLogEntry<TEventType, TEntityType, TPropertyType>> DecimalPropertyLogEntries { get; set; }
+    public ICollection<DecimalPropertyLogEntry<TEventType, TEntityType, TPropertyType>> DecimalPropertyLog { get; set; }
 
     public bool HasPropertyLogEntries =>
-        (BoolPropertyLogEntries != null && BoolPropertyLogEntries.Any()) ||
-        (DateTimePropertyLogEntries != null && DateTimePropertyLogEntries.Any()) ||
-        (StringPropertyLogEntries != null && StringPropertyLogEntries.Any()) ||
-        (Int32PropertyLogEntries != null && Int32PropertyLogEntries.Any()) ||
-        (DoublePropertyLogEntries != null && DoublePropertyLogEntries.Any()) ||
-        (DecimalPropertyLogEntries != null && DecimalPropertyLogEntries.Any());
+        (BoolPropertyLog != null && BoolPropertyLog.Any()) ||
+        (DateTimePropertyLog != null && DateTimePropertyLog.Any()) ||
+        (StringPropertyLog != null && StringPropertyLog.Any()) ||
+        (Int32PropertyLog != null && Int32PropertyLog.Any()) ||
+        (DoublePropertyLog != null && DoublePropertyLog.Any()) ||
+        (DecimalPropertyLog != null && DecimalPropertyLog.Any());
 }

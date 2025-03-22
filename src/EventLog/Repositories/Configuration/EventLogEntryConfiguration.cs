@@ -1,4 +1,5 @@
 using AHSW.EventLog.Models.Entities;
+using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace AHSW.EventLog.Repositories.Configuration;
 
 public class EventLogEntryConfiguration<TEventType, TEntityType, TPropertyType> :
+    BaseConfiguration,
     IEntityTypeConfiguration<EventLogEntry<TEventType, TEntityType, TPropertyType>>
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
@@ -19,9 +21,12 @@ public class EventLogEntryConfiguration<TEventType, TEntityType, TPropertyType> 
                 EventLogPersistenceConstants.EventLogSchema);
             
         builder
-            .HasMany(x => x.EntityLogEntries)
+            .HasMany(x => x.EntityLog)
             .WithOne(x => x.EventLogEntry)
             .HasForeignKey(x => x.EventLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        MapEnumTypeToaColumnType(builder.Property(x => x.EventType));
+        MapEnumTypeToaColumnType(builder.Property(x => x.Status));
     }
 }

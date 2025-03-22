@@ -21,15 +21,13 @@ public class EventLogEntry<TEventType, TEntityType, TPropertyType> : ReadOnlyEnt
     
     public TEventType EventType { get; set; }
     
-    public ICollection<EntityLogEntry<TEventType, TEntityType, TPropertyType>> EntityLogEntries { get; set; }
-
-    // public User User { get; set; }
+    public ICollection<EntityLogEntry<TEventType, TEntityType, TPropertyType>> EntityLog { get; set; }
     
     public DateTime CompletedAt { get; set; }
     
     public string Details { get; set; }
     
-    public EventStatus? Status { get; set; }
+    public EventStatus Status { get; set; }
     
     public string FailureDetails { get; set; }
     
