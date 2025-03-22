@@ -3,12 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AHSW.EventLog.Models.Entities.Abstract;
 
-public abstract class BaseDescriptiveEntity<T>
-    where T : struct
+public abstract class BaseDescriptiveEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    public T EnumId { get; set; }
+    public int EnumId { get; set; }
     
     public string Description { get; set; }
 }

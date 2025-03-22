@@ -2,8 +2,6 @@
 
 namespace AHSW.EventLog.Models.Entities;
 
-public class EntityTypeDescription<TEntityType> :
-    BaseDescriptiveEntity<TEntityType>
-        where TEntityType : struct, Enum
+public class EntityTypeDescription : BaseDescriptiveEntity
 {
 }

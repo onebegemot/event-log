@@ -1,23 +1,18 @@
 ﻿using AHSW.EventLog.Models.Entities;
-using AHSW.EventLog.Repositories.Configuration.Abstract;
 using AHSW.EventLog.Repositories.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AHSW.EventLog.Repositories.Configuration;
 
-public class EntityTypeDescriptionConfiguration<TEntityType> :
-    BaseConfiguration,
-    IEntityTypeConfiguration<EntityTypeDescription<TEntityType>>
-        where TEntityType : struct, Enum
+public class EntityTypeDescriptionConfiguration :
+    IEntityTypeConfiguration<EntityTypeDescription>
 {
-    public void Configure(EntityTypeBuilder<EntityTypeDescription<TEntityType>> builder)
+    public void Configure(EntityTypeBuilder<EntityTypeDescription> builder)
     {
         builder
             .ToTable(
                 EventLogPersistenceConstants.EntityTypeDescriptionsTableName,
                 EventLogPersistenceConstants.EventLogSchema);
-        
-        MapEnumTypeToaColumnType(builder.Property(x => x.EnumId));
     }
 }

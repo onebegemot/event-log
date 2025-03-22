@@ -64,9 +64,9 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         if (context == null)
             return;
 
-        UpdateStorage<TEventType, EventTypeDescription<TEventType>>(configuration.EventTypeDescriptions);
-        UpdateStorage<TEntityType, EntityTypeDescription<TEntityType>>(configuration.EntityTypeDescriptions);
-        UpdateStorage<TPropertyType, PropertyTypeDescription<TPropertyType>>(configuration.PropertyTypeDescriptions);
+        UpdateStorage<TEventType, EventTypeDescription>(configuration.EventTypeDescriptions);
+        UpdateStorage<TEntityType, EntityTypeDescription>(configuration.EntityTypeDescriptions);
+        UpdateStorage<TPropertyType, PropertyTypeDescription>(configuration.PropertyTypeDescriptions);
         UpdateStorage<EventStatus, EventStatusDescription>(configuration.EventStatusDescriptions);
         
         context.SaveChanges();
@@ -74,7 +74,7 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         return;
         
         void UpdateStorage<TEnum, TDescriptiveEntity>(IReadOnlyDictionary<TEnum, string> descriptions)
-            where TDescriptiveEntity : BaseDescriptiveEntity<TEnum>, new()
+            where TDescriptiveEntity : BaseDescriptiveEntity, new()
             where TEnum : struct, Enum
         {
             var descriptionEntities = GetCustomEnumDescriptions<TEnum, TDescriptiveEntity>(descriptions);
@@ -85,7 +85,7 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
     
     private static IReadOnlyCollection<TDescriptiveEntity> GetCustomEnumDescriptions<TEnum, TDescriptiveEntity>(
         IReadOnlyDictionary<TEnum, string> enumDescriptions)
-            where TDescriptiveEntity : BaseDescriptiveEntity<TEnum>, new()
+            where TDescriptiveEntity : BaseDescriptiveEntity, new()
             where TEnum : struct, Enum
     {
         var enumValues = Enum.GetValues<TEnum>();
@@ -94,7 +94,7 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         entities.AddRange(enumValues.Select(value =>
             new TDescriptiveEntity()
             {
-                EnumId = value,
+                EnumId = Convert.ToInt32(value),
                 Description = enumDescriptions?.TryGetValue(value, out var description) ?? false
                     ? description
                     : Enum.GetName(value)

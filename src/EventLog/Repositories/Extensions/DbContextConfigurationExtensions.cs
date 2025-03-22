@@ -20,6 +20,6 @@ public static class DbContextConfigurationExtensions
                 .ApplyConfiguration(new DecimalPropertyLogEntryConfiguration<TEventType, TEntityType, TPropertyType>())
                 .ApplyConfiguration(new EventTypeDescriptionConfiguration<TEventType>())
                 .ApplyConfiguration(new EventStatusDescriptionConfiguration())
-                .ApplyConfiguration(new EntityTypeDescriptionConfiguration<TEntityType>())
+                .ApplyConfiguration(new EntityTypeDescriptionConfiguration())
                 .ApplyConfiguration(new PropertyTypeDescriptionConfiguration<TPropertyType>());
 }

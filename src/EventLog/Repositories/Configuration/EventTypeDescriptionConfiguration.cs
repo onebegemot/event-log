@@ -8,16 +8,14 @@ namespace AHSW.EventLog.Repositories.Configuration;
 
 public class EventTypeDescriptionConfiguration<TEventType> :
     BaseConfiguration,
-    IEntityTypeConfiguration<EventTypeDescription<TEventType>>
+    IEntityTypeConfiguration<EventTypeDescription>
         where TEventType : struct, Enum
 {
-    public void Configure(EntityTypeBuilder<EventTypeDescription<TEventType>> builder)
+    public void Configure(EntityTypeBuilder<EventTypeDescription> builder)
     {
         builder
             .ToTable(
                 EventLogPersistenceConstants.EventTypeDescriptionsTableName,
                 EventLogPersistenceConstants.EventLogSchema);
-        
-        MapEnumTypeToaColumnType(builder.Property(x => x.EnumId));
     }
 }

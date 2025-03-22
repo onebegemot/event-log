@@ -17,7 +17,5 @@ public class EventStatusDescriptionConfiguration :
             .ToTable(
                 EventLogPersistenceConstants.EventStatusDescriptionsTableName,
                 EventLogPersistenceConstants.EventLogSchema);
-        
-        MapEnumTypeToaColumnType(builder.Property(x => x.EnumId));
     }
 }

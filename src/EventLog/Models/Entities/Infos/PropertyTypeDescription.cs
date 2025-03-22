@@ -2,8 +2,6 @@
 
 namespace AHSW.EventLog.Models.Entities;
 
-public class PropertyTypeDescription<TPropertyType> :
-    BaseDescriptiveEntity<TPropertyType>
-        where TPropertyType : struct, Enum
+public class PropertyTypeDescription : BaseDescriptiveEntity
 {
 }
