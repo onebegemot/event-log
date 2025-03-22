@@ -1,6 +1,6 @@
 namespace Bookstore.Sample.Configurations;
 
-internal enum EventType
+internal enum EventType : short
 {
     AddBooksOnShelf = 1,
     UpdateBooksOnShelf = 2,

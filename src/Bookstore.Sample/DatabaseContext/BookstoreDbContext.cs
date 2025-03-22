@@ -12,9 +12,9 @@ internal class BookstoreDbContext : DbContext
     {
     }
     
-    public DbSet<BookEntity> ApplicationEntities { get; set; }
+    public DbSet<BookEntity> Books { get; set; }
     
-    public DbSet<ShelfEntity> ApplicationOtherEntities { get; set; }
+    public DbSet<ShelfEntity> Shelves { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

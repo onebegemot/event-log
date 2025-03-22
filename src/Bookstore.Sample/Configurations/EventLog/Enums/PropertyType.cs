@@ -1,6 +1,6 @@
 namespace Bookstore.Sample.Configurations;
 
-internal enum PropertyType
+internal enum PropertyType : short
 {
     // Book = 1000
     BookTitle = 1001,
