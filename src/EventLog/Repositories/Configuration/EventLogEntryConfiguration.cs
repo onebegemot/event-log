@@ -28,5 +28,7 @@ public class EventLogEntryConfiguration<TEventType, TEntityType, TPropertyType> 
         
         MapEnumTypeToaColumnType(builder.Property(x => x.EventType));
         MapEnumTypeToaColumnType(builder.Property(x => x.Status));
+        
+        builder.HasIndex(x => x.CreatedAt);
     }
 }

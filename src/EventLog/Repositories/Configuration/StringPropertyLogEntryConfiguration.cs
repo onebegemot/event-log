@@ -21,5 +21,7 @@ public class StringPropertyLogEntryConfiguration<TEventType, TEntityType, TPrope
                 EventLogPersistenceConstants.EventLogSchema);
         
         MapEnumTypeToaColumnType(builder.Property(x => x.PropertyType));
+        
+        builder.HasIndex(x => x.PropertyType);
     }
 }

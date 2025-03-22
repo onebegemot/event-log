@@ -58,5 +58,7 @@ public class EntityLogEntryConfiguration<TEventType, TEntityType, TPropertyType>
         
         MapEnumTypeToaColumnType(builder.Property(x => x.EntityType));
         MapEnumTypeToaColumnType(builder.Property(x => x.ActionType));
+        
+        builder.HasIndex(x => x.EntityId);
     }
 }
