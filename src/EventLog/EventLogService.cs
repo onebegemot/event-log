@@ -34,10 +34,14 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
             
             await _eventLogEntryRepository.AddOrUpdateAsync(eventLogEntry);
         }
-        // todo: handle CancellationToken
+        catch (TaskCanceledException exception)
+        {
+            await ProcessUnhandledException(EventStatus.TaskCancelledException, eventLogEntry, exception);
+            throw;
+        }
         catch (Exception exception)
         {
-            await ProcessUnhandledException(eventLogEntry, exception);
+            await ProcessUnhandledException(EventStatus.UnhandledException, eventLogEntry, exception);
             throw;
         }
     }
@@ -59,21 +63,33 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
 
             return result;
         }
+        catch (TaskCanceledException exception)
+        {
+            await ProcessUnhandledException(EventStatus.TaskCancelledException, eventLogEntry, exception);
+            throw;
+        }
         catch (Exception exception)
         {
-            await ProcessUnhandledException(eventLogEntry, exception);
+            await ProcessUnhandledException(EventStatus.UnhandledException, eventLogEntry, exception);
             throw;
         }
     }
     
-    private async ValueTask ProcessUnhandledException(
+    private async ValueTask ProcessUnhandledException(EventStatus eventStatus,
         EventLogEntry<TEventType, TEntityType, TPropertyType> eventLogEntry,
         Exception exception)
     {
         if (!eventLogEntry.ExplicitlyThrownException)
         {
-            eventLogEntry.SetFailedStatusAndAddFailureDetails(EventStatus.UnhandledException,
-                "--- UNHANDLED EXCEPTION ---", exception.ToString());
+            var header = string.Empty;
+            
+            if (eventStatus == EventStatus.UnhandledException)
+                header = "--- UNHANDLED EXCEPTION ---";
+            
+            if (eventStatus == EventStatus.UnhandledException)
+                header = "--- TOKEN CANCELLATION EXCEPTION ---";
+            
+            eventLogEntry.SetFailedStatusAndAddFailureDetails(eventStatus, header, exception.ToString());
         }
 
         await _eventLogEntryRepository.AddOrUpdateAsync(eventLogEntry);
