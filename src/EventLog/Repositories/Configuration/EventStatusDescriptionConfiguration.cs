@@ -9,9 +9,9 @@ namespace AHSW.EventLog.Repositories.Configuration;
 
 public class EventStatusDescriptionConfiguration :
     BaseConfiguration,
-    IEntityTypeConfiguration<EventStatusDescription<EventStatus>>
+    IEntityTypeConfiguration<EventStatusDescription>
 {
-    public void Configure(EntityTypeBuilder<EventStatusDescription<EventStatus>> builder)
+    public void Configure(EntityTypeBuilder<EventStatusDescription> builder)
     {
         builder
             .ToTable(

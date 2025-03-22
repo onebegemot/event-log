@@ -67,7 +67,7 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         UpdateStorage<TEventType, EventTypeDescription<TEventType>>(configuration.EventTypeDescriptions);
         UpdateStorage<TEntityType, EntityTypeDescription<TEntityType>>(configuration.EntityTypeDescriptions);
         UpdateStorage<TPropertyType, PropertyTypeDescription<TPropertyType>>(configuration.PropertyTypeDescriptions);
-        UpdateStorage<EventStatus, EventStatusDescription<EventStatus>>(configuration.EventStatusDescriptions);
+        UpdateStorage<EventStatus, EventStatusDescription>(configuration.EventStatusDescriptions);
         
         context.SaveChanges();
 
