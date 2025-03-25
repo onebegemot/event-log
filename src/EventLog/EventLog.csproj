@@ -27,10 +27,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.20" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-  </PropertyGroup>
   
   <ItemGroup>
     <None Include="..\..\images\logo-1.png" Pack="true" PackagePath="\"/>
