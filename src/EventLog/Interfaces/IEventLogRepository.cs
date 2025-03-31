@@ -3,7 +3,7 @@ using AHSW.EventLog.Models.Entities;
 
 namespace AHSW.EventLog.Interfaces;
 
-public interface IRepository
+public interface IEventLogRepository
 {
     Task AddOrUpdateEventLogAsync<TEventType, TEntityType, TPropertyType>(
         EventLogEntry<TEventType, TEntityType, TPropertyType> entity,

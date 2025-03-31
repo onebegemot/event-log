@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AHSW.EventLog.Repositories;
 
-public class Repository<TDbContext> : IEventLogRepository
+public class EventLogRepository<TDbContext> : IEventLogRepository
     where TDbContext : DbContext
 {
     private readonly TDbContext _dbContext;
 
-    public Repository(TDbContext dbContext)
+    public EventLogRepository(TDbContext dbContext)
     {
         _dbContext = dbContext;
     }

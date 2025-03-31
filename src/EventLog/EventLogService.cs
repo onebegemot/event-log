@@ -12,9 +12,9 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
-    private readonly IRepository _repository;
+    private readonly IEventLogRepository _repository;
     
-    public EventLogService(IRepository repository)
+    public EventLogService(IEventLogRepository repository)
     {
         _repository = repository;
     }

@@ -14,9 +14,9 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
-    private readonly IRepository _repository;
+    private readonly IEventLogRepository _repository;
 
-    public EntityLogConfiguration(IRepository repository)
+    public EntityLogConfiguration(IEventLogRepository repository)
     {
         _repository = repository;
     }
