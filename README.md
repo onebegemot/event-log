@@ -34,7 +34,6 @@ await services.EventLog.CreateEventScopeAndRun(
 	    () => services.BookRepository.AddOrUpdateAsync(book),
 	    options => options
 		.AddEntityLogging(
-		    services.BookRepository.GetOriginalPropertyValue,
 		    new[] { book },
 		    PropertyType.BookTitle,
 		    PropertyType.BookLikeCount));
@@ -140,12 +139,6 @@ internal enum EntityType
 ```
 * Create and apply the new migration with EventLog convfigurations
 
-### Add GetOriginalPropertyValue to the base application repository
-```cs
-    public object GetOriginalPropertyValue(TEntity entity, string propertyName) =>
-        _dbContext.Entry(entity).Property(propertyName).OriginalValue;
-```
-
 ### Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using
 ```cs
 internal static class ObservableProperties
@@ -210,18 +203,21 @@ All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Ins
         var book = CreateBookEntity();
 
         await services.EventLog.CreateEventScopeAndRun(
-            EventType.AddBooksOnShelf, // Specify event logging level here
+            // Specify event logging level here
+            EventType.AddBooksOnShelf,
             async eventLogScope =>
             {
                 eventLogScope.EventLogEntry.CreatedBy = userId;
                 eventLogScope.EventLogEntry.Details = "Adding a book";
             
                 await eventLogScope.SaveAndLogEntitiesAsync(
-                    () => services.BookRepository.AddOrUpdateAsync(book), // All entity changes must be made before SaveAndLogEntitiesAsync() invocation
+                    // All entity changes must be made before SaveAndLogEntitiesAsync() invocation
+                    () => services.BookRepository.AddOrUpdateAsync(book),
                     options => options
-                        .AddEntityLogging( // Specify entity level logging here
-                            services.BookRepository.GetOriginalPropertyValue,
-                            new[] { book }, ObservableProperties.GetForBookEntity) // Specify property level logging here
+                        // Specify entity level logging here
+                        .AddEntityLogging(
+                            // Specify property level logging here
+                            new[] { book }, ObservableProperties.GetForBookEntity)
                 );
             }
         );
