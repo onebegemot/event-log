@@ -1,25 +1,26 @@
 using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Interfaces.Entities;
 using AHSW.EventLog.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AHSW.EventLog.Repositories;
 
-public class EventLogEntryRepository<TDbContext, TEventType, TEntityType, TPropertyType> :
-    IEventLogEntryRepository<TEventType, TEntityType, TPropertyType>
-        where TDbContext : DbContext
-        where TEventType : struct, Enum
-        where TEntityType : struct, Enum
-        where TPropertyType : struct, Enum
+public class Repository<TDbContext> : IRepository
+    where TDbContext : DbContext
 {
     private readonly TDbContext _dbContext;
 
-    public EventLogEntryRepository(TDbContext dbContext)
+    public Repository(TDbContext dbContext)
     {
         _dbContext = dbContext;
     }
     
-    public async Task AddOrUpdateAsync(EventLogEntry<TEventType, TEntityType, TPropertyType> entity,
+    public async Task AddOrUpdateEventLogAsync<TEventType, TEntityType, TPropertyType>(
+        EventLogEntry<TEventType, TEntityType, TPropertyType> entity,
         CancellationToken cancellationToken = default)
+            where TEventType : struct, Enum
+            where TEntityType : struct, Enum
+            where TPropertyType : struct, Enum
     {
         if (IsNew())
         {
@@ -34,4 +35,8 @@ public class EventLogEntryRepository<TDbContext, TEventType, TEntityType, TPrope
         
         bool IsNew() => entity.Id == 0;
     }
+    
+    public object GetOriginalPropertyValue<TEntity>(TEntity entity, string propertyName)
+        where TEntity : IPkEntity =>
+            _dbContext.Entry(entity).Property(propertyName).OriginalValue;
 }

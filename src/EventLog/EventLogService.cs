@@ -12,11 +12,11 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
-    private readonly IEventLogEntryRepository<TEventType, TEntityType, TPropertyType> _eventLogEntryRepository;
+    private readonly IRepository _repository;
     
-    public EventLogService(IEventLogEntryRepository<TEventType, TEntityType, TPropertyType> eventLogEntryRepository)
+    public EventLogService(IRepository repository)
     {
-        _eventLogEntryRepository = eventLogEntryRepository;
+        _repository = repository;
     }
     
     public async Task CreateEventScopeAndRun(TEventType eventLogType,
@@ -28,11 +28,11 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         {
             await workUnitAction(
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
-                    eventLogEntry, _eventLogEntryRepository));
+                    eventLogEntry, _repository));
             
             eventLogEntry.Status = EventStatus.Successful;
             
-            await _eventLogEntryRepository.AddOrUpdateAsync(eventLogEntry);
+            await _repository.AddOrUpdateEventLogAsync(eventLogEntry);
         }
         catch (TaskCanceledException exception)
         {
@@ -55,11 +55,11 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         {
             var result = await workUnitAction(
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
-                    eventLogEntry, _eventLogEntryRepository));
+                    eventLogEntry, _repository));
             
             eventLogEntry.Status = EventStatus.Successful;
             
-            await _eventLogEntryRepository.AddOrUpdateAsync(eventLogEntry);
+            await _repository.AddOrUpdateEventLogAsync(eventLogEntry);
 
             return result;
         }
@@ -92,6 +92,6 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
             eventLogEntry.SetFailedStatusAndAddFailureDetails(eventStatus, header, exception.ToString());
         }
 
-        await _eventLogEntryRepository.AddOrUpdateAsync(eventLogEntry);
+        await _repository.AddOrUpdateEventLogAsync(eventLogEntry);
     }
 }

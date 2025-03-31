@@ -71,7 +71,7 @@ internal static class Program
         await CreateBooksAndAddToShelfOneByOneInDedicatedEventScope(userId, bookCount, services);
         await CreateBooksAndAddToShelfOneByOneInSingleEventScope(userId, bookCount, services);
         await CreateBookAndThenUpdateBookInDedicatedEventScope(userId, services);
-        await CreateBooksAndThrowUnhandledException(userId, bookCount, services);
+        // await CreateBooksAndThrowUnhandledException(userId, bookCount, services);
         await CreateBooksAndThrowHandledException(userId, services);
 
         Console.WriteLine("Completed...");
@@ -148,7 +148,6 @@ internal static class Program
                         () => services.ShelfRepository.AddOrUpdateAsync(shelf),
                         options => options
                             .AddEntityLogging(
-                                services.ShelfRepository.GetOriginalPropertyValue,
                                 new[] { shelf }, ObservableProperties.GetForShelfEntity)
                     );
 
@@ -161,7 +160,6 @@ internal static class Program
                             () => services.BookRepository.AddOrUpdateAsync(book),
                             options => options
                                 .AddEntityLogging(
-                                    services.BookRepository.GetOriginalPropertyValue,
                                     new[] { book }, ObservableProperties.GetForBookEntity)
                         );
                     }
@@ -193,7 +191,6 @@ internal static class Program
                     () => services.ShelfRepository.AddOrUpdateAsync(shelf),
                     options => options
                         .AddEntityLogging(
-                            services.ShelfRepository.GetOriginalPropertyValue,
                             new[] { shelf }, ObservableProperties.GetForShelfEntity)
                 );
             }
@@ -215,7 +212,6 @@ internal static class Program
                         () => services.BookRepository.AddOrUpdateAsync(book),
                         options => options
                             .AddEntityLogging(
-                                services.BookRepository.GetOriginalPropertyValue,
                                 new[] { book }, ObservableProperties.GetForBookEntity)
                     );
                 }
@@ -249,7 +245,6 @@ internal static class Program
                     () => services.BookRepository.AddOrUpdateAsync(book),
                     options => options
                         .AddEntityLogging(
-                            services.BookRepository.GetOriginalPropertyValue,
                             new[] { book }, ObservableProperties.GetForBookEntity)
                 );
             }
@@ -275,7 +270,6 @@ internal static class Program
                     () => services.BookRepository.AddOrUpdateAsync(book),
                     options => options
                         .AddEntityLogging(
-                            services.BookRepository.GetOriginalPropertyValue,
                             new[] { book }, ObservableProperties.GetForBookEntity)
                 );
             }
@@ -292,7 +286,6 @@ internal static class Program
                     () => services.BookRepository.AddOrUpdateAsync(book),
                     options => options
                         .AddEntityLogging(
-                            services.BookRepository.GetOriginalPropertyValue,
                             new[] { book }, ObservableProperties.GetForBookEntity)
                 );
             }
@@ -319,7 +312,6 @@ internal static class Program
                         () => throw new Exception("A test exception occurred... Just proceed the application execution."),
                         options => options
                             .AddEntityLogging(
-                                services.BookRepository.GetOriginalPropertyValue,
                                 new[] { CreateBookEntity() }, ObservableProperties.GetForBookEntity)
                     );
                 }
@@ -348,7 +340,6 @@ internal static class Program
                     () => services.BookRepository.AddOrUpdateAsync(book1),
                     options => options
                         .AddEntityLogging(
-                            services.BookRepository.GetOriginalPropertyValue,
                             new[] { book1 }, ObservableProperties.GetForBookEntity)
                 );
 
@@ -360,7 +351,6 @@ internal static class Program
                         () => throw new Exception("An exception occurred..."),
                         options => options
                             .AddEntityLogging(
-                                services.BookRepository.GetOriginalPropertyValue,
                                 new[] { book2 }, ObservableProperties.GetForBookEntity)
                     );
                 }

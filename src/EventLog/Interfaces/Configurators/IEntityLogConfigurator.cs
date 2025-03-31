@@ -8,7 +8,6 @@ public interface IEntityLogConfigurator<TEventType, TEntityType, in TPropertyTyp
     where TPropertyType : struct, Enum
 {
     IEntityLogConfigurator<TEventType, TEntityType, TPropertyType> AddEntityLogging<TEntity>(
-        Func<TEntity, string, object> getOriginalPropertyValue, IEnumerable<TEntity> entities,
-        Func<TPropertyType[]> getObservableProperties)
+        IEnumerable<TEntity> entities, Func<TPropertyType[]> getObservableProperties)
             where TEntity : IPkEntity;
 }

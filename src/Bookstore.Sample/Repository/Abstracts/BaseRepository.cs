@@ -24,7 +24,4 @@ internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
         
         bool IsNew() => entity.Id == 0;
     }
-    
-    public object GetOriginalPropertyValue(TEntity entity, string propertyName) =>
-        _dbContext.Entry(entity).Property(propertyName).OriginalValue;
 }

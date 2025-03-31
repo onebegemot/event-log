@@ -9,16 +9,16 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
     where TEntityType : struct, Enum
     where TPropertyType : struct, Enum
 {
-    private readonly IEventLogEntryRepository<TEventType, TEntityType, TPropertyType> _eventLogEntryRepository;
+    private readonly IRepository _repository;
     
     public EventLogScope(
         EventLogEntry<TEventType,TEntityType,TPropertyType> eventLogEntry,
-        IEventLogEntryRepository<TEventType, TEntityType, TPropertyType> eventLogEntryRepository)
+        IRepository repository)
     {
         ArgumentNullException.ThrowIfNull(eventLogEntry);
 
         EventLogEntry = eventLogEntry;
-        _eventLogEntryRepository = eventLogEntryRepository;
+        _repository = repository;
     }
     
     public EventLogEntry<TEventType,TEntityType,TPropertyType> EventLogEntry { get; }
@@ -33,7 +33,7 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
     {
         ArgumentNullException.ThrowIfNull(repositoryActionAsync);
         
-        var entityLogConfiguration = new EntityLogConfiguration<TEventType, TEntityType, TPropertyType>();
+        var entityLogConfiguration = new EntityLogConfiguration<TEventType, TEntityType, TPropertyType>(_repository);
         optionsBuilder?.Invoke(entityLogConfiguration);
         var logEntityUnits = entityLogConfiguration.LogEntityUnits;
         
@@ -49,15 +49,15 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
                     .ToList();
         }
         
-        await _eventLogEntryRepository.AddOrUpdateAsync(EventLogEntry);
+        await _repository.AddOrUpdateEventLogAsync(EventLogEntry);
 
         return;
         
         IEnumerable<EntityLogEntry<TEventType,TEntityType,TPropertyType>> GetFilteredEntityLogEntries(
             IEnumerable<LogEntityUnit<TEventType, TEntityType, TPropertyType>> values) =>
-            values
-                .Select(x => x.GetEntityLogEntry())
-                .Where(EntityLogEntryFilter);
+                values
+                    .Select(x => x.GetEntityLogEntry())
+                    .Where(EntityLogEntryFilter);
     }
     
     private static bool EntityLogEntryFilter(

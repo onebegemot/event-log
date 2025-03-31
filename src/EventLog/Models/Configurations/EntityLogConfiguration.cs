@@ -1,4 +1,5 @@
-﻿using AHSW.EventLog.Interfaces.Configurators;
+﻿using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Interfaces.Configurators;
 using AHSW.EventLog.Interfaces.Entities;
 using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Models.Entities.Abstract;
@@ -13,20 +14,25 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
+    private readonly IRepository _repository;
+
+    public EntityLogConfiguration(IRepository repository)
+    {
+        _repository = repository;
+    }
+    
     private readonly List<LogEntityUnit<TEventType, TEntityType, TPropertyType>> _logEntityUnits = new();
 
     public IReadOnlyCollection<LogEntityUnit<TEventType, TEntityType, TPropertyType>> LogEntityUnits => _logEntityUnits;
     
     public IEntityLogConfigurator<TEventType, TEntityType, TPropertyType> AddEntityLogging<TEntity>(
-        Func<TEntity, string, object> getOriginalPropertyValue, IEnumerable<TEntity> entities,
-        Func<TPropertyType[]> getObservableProperties)
+        IEnumerable<TEntity> entities, Func<TPropertyType[]> getObservableProperties)
             where TEntity : IPkEntity
     {
-        ArgumentNullException.ThrowIfNull(getOriginalPropertyValue);
         ArgumentNullException.ThrowIfNull(entities);
         ArgumentNullException.ThrowIfNull(getObservableProperties);
-        
-        var logEntityUnits = GetLogEntities(getOriginalPropertyValue,
+
+        var logEntityUnits = GetLogEntities(_repository.GetOriginalPropertyValue,
             new EntityLogInfo<TEntity, TPropertyType>(entities, getObservableProperties()));
         
         _logEntityUnits.AddRange(logEntityUnits);

@@ -17,9 +17,8 @@ public static class ConfigureExtensions
         services.AddScoped<
             IEventLogService<TEventType, TEntityType, TPropertyType>,
             EventLogService<TEventType, TEntityType, TPropertyType>>();
-        services.AddScoped<
-            IEventLogEntryRepository<TEventType, TEntityType, TPropertyType>,
-            EventLogEntryRepository<TDbContext, TEventType, TEntityType, TPropertyType>>();
+        
+        services.AddScoped<IRepository, Repository<TDbContext>>();
         
         return services;
     }
