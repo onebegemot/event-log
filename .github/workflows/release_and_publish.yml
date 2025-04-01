@@ -1,0 +1,102 @@
+name: Create release and publish NuGet
+
+on:
+  push:
+    branches:
+      - 'master' 
+
+permissions:
+  contents: write
+  
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+  NuGetDirectory: ${{ github.workspace}}/nuget
+
+defaults:
+  run:
+    shell: pwsh
+    
+jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-24.04
+    if: startsWith(github.ref, 'refs/tags/') && github.ref_type == 'tag' && github.event.base_ref == 'refs/heads/master'
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      tag: ${{ github.ref_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Get project version from .csproj
+        id: version
+        run: |
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
+          echo "Project version is $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Create release
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title "$VERSION" \
+              --generate-notes \
+              --latest
+  
+  tag_and_push:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "Alex Holenko"
+          git config --global user.email "cat-begemot@live.com"
+
+      - name: Create a new tag
+        run: |
+          NEW_TAG="v$VERSION"
+          git tag $NEW_TAG
+          echo "Tag created: $NEW_TAG"
+
+      - name: Push tag to remote
+        run: |
+          git push origin $NEW_TAG
+  
+  create_nuget:
+    name: Create NuGet
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+
+    - run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: nuget
+        if-no-files-found: error
+        retention-days: 7
+        path: ${{ env.NuGetDirectory }}/*.nupkg
+        
+  deploy:
+    name: Deploy NuGet
+    if: github.event_name == 'release'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nuget
+          path: ${{ env.NuGetDirectory }}
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+
+      - name: Publish NuGet package
+        run: |
+          foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
+              dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          }
