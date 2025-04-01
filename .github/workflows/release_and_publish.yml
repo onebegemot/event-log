@@ -17,6 +17,9 @@ jobs:
   tag_and_push:
     name: Create and push release tag
     runs-on: ubuntu-24.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      tag: ${{ github.ref_name }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,11 +35,15 @@ jobs:
           VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
           echo "Project version is $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-
+      - name: Fetch the latest changes from the remote repository
+        run: |
+          git fetch --all
+          
       - name: Create a new tag
         run: |
           NEW_TAG="v$VERSION"
           git checkout master
+          git pull origin master
           git tag $NEW_TAG
           echo "Tag created: $NEW_TAG"
 
