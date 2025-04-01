@@ -38,7 +38,7 @@ internal static class Program
                             .AddPropertyTypeDescription(PropertyType.BookPrice, "Price")
                             .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Height")
                     )
-                    .RegisterEntity<BookEntity>(EntityType.Book,
+                    .RegisterEntity<BookEntity>(EntityType.Book, x => ((BookEntity)x).Id,
                         options => options
                             .RegisterProperty(PropertyType.BookTitle,
                                 x => x.Title, nameof(BookEntity.Title))
@@ -57,7 +57,7 @@ internal static class Program
                             .RegisterProperty(PropertyType.BookPrice,
                                 x => x.Price, nameof(BookEntity.Price))
                     )
-                    .RegisterEntity<ShelfEntity>(EntityType.Shelf,
+                    .RegisterEntity<ShelfEntity>(EntityType.Shelf, x => ((ShelfEntity)x).Id,
                         options => options
                             .RegisterProperty(PropertyType.ShelfHeight,
                                 x => x.Height, nameof(ShelfEntity.Height))

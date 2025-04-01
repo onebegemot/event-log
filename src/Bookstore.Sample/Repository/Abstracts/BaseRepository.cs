@@ -1,11 +1,11 @@
-﻿using AHSW.EventLog.Interfaces.Entities;
+﻿using AHSW.EventLog.Models.Entities.Abstract;
 using Bookstore.Sample.DatabaseContext;
 using Bookstore.Sample.Interfaces;
 
 namespace Bookstore.Sample.Repository;
 
 internal abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>
-    where TEntity : class, IPkEntity
+    where TEntity : PkEntity
 {
     private readonly BookstoreDbContext _dbContext;
 

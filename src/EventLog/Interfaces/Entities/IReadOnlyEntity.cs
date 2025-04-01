@@ -1,6 +1,6 @@
 namespace AHSW.EventLog.Interfaces.Entities;
 
-public interface IReadOnlyEntity : IPkEntity
+public interface IReadOnlyEntity
 {
     int? CreatedBy { get; set; }
 

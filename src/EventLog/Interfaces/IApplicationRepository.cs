@@ -1,9 +1,8 @@
-using AHSW.EventLog.Interfaces.Entities;
 using AHSW.EventLog.Models.Entities;
 
 namespace AHSW.EventLog.Interfaces;
 
-public interface IEventLogRepository
+public interface IApplicationRepository
 {
     Task AddOrUpdateEventLogAsync<TEventType, TEntityType, TPropertyType>(
         EventLogEntry<TEventType, TEntityType, TPropertyType> entity,
@@ -13,5 +12,5 @@ public interface IEventLogRepository
             where TPropertyType : struct, Enum;
 
     object GetOriginalPropertyValue<TEntity>(TEntity entity, string propertyName)
-        where TEntity : IPkEntity;
+        where TEntity : class;
 }

@@ -1,5 +1,4 @@
 ﻿using AHSW.EventLog.Interfaces;
-using AHSW.EventLog.Interfaces.Entities;
 using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Models.Entities.Abstract;
 using AHSW.EventLog.Models.Enums;
@@ -13,6 +12,7 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
     where TPropertyType : struct, Enum
 {
     private static IReadOnlyDictionary<Type, TEntityType> _entityTypes;
+    private static IReadOnlyDictionary<Type, Func<object, int>> _entityIdGetters;
     private static IReadOnlyDictionary<TPropertyType, IPropertyInfo> _registeredProperties;
     
     public static void Configure<TDbContext>(
@@ -23,13 +23,14 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         configurationBuilder?.Invoke(configuration);
         
         _entityTypes = configuration.EntityTypes;
+        _entityIdGetters = configuration.EntityIdGetters;
         _registeredProperties = configuration.Properties;
         
         FillCustomDescriptionTables(configuration);
     }
     
     public static TEntityType GetEntityType<TEntity>(EntityLogInfo<TEntity, TPropertyType> logInfo)
-        where TEntity : IPkEntity
+        where TEntity : class
     {
         if (_entityTypes.TryGetValue(logInfo.GetType(), out var entityType))
             return entityType;
@@ -37,9 +38,18 @@ public static class EventLogServiceConfiguration<TEventType, TEntityType, TPrope
         throw new NotImplementedException($"The type {nameof(EntityLogInfo<TEntity, TPropertyType>)} cannot be parsed into {nameof(TEntityType)}");
     }
     
+    public static int GetEntityId<TEntity>(TEntity entity)
+        where TEntity : class
+    {
+        if (_entityIdGetters.TryGetValue(entity.GetType(), out var entityIdGetter))
+            return entityIdGetter(entity);
+        
+        throw new NotImplementedException($"The ID getter for the entity type {nameof(TEntity)} is not registered");
+    }
+    
     public static PropertyValues GetPropertyInfo<TEntity>(TEntity entity,
         TPropertyType propertyType, Func<TEntity, string, object> getOriginalPropertyValue)
-            where TEntity : IPkEntity
+            where TEntity : class
     {
         if (_registeredProperties.TryGetValue(propertyType, out var propertyInfo))
         {

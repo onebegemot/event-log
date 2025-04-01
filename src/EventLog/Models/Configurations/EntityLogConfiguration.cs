@@ -1,6 +1,5 @@
 ﻿using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Interfaces.Configurators;
-using AHSW.EventLog.Interfaces.Entities;
 using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Models.Entities.Abstract;
 using AHSW.EventLog.Models.Entities.PropertyLogEntries;
@@ -14,11 +13,11 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
-    private readonly IEventLogRepository _repository;
+    private readonly IApplicationRepository _applicationRepository;
 
-    public EntityLogConfiguration(IEventLogRepository repository)
+    public EntityLogConfiguration(IApplicationRepository applicationRepository)
     {
-        _repository = repository;
+        _applicationRepository = applicationRepository;
     }
     
     private readonly List<LogEntityUnit<TEventType, TEntityType, TPropertyType>> _logEntityUnits = new();
@@ -27,22 +26,21 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
     
     public IEntityLogConfigurator<TEventType, TEntityType, TPropertyType> AddEntityLogging<TEntity>(
         IEnumerable<TEntity> entities, Func<TPropertyType[]> getObservableProperties)
-            where TEntity : IPkEntity
+            where TEntity : class
     {
         ArgumentNullException.ThrowIfNull(entities);
         ArgumentNullException.ThrowIfNull(getObservableProperties);
 
-        var logEntityUnits = GetLogEntities(_repository.GetOriginalPropertyValue,
-            new EntityLogInfo<TEntity, TPropertyType>(entities, getObservableProperties()));
+        var logEntityUnits = GetLogEntities(new EntityLogInfo<TEntity, TPropertyType>(entities, getObservableProperties()));
         
         _logEntityUnits.AddRange(logEntityUnits);
         
         return this;
     }
     
-    private static IEnumerable<LogEntityUnit<TEventType, TEntityType, TPropertyType>> GetLogEntities<TEntity>(
-        Func<TEntity, string, object> getOriginalPropertyValue, EntityLogInfo<TEntity, TPropertyType> logInfo)
-            where TEntity : IPkEntity
+    private IEnumerable<LogEntityUnit<TEventType, TEntityType, TPropertyType>> GetLogEntities<TEntity>(
+        EntityLogInfo<TEntity, TPropertyType> logInfo)
+            where TEntity : class
     {
         var entityType = EventLogServiceConfiguration<TEventType, TEntityType, TPropertyType>.GetEntityType(logInfo);
 
@@ -51,7 +49,7 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
             {
                 var entityLogEntry = new EntityLogEntry<TEventType, TEntityType, TPropertyType>()
                 {
-                    ActionType = entity.Id == 0
+                    ActionType = IsNew()
                         ? ActionType.Create
                         : ActionType.Update,
                     EntityType = entityType
@@ -60,20 +58,26 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
                 if (logInfo.Properties != null)
                 {
                     foreach (var property in logInfo.Properties)
-                        AddPropertyLogEntries(entity, property, getOriginalPropertyValue, entityLogEntry);
+                        AddPropertyLogEntries(entity, property, entityLogEntry);
                 }
 
                 return new LogEntityUnit<TEventType, TEntityType, TPropertyType>(entity, entityLogEntry);
+                
+                bool IsNew()
+                {
+                    var id = EventLogServiceConfiguration<TEventType, TEntityType, TPropertyType>.GetEntityId(entity);
+                    return id == 0;
+                }
             })
             .ToList();
     }
     
-    private static void AddPropertyLogEntries<TEntity>(TEntity entity, TPropertyType property,
-        Func<TEntity, string, object> getOriginalPropertyValue, EntityLogEntry<TEventType, TEntityType, TPropertyType> entityLogEntry)
-            where TEntity : IPkEntity
+    private void AddPropertyLogEntries<TEntity>(TEntity entity, TPropertyType property,
+        EntityLogEntry<TEventType, TEntityType, TPropertyType> entityLogEntry)
+            where TEntity : class
     {
         var propertyValues = EventLogServiceConfiguration<TEventType, TEntityType, TPropertyType>.GetPropertyInfo(
-            entity, property, getOriginalPropertyValue);
+            entity, property, _applicationRepository.GetOriginalPropertyValue);
 
         var indicativeProperty = propertyValues.New ?? propertyValues.Original;
         

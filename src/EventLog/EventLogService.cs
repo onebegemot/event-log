@@ -12,11 +12,11 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
-    private readonly IEventLogRepository _repository;
+    private readonly IApplicationRepository _applicationRepository;
     
-    public EventLogService(IEventLogRepository repository)
+    public EventLogService(IApplicationRepository applicationRepository)
     {
-        _repository = repository;
+        _applicationRepository = applicationRepository;
     }
     
     public async Task CreateEventScopeAndRun(TEventType eventLogType,
@@ -28,11 +28,11 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         {
             await workUnitAction(
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
-                    eventLogEntry, _repository));
+                    eventLogEntry, _applicationRepository));
             
             eventLogEntry.Status = EventStatus.Successful;
             
-            await _repository.AddOrUpdateEventLogAsync(eventLogEntry);
+            await _applicationRepository.AddOrUpdateEventLogAsync(eventLogEntry);
         }
         catch (TaskCanceledException exception)
         {
@@ -55,11 +55,11 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         {
             var result = await workUnitAction(
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
-                    eventLogEntry, _repository));
+                    eventLogEntry, _applicationRepository));
             
             eventLogEntry.Status = EventStatus.Successful;
             
-            await _repository.AddOrUpdateEventLogAsync(eventLogEntry);
+            await _applicationRepository.AddOrUpdateEventLogAsync(eventLogEntry);
 
             return result;
         }
@@ -92,6 +92,6 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
             eventLogEntry.SetFailedStatusAndAddFailureDetails(eventStatus, header, exception.ToString());
         }
 
-        await _repository.AddOrUpdateEventLogAsync(eventLogEntry);
+        await _applicationRepository.AddOrUpdateEventLogAsync(eventLogEntry);
     }
 }

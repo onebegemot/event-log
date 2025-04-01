@@ -1,8 +1,7 @@
-﻿using AHSW.EventLog.Interfaces.Entities;
+﻿using AHSW.EventLog.Models.Entities.Abstract;
 
 namespace Bookstore.Sample.Models;
 
-internal abstract class BaseEntity : IPkEntity
+internal abstract class BaseEntity : PkEntity
 {
-    public int Id { get; set; }
 }

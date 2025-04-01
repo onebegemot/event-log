@@ -1,12 +1,11 @@
 using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Interfaces.Configurators;
-using AHSW.EventLog.Interfaces.Entities;
 
 namespace AHSW.EventLog.Models.Configurations;
 
 public class PropertyConfiguration<TEntity, TPropertyType> :
     IPropertyConfigurator<TEntity, TPropertyType>
-        where TEntity : IPkEntity
+        where TEntity : class
         where TPropertyType : struct, Enum
 {
     private readonly Dictionary<TPropertyType, IPropertyInfo> _properties = new();

@@ -9,16 +9,16 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
     where TEntityType : struct, Enum
     where TPropertyType : struct, Enum
 {
-    private readonly IEventLogRepository _repository;
+    private readonly IApplicationRepository _applicationRepository;
     
     public EventLogScope(
         EventLogEntry<TEventType,TEntityType,TPropertyType> eventLogEntry,
-        IEventLogRepository repository)
+        IApplicationRepository applicationRepository)
     {
         ArgumentNullException.ThrowIfNull(eventLogEntry);
 
         EventLogEntry = eventLogEntry;
-        _repository = repository;
+        _applicationRepository = applicationRepository;
     }
     
     public EventLogEntry<TEventType,TEntityType,TPropertyType> EventLogEntry { get; }
@@ -33,7 +33,7 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
     {
         ArgumentNullException.ThrowIfNull(repositoryActionAsync);
         
-        var entityLogConfiguration = new EntityLogConfiguration<TEventType, TEntityType, TPropertyType>(_repository);
+        var entityLogConfiguration = new EntityLogConfiguration<TEventType, TEntityType, TPropertyType>(_applicationRepository);
         optionsBuilder?.Invoke(entityLogConfiguration);
         var logEntityUnits = entityLogConfiguration.LogEntityUnits;
         
@@ -49,7 +49,7 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
                     .ToList();
         }
         
-        await _repository.AddOrUpdateEventLogAsync(EventLogEntry);
+        await _applicationRepository.AddOrUpdateEventLogAsync(EventLogEntry);
 
         return;
         

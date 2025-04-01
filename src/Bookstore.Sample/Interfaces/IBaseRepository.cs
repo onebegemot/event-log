@@ -1,9 +1,9 @@
-using AHSW.EventLog.Interfaces.Entities;
+using AHSW.EventLog.Models.Entities.Abstract;
 
 namespace Bookstore.Sample.Interfaces;
 
 internal interface IBaseRepository<in TEntity>
-    where TEntity : class, IPkEntity
+    where TEntity : PkEntity
 {
     Task AddOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 }

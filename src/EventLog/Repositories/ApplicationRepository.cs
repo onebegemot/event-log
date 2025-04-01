@@ -1,16 +1,15 @@
 using AHSW.EventLog.Interfaces;
-using AHSW.EventLog.Interfaces.Entities;
 using AHSW.EventLog.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AHSW.EventLog.Repositories;
 
-public class EventLogRepository<TDbContext> : IEventLogRepository
+public class ApplicationRepository<TDbContext> : IApplicationRepository
     where TDbContext : DbContext
 {
     private readonly TDbContext _dbContext;
 
-    public EventLogRepository(TDbContext dbContext)
+    public ApplicationRepository(TDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -37,6 +36,6 @@ public class EventLogRepository<TDbContext> : IEventLogRepository
     }
     
     public object GetOriginalPropertyValue<TEntity>(TEntity entity, string propertyName)
-        where TEntity : IPkEntity =>
+        where TEntity : class =>
             _dbContext.Entry(entity).Property(propertyName).OriginalValue;
 }

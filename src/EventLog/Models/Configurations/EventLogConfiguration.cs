@@ -1,6 +1,5 @@
 ﻿using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Interfaces.Configurators;
-using AHSW.EventLog.Interfaces.Entities;
 using AHSW.EventLog.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +17,7 @@ public class EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropert
     private readonly Dictionary<TPropertyType, string> _propertyTypeDescriptions = new();
     private readonly Dictionary<EventStatus, string> _eventStatusDescriptions = new();
     private readonly Dictionary<Type, TEntityType> _entityTypes = new();
+    private readonly Dictionary<Type, Func<object, int>> _entityIdGetters = new();
     private readonly Dictionary<TPropertyType, IPropertyInfo> _properties = new();
     
     private TDbContext _databaseContext;
@@ -31,6 +31,8 @@ public class EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropert
     public IReadOnlyDictionary<EventStatus, string> EventStatusDescriptions => _eventStatusDescriptions;
     
     public IReadOnlyDictionary<Type, TEntityType> EntityTypes => _entityTypes;
+    
+    public IReadOnlyDictionary<Type, Func<object, int>> EntityIdGetters => _entityIdGetters;
     
     public IReadOnlyDictionary<TPropertyType, IPropertyInfo> Properties => _properties;
     
@@ -60,10 +62,11 @@ public class EventLogConfiguration<TDbContext, TEventType, TEntityType, TPropert
     }
     
     public IEntityConfigurator<TEntityType, TPropertyType> RegisterEntity<TEntity>(
-        TEntityType entityType, Action<IPropertyConfigurator<TEntity, TPropertyType>> optionsBuilder)
-            where TEntity : IPkEntity
+        TEntityType entityType, Func<object, int> getId, Action<IPropertyConfigurator<TEntity, TPropertyType>> optionsBuilder)
+            where TEntity : class
     {
         _entityTypes[typeof(EntityLogInfo<TEntity, TPropertyType>)] = entityType;
+        _entityIdGetters[typeof(TEntity)] = getId;
 
         var configurator = new PropertyConfiguration<TEntity, TPropertyType>();
         optionsBuilder(configurator);

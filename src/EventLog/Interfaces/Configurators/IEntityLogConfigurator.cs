@@ -1,6 +1,4 @@
-﻿using AHSW.EventLog.Interfaces.Entities;
-
-namespace AHSW.EventLog.Interfaces.Configurators;
+﻿namespace AHSW.EventLog.Interfaces.Configurators;
 
 public interface IEntityLogConfigurator<TEventType, TEntityType, in TPropertyType>
     where TEventType : struct, Enum
@@ -9,5 +7,5 @@ public interface IEntityLogConfigurator<TEventType, TEntityType, in TPropertyTyp
 {
     IEntityLogConfigurator<TEventType, TEntityType, TPropertyType> AddEntityLogging<TEntity>(
         IEnumerable<TEntity> entities, Func<TPropertyType[]> getObservableProperties)
-            where TEntity : IPkEntity;
+            where TEntity : class;
 }
