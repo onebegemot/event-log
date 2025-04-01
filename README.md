@@ -83,7 +83,7 @@ Using join queries, the output might be more user-friendly:
 
 ## How to use
 
-### Define TEventType, TEntityType, and TPropertyType empty enums
+### 1. Define TEventType, TEntityType, and TPropertyType empty enums
 These enums will be filled later, when required event and property logging is added to the code. It is desirable to follow the next suggestions.
 * Explicitly numerate enum members to avoid damaging the log in the future
 ```cs
@@ -124,7 +124,7 @@ internal enum EntityType
 }
 ```
 
-### Embed EventLog tables to the application database context
+### 2. Embed EventLog tables to the application database context
 * Add `modelBuilder.ApplyEventLogConfigurations<EventType, EntityType, PropertyType>();` to the overriden OnModelCreating method in the application database context class. Make sure it goes first in the settings in roder to apply all database schemes correctly
 ```cs
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -137,7 +137,7 @@ internal enum EntityType
 ```
 * Create and apply the new migration with EventLog convfigurations
 
-### Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using
+### 3. Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using
 ```cs
 internal static class ObservableProperties
 {
@@ -156,12 +156,12 @@ internal static class ObservableProperties
 }
 ```
 
-### Register EventLog service
+### 4. Register EventLog service
 ```cs
 services.AddEventLog<BookstoreDbContext, EventType, EntityType, PropertyType>();
 ```
 
-### Configure EventLog service on the application startup
+### 5. Configure EventLog service on the application startup
 See more detail example in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
 
 Setting up enum member custom names is a convenient way to make look of SQL query results more user-friendly.
@@ -193,7 +193,7 @@ EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<Book
         });
 ```
 
-### Add EventLog recording
+### 6. Add EventLog recording
 See more examples in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
 
 All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Inside this method entities must be only updated in repository and saves.
@@ -221,7 +221,7 @@ All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Ins
         );
 ```
 
-### Use SQL queries for log investigation
+### 7. Use SQL queries for log investigation
 Samples of SQL queries can be found [here](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts).
 
-### Use log tables in any way in code for extend application functionality
+### 8. Use log tables in any way in code for extend application functionality
