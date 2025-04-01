@@ -36,6 +36,7 @@ jobs:
       - name: Create a new tag
         run: |
           NEW_TAG="v$VERSION"
+          git checkout master
           git tag $NEW_TAG
           echo "Tag created: $NEW_TAG"
 
