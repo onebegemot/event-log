@@ -13,40 +13,10 @@ env:
   DOTNET_NOLOGO: true
   NuGetDirectory: ${{ github.workspace}}/nuget
     
-jobs:
-  tag_and_push:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Git
-        run: |
-          git config --global user.name "Alex Holenko"
-          git config --global user.email "cat-begemot@live.com"
-
-      - name: Get project version from .csproj
-        id: version
-        run: |
-          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
-          echo "Project version is $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-      - name: Create a new tag
-        run: |
-          NEW_TAG="v$VERSION"
-          git tag $NEW_TAG
-          echo "Tag created: $NEW_TAG"
-
-      - name: Push tag to remote
-        run: |
-          git push origin $NEW_TAG
-          
+jobs:         
   release:
     name: Create release
     runs-on: ubuntu-24.04
-    needs: tag_and_push
-    if: success() && startsWith(github.ref, 'refs/tags/') && github.ref_type == 'tag' && github.event.base_ref == 'refs/heads/master'
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       tag: ${{ github.ref_name }}
@@ -86,11 +56,41 @@ jobs:
         if-no-files-found: error
         retention-days: 7
         path: ${{ env.NuGetDirectory }}/*.nupkg
-        
+
+  tag_and_push:
+    runs-on: ubuntu-24.04
+    needs: create_nuget
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "Alex Holenko"
+          git config --global user.email "cat-begemot@live.com"
+
+      - name: Get project version from .csproj
+        id: version
+        run: |
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
+          echo "Project version is $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Create a new tag
+        run: |
+          NEW_TAG="v$VERSION"
+          git tag $NEW_TAG
+          echo "Tag created: $NEW_TAG"
+
+      - name: Push tag to remote
+        run: |
+          git push origin $NEW_TAG
+          
   deploy:
     name: Deploy NuGet
     runs-on: ubuntu-24.04
-    needs: create_nuget
+    needs: tag_and_push
     if: success()
     steps:
       - uses: actions/download-artifact@v4
