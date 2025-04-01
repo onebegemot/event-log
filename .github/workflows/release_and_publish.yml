@@ -46,7 +46,12 @@ jobs:
           git pull origin master
           git tag $NEW_TAG
           echo "Tag created: $NEW_TAG"
-
+          
+      - name: Push tag to remote
+        uses: actions-ecosystem/action-push-tag@v1
+        with:
+          tag: $NEW_TAG
+          
       - name: Push tag to remote
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
