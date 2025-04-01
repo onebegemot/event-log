@@ -1,4 +1,4 @@
-name: Create release by tag
+name: Create release
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    name: Release pushed tag
+    name: Release
     runs-on: ubuntu-24.04      
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -29,5 +29,4 @@ jobs:
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --title "$VERSION" \
-              --generate-notes \
               --latest
