@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 
-name: publish
+name: Deploy NuGet package
 on:
   workflow_dispatch: # Allow running the workflow manually from the GitHub UI
 
@@ -22,9 +22,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
 
+    - name: Pack NuGet
     - run: dotnet pack --configuration Release --output ${{ env.NuGetDirectory }}
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: nuget
         if-no-files-found: error
