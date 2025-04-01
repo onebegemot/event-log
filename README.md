@@ -124,8 +124,6 @@ internal enum EntityType
 }
 ```
 
-### Each application EF entity must implement IPkEntity interface
-
 ### Embed EventLog tables to the application database context
 * Add `modelBuilder.ApplyEventLogConfigurations<EventType, EntityType, PropertyType>();` to the overriden OnModelCreating method in the application database context class. Make sure it goes first in the settings in roder to apply all database schemes correctly
 ```cs
@@ -181,12 +179,12 @@ EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<Book
                             .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
                             .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Height")
                     )
-                    .RegisterEntity<BookEntity>(EntityType.Book,
+                    .RegisterEntity<BookEntity>(EntityType.Book, x => ((BookEntity)x).Id,
                         options => options
                             .RegisterProperty(PropertyType.BookTitle,
                                 x => x.Title, nameof(BookEntity.Title))
                     )
-                    .RegisterEntity<ShelfEntity>(EntityType.Shelf,
+                    .RegisterEntity<ShelfEntity>(EntityType.Shelf, x => ((ShelfEntity)x).Id,
                         options => options
                             .RegisterProperty(PropertyType.ShelfHeight,
                                 x => x.Height, nameof(ShelfEntity.Height))
