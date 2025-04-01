@@ -41,13 +41,10 @@ jobs:
           
       - name: Create and push tag
         run: |
-          git branch --show-current
-          git branch -b master
           NEW_TAG="v$VERSION"
           git tag $NEW_TAG
           echo "Tag created: $NEW_TAG"
           git push origin $NEW_TAG
-          git branch --show-current
                               
   release:
     name: Create release
