@@ -48,8 +48,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
 
-    - run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
-
+    - name: pack
+      shell: pwsh
+      run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
+      
     - uses: actions/upload-artifact@v4
       with:
         name: nuget
@@ -102,6 +104,7 @@ jobs:
         uses: actions/setup-dotnet@v4
 
       - name: Publish NuGet package
+        shell: pwsh
         run: |
           foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
               dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
