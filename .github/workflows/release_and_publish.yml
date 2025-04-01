@@ -13,56 +13,9 @@ env:
   DOTNET_NOLOGO: true
   NuGetDirectory: ${{ github.workspace}}/nuget
     
-jobs:         
-  release:
-    name: Create release
-    runs-on: ubuntu-24.04
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      tag: ${{ github.ref_name }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Get project version from .csproj
-        id: version
-        run: |
-          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
-          echo "Project version is $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-      - name: Create release
-        run: |
-          gh release create "$tag" \
-              --repo="$GITHUB_REPOSITORY" \
-              --title "$VERSION" \
-              --generate-notes \
-              --latest
-  
-  create_nuget:
-    name: Create NuGet
-    runs-on: ubuntu-24.04
-    needs: release
-    if: success()
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-
-    - name: pack
-      shell: pwsh
-      run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
-      
-    - uses: actions/upload-artifact@v4
-      with:
-        name: nuget
-        if-no-files-found: error
-        retention-days: 7
-        path: ${{ env.NuGetDirectory }}/*.nupkg
-
+jobs:
   tag_and_push:
     runs-on: ubuntu-24.04
-    needs: create_nuget
-    if: success()
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -89,13 +42,59 @@ jobs:
         run: |
           git push origin $NEW_TAG
           
-  deploy:
-    name: Deploy NuGet
+  release:
+    name: Create release
     runs-on: ubuntu-24.04
     needs: tag_and_push
     if: success()
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      tag: ${{ github.ref_name }}
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+            
+      - name: Create GitHub release
+        run: |
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${tag#v}" \
+              --generate-notes
+              --generate-notes \
+              --verify-tag \
+              --latest
+  
+  create_nuget:
+    name: Create NuGet
+    runs-on: ubuntu-24.04
+    needs: release
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      - name: Pack
+        shell: pwsh
+        run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nuget
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{ env.NuGetDirectory }}/*.nupkg
+          
+  deploy:
+    name: Deploy NuGet
+    runs-on: ubuntu-24.04
+    needs: create_nuget
+    if: success()
+    steps:
+      - name: Checkout repository
+        uses: actions/download-artifact@v4
         with:
           name: nuget
           path: ${{ env.NuGetDirectory }}
