@@ -24,5 +24,4 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="${tag#v}" \
               --generate-notes
-              --verify-tag \
               --latest
