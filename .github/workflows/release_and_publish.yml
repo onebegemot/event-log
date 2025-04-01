@@ -15,7 +15,7 @@ env:
     
 jobs:
   tag_and_push:
-    name: Create and poush release tag
+    name: Create and push release tag
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
@@ -54,7 +54,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-            
+      
+      - name: Get latest tag from master
+        run: |
+          git fetch --tags
+          tag=$(git describe --tags --abbrev=0 origin/master)
+          echo "Latest tag on master: $tag"
+      
       - name: Create GitHub release
         run: |
           gh release create "$tag" \
