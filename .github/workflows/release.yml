@@ -2,8 +2,8 @@ name: Create release by tag
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - 'master' 
 
 permissions:
   contents: write
