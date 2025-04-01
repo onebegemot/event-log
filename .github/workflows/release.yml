@@ -30,5 +30,4 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title "$VERSION" \
               --generate-notes \
-              --verify-tag \
               --latest
