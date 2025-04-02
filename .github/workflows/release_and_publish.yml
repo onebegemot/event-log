@@ -34,7 +34,9 @@ jobs:
         id: tag
         run: |
           git fetch --tags
-          echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          echo "Latest tag: $LATEST_TAG"
         
       - name: Compare Strings
         id: compare_versions
