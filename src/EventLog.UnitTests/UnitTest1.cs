@@ -13,7 +13,7 @@ public class Tests
         Assert.Pass();
     }
     
-    // [Test]
+    [Test]
     public void Test2()
     {
         Assert.Fail();
