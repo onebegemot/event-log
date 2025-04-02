@@ -18,7 +18,7 @@ jobs:
     name: Check project version
     runs-on: ubuntu-24.04
     outputs:
-      is_release: ${{ steps.compare_versions.outputs.value }}
+      is_release: ${{ steps.compare_versions.outputs.is_release }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,13 +43,14 @@ jobs:
         run: |         
           if [[ "$VERSION" == "${LATEST_TAG#v}" ]]; then
             echo "The project version is not incremented"
-            IS_RELEASE=false
-            echo "value=$IS_RELEASE" >> $GITHUB_OUTPUT
+            echo "is_release=true" >> $GITHUB_ENV
           else
             echo "The new release version is ${LATEST_TAG#v}"
             IS_RELEASE=true
-            echo "value=$IS_RELEASE" >> $GITHUB_OUTPUT
-          fi  # Closing the if statement
+            echo "is_release=false" >> $GITHUB_ENV
+          fi
+          
+          echo "is_release=${{ env.is_release }}" >> $GITHUB_OUTPUT
                     
   tag_and_push:
     name: Create and push release tag
