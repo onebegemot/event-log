@@ -127,7 +127,7 @@ jobs:
   create_nuget:
     name: Create NuGet
     runs-on: ubuntu-24.04
-    needs: release
+    needs: tag_and_push
     if: success()
     steps:
       - name: Checkout repository
