@@ -14,9 +14,41 @@ env:
   NuGetDirectory: ${{ github.workspace}}/nuget
     
 jobs:
+  compare_strings:
+    name: Check project version
+    runs-on: ubuntu-24.04
+    outputs:
+      is_release: ${{ steps.compare_versions.outputs.value }}
+    steps:
+      - name: Get project version from .csproj
+        id: version
+        run: |
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
+          echo "Project version is $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV      
+          
+      - name: Get latest tag
+        id: tag
+        run: echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+        
+      - name: Compare Strings
+        id: compare_versions
+        run: |         
+          if [[ "$VERSION" == "${LATEST_TAG#v}" ]]; then
+            echo "The project version is not incremented"
+            IS_RELEASE=false
+            echo "value=$IS_RELEASE" >> $GITHUB_OUTPUT
+          else
+            echo "The new release version is ${LATEST_TAG#v}"
+            IS_RELEASE=true
+            echo "value=$IS_RELEASE" >> $GITHUB_OUTPUT
+          fi  # Closing the if statement
+                    
   tag_and_push:
     name: Create and push release tag
     runs-on: ubuntu-24.04
+    needs: compare_strings
+    if: ${{ success() && needs.compare_versions.outputs.is_release == 'true' }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       tag: ${{ github.ref_name }}
@@ -35,6 +67,7 @@ jobs:
           VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
           echo "Project version is $VERSION"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
       - name: Fetch the latest changes from the remote repository
         run: |
           git fetch --all
