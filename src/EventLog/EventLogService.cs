@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using AHSW.EventLog.Extensions;
 using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Models;
@@ -12,7 +14,17 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
+    private static readonly JsonSerializerOptions _serializerOptions;
+    
     private readonly IApplicationRepository _applicationRepository;
+
+    static EventLogService()
+    {
+        _serializerOptions = new JsonSerializerOptions()
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+    }
     
     public EventLogService(IApplicationRepository applicationRepository)
     {
@@ -30,9 +42,10 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
                     eventLogEntry, _applicationRepository));
             
-            eventLogEntry.Status = EventStatus.Successful;
+            if (eventLogEntry.Status == EventStatus.NotDefined)
+                eventLogEntry.Status = EventStatus.Successful;
             
-            await _applicationRepository.AddOrUpdateEventLogAsync(eventLogEntry);
+            await AddOrUpdateEventLogAsync(eventLogEntry);
         }
         catch (TaskCanceledException exception)
         {
@@ -57,9 +70,10 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
                     eventLogEntry, _applicationRepository));
             
-            eventLogEntry.Status = EventStatus.Successful;
+            if (eventLogEntry.Status == EventStatus.NotDefined)
+                eventLogEntry.Status = EventStatus.Successful;
             
-            await _applicationRepository.AddOrUpdateEventLogAsync(eventLogEntry);
+            await AddOrUpdateEventLogAsync(eventLogEntry);
 
             return result;
         }
@@ -75,23 +89,25 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         }
     }
     
-    private async ValueTask ProcessUnhandledException(EventStatus eventStatus,
+    private async Task ProcessUnhandledException(EventStatus eventStatus,
         EventLogEntry<TEventType, TEntityType, TPropertyType> eventLogEntry,
         Exception exception)
     {
         if (!eventLogEntry.ExplicitlyThrownException)
-        {
-            var header = string.Empty;
-            
-            if (eventStatus == EventStatus.UnhandledException)
-                header = "--- UNHANDLED EXCEPTION ---";
-            
-            if (eventStatus == EventStatus.UnhandledException)
-                header = "--- TOKEN CANCELLATION EXCEPTION ---";
-            
-            eventLogEntry.SetFailedStatusAndAddFailureDetails(eventStatus, header, exception.ToString());
-        }
+            eventLogEntry.AddFailureInfo(eventStatus, exception: exception);
+        
+        await AddOrUpdateEventLogAsync(eventLogEntry);
+    }
 
+    private async Task AddOrUpdateEventLogAsync(
+        EventLogEntry<TEventType, TEntityType, TPropertyType> eventLogEntry)
+    {
+        if (eventLogEntry.FailureInfos != null && eventLogEntry.FailureInfos.Any())
+        {
+            eventLogEntry.FailureDetails = JsonSerializer.Serialize(
+                eventLogEntry.FailureInfos, _serializerOptions);
+        }
+        
         await _applicationRepository.AddOrUpdateEventLogAsync(eventLogEntry);
     }
 }

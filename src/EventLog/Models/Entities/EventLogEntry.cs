@@ -15,6 +15,7 @@ public class EventLogEntry<TEventType, TEntityType, TPropertyType> : ReadOnlyEnt
     
     public EventLogEntry(TEventType eventType)
     {
+        Status = EventStatus.NotDefined;
         EventType = eventType;
         CreatedAt = DateTime.UtcNow;
     }
@@ -37,4 +38,7 @@ public class EventLogEntry<TEventType, TEntityType, TPropertyType> : ReadOnlyEnt
     /// </summary>
     [NotMapped]
     public bool ExplicitlyThrownException { get; set; }
+
+    [NotMapped]
+    public ICollection<FailureInfo> FailureInfos { get; set; }
 }

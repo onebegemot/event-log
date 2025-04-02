@@ -71,8 +71,8 @@ internal static class Program
         await CreateBooksAndAddToShelfOneByOneInDedicatedEventScope(userId, bookCount, services);
         await CreateBooksAndAddToShelfOneByOneInSingleEventScope(userId, bookCount, services);
         await CreateBookAndThenUpdateBookInDedicatedEventScope(userId, services);
-        // await CreateBooksAndThrowUnhandledException(userId, bookCount, services);
         await CreateBooksAndThrowHandledException(userId, services);
+        await CreateBooksAndThrowUnhandledException(userId, bookCount, services);
 
         Console.WriteLine("Completed...");
     }
@@ -356,10 +356,10 @@ internal static class Program
                 }
                 catch (Exception exception)
                 {
-                    eventLogScope.EventLogEntry.SetFailedStatusAndAddFailureDetails(
+                    eventLogScope.EventLogEntry.AddFailureInfo(
                         EventStatus.HandledException,
                         $"Database error when saving a book with title {book2.Title}",
-                        exception.ToString());
+                        exception);
                 }
             }
         );

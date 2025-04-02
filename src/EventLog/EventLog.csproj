@@ -6,12 +6,13 @@
     <Nullable>disable</Nullable>
     <RootNamespace>AHSW.EventLog</RootNamespace>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
     <!--Nuget properties-->
     <PackageId>AHSW.EventLog</PackageId>
-    <Version>1.7.1</Version>
+    <Version>1.8.0</Version>
     <Authors>Alex Holenko</Authors>
     
     <AssemblyTitle>Library for capturing application events, storing diagnostic data, and tracking domain model states</AssemblyTitle>
