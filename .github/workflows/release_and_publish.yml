@@ -31,8 +31,6 @@ jobs:
   compare_strings:
     name: Check project version
     runs-on: ubuntu-24.04
-    needs: run_test
-    if: success()
     outputs:
       is_release: ${{ steps.compare_versions.outputs.is_release }}
     steps:
@@ -69,7 +67,7 @@ jobs:
   tag_and_push:
     name: Create and push release tag
     runs-on: ubuntu-24.04
-    needs: compare_strings
+    needs: [run_test, compare_strings]
     if: ${{ success() && needs.compare_strings.outputs.is_release == 'true' }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
