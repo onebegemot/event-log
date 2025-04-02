@@ -20,6 +20,9 @@ jobs:
     outputs:
       is_release: ${{ steps.compare_versions.outputs.value }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Get project version from .csproj
         id: version
         run: |
