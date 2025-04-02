@@ -14,9 +14,25 @@ env:
   NuGetDirectory: ${{ github.workspace}}/nuget
     
 jobs:
+  run_test:
+    name: Run tests
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        
+      - name: Run tests
+        shell: pwsh
+        run: dotnet test --configuration Release .\src\EventLog.UnitTests
+        
   compare_strings:
     name: Check project version
     runs-on: ubuntu-24.04
+    needs: run_test
+    if: success()
     outputs:
       is_release: ${{ steps.compare_versions.outputs.is_release }}
     steps:

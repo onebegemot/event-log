@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLog", "src\EventLog\Ev
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookstore.Sample", "src\Bookstore.Sample\Bookstore.Sample.csproj", "{246BC6C2-BC17-4B1F-A1B9-F15CA03807C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLog.UnitTests", "src\EventLog.UnitTests\EventLog.UnitTests.csproj", "{FF8E4F68-15E0-4B75-A57F-55850385880D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{246BC6C2-BC17-4B1F-A1B9-F15CA03807C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{246BC6C2-BC17-4B1F-A1B9-F15CA03807C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{246BC6C2-BC17-4B1F-A1B9-F15CA03807C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF8E4F68-15E0-4B75-A57F-55850385880D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF8E4F68-15E0-4B75-A57F-55850385880D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF8E4F68-15E0-4B75-A57F-55850385880D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF8E4F68-15E0-4B75-A57F-55850385880D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
