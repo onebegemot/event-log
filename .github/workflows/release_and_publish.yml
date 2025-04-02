@@ -56,7 +56,7 @@ jobs:
     name: Create and push release tag
     runs-on: ubuntu-24.04
     needs: compare_strings
-    if: ${{ success() && needs.compare_versions.outputs.is_release == 'true' }}
+    if: ${{ success() && needs.compare_strings.outputs.is_release == 'true' }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       tag: ${{ github.ref_name }}
