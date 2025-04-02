@@ -34,7 +34,7 @@ jobs:
         id: tag
         run: |
           git fetch --tags
-          LATEST_TAG=$(git describe --tags --abbrev=0 origin/master)
+          LATEST_TAG=$(git tag -l "v*" --sort=-v:refname | head -n 1)
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
           echo "Latest tag: $LATEST_TAG"
         
