@@ -43,14 +43,12 @@ jobs:
         run: |         
           if [[ "$VERSION" == "${LATEST_TAG#v}" ]]; then
             echo "The project version is not incremented"
-            echo "is_release=true" >> $GITHUB_ENV
+            echo "is_release=true" >> $GITHUB_OUTPUT
           else
             echo "The new release version is ${LATEST_TAG#v}"
             IS_RELEASE=true
-            echo "is_release=false" >> $GITHUB_ENV
+            echo "is_release=false" >> $GITHUB_OUTPUT
           fi
-          
-          echo "is_release=${{ env.is_release }}" >> $GITHUB_OUTPUT
                     
   tag_and_push:
     name: Create and push release tag
