@@ -111,7 +111,8 @@ Expand below text to see the examples.
 These enums will be filled later, when required event and property logging is added to the code. It is desirable to follow the next suggestions.
 * Explicitly numerate enum members to avoid damaging the log in the future
 ```cs
-internal enum EventType
+// Preferable to use the short underlying type to keep EventLog data compact 
+internal enum EventType : short
 {
     // Books = 1000
     AddBooksOnShelf = 1001, // Explicit number is assigned to each enum member
@@ -124,7 +125,8 @@ internal enum EventType
 ```
 * Group enum members to simplify further maintenance and extends types
 ```cs
-internal enum PropertyType
+// Preferable to use the short underlying type to keep EventLog data compact 
+internal enum PropertyType : short
 {
     // Book = 1000 - All properties grouped by entity
     BookTitle = 1001,
@@ -141,7 +143,8 @@ internal enum PropertyType
 ```
 * Make consistency numeration between TEntityType and TPropertyType
 ```cs
-internal enum EntityType
+// Preferable to use the short underlying type to keep EventLog data compact 
+internal enum EntityType ; short
 {
     Book = 1000, // PropertyType has Book entity group that starts with 1000 as well
     Shelf = 2000
