@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using AHSW.EventLog.Extensions;
 using AHSW.EventLog.Interfaces;
+using AHSW.EventLog.Interfaces.Configurators;
 using AHSW.EventLog.Models;
 using AHSW.EventLog.Models.Configurations;
 using AHSW.EventLog.Models.Entities;
@@ -17,7 +18,7 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         where TPropertyType : struct, Enum
 
 {
-    private static EventLogConfiguration<TEventType, TEntityType, TPropertyType> _configuration;
+    private static EventLogConfiguration<TEventType, TEntityType, TPropertyType> _logConfiguration;
     private static JsonSerializerOptions _serializerOptions;
     
     private readonly IApplicationRepository _applicationRepository;
@@ -35,13 +36,13 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         _applicationRepository = applicationRepository;
     }
     
-    public static void Configure(Action<EventLogConfiguration<TEventType, TEntityType, TPropertyType>> configurationBuilder = null)
+    public static void Configure(Action<IEventLogConfigurator<TEventType, TEntityType, TPropertyType>> configurationBuilder = null)
     {
-        _configuration = new EventLogConfiguration<TEventType, TEntityType, TPropertyType>();
-        configurationBuilder?.Invoke(_configuration);
+        _logConfiguration = new EventLogConfiguration<TEventType, TEntityType, TPropertyType>();
+        configurationBuilder?.Invoke(_logConfiguration);
     }
 
-    EventLogConfiguration<TEventType, TEntityType, TPropertyType> IEventLog<TEventType, TEntityType, TPropertyType>.Configuration => _configuration;
+    EventLogConfiguration<TEventType, TEntityType, TPropertyType> IEventLog<TEventType, TEntityType, TPropertyType>.Configuration => _logConfiguration;
     
     IApplicationRepository IEventLog<TEventType, TEntityType, TPropertyType>.ApplicationRepository => _applicationRepository;
     

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AHSW.EventLog.Models.Configurations;
 
 public class EventLogConfiguration<TEventType, TEntityType, TPropertyType> :
+    IEventLogConfigurator<TEventType, TEntityType, TPropertyType>,
     IEntityConfigurator<TEntityType, TPropertyType>
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
