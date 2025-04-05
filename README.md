@@ -20,12 +20,19 @@ The concept behind using EventLog is to gather information about application act
 ## Table of Contents
 
 * [Event Log](#event-log)
-* [Table of Contents](#2-table-of-contents)
-* [Usage Example in Code](#usage-example-in-code)
-* [Database Result Output](#database-result-output)
-* [Sample Project]
-* [How to use]
-  * [Define TEventType, TEntityType, and TPropertyType empty enums](#6.1.-define-tEventType,-tEntityType,-and-tPropertyType-empty-enums)
+* [Table of Contents](#table-of-contents)
+* [Usage Example in Code](##1-usage-example-in-code)
+* [Database Result Output]([#database-result-output](#2-database-result-output))
+* [Sample Project](#3-sample-project)
+* [How to use](#4-how-to-use)
+  * [Define TEventType, TEntityType, and TPropertyType empty enums](#41-define-teventtype-tentitytype-and-tpropertytype-empty-enums)
+  * [Embed EventLog tables to the application database context](#42-embed-eventlog-tables-to-the-application-database-context)
+  * [Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using](#43-add-observableproperties-static-class-with-predefined-methods-with-observable-property-collection-for-convenient-and-consistent-using)
+  * [Register EventLog service](#44-register-eventlog-service)
+  * [Configure EventLog service on the application startup](#45-configure-eventlog-service-on-the-application-startup)
+  * [Add EventLog recording](#46-add-eventlog-recording)
+* [Use SQL queries for log investigation](#5-use-sql-queries-for-log-investigation)
+* [Use log tables in any way in code for extend application functionality](#6-use-log-tables-in-any-way-in-code-for-extend-application-functionality)
 
 ## 1. Usage Example in Code  
 As an example, imagine the following code is an API endpoint that creates a domain model, **Book**, and saves it in storage.  
