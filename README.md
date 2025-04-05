@@ -104,7 +104,7 @@ Expand below text to see the examples.
 <details>
 <summary>2.3. Track application domain model properties changing</summary>
 	
-#### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/TrackPropertyChanging.sql)
+#### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/TrackPropertyChanges.sql)
 
 | **CreatedAt** | **Action** | **EntityId** | **Entity** | **Property** | **Value** | **ValueType** | **InitiatorId** | **Event** |
 |---|---|---|---|---|---|---|---|---|
