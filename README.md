@@ -27,7 +27,7 @@ The concept behind using EventLog is to gather information about application act
 * [How to use](#4-how-to-use)
   * [Define TEventType, TEntityType, and TPropertyType empty enums](#41-define-teventtype-tentitytype-and-tpropertytype-empty-enums)
   * [Embed EventLog tables to the application database context](#42-embed-eventlog-tables-to-the-application-database-context)
-  * [Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using](#43-add-observableproperties-static-class-with-predefined-methods-with-observable-property-collection-for-convenient-and-consistent-using)
+  * [Add ObservableProperties static class (optional)](#43-add-observableproperties-static-class-optional)
   * [Register EventLog service](#44-register-eventlog-service)
   * [Configure EventLog service on the application startup](#45-configure-eventlog-service-on-the-application-startup)
   * [Add EventLog recording](#46-add-eventlog-recording)
@@ -182,7 +182,9 @@ internal enum EntityType ; short
 ```
 * 4.2.2. Create and apply the new migration with EventLog convfigurations
 
-### 4.3. Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using
+### 4.3. Add ObservableProperties static class (optional)
+Predefine methods with observable property collections to enable convenient and consistent usage across the application.
+
 ```cs
 internal static class ObservableProperties
 {
