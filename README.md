@@ -6,7 +6,7 @@
 	<img width="111" height="111" src="https://github.com/cat-begemot/event-log/blob/master/images/logo-1.png"/>
 </a>
 
-## Event Log
+## 1. Event Log
 EventLog is a library that identifies application events, records diagnostic and statistical information about them, and stores them in a relational database for further analysis. Within the scope of an application event, it has the ability to track the state of application domain models.
 
 The concept behind using EventLog is to gather information about application activity and domain model mutations for various purposes. Some possible examples of its use include:
@@ -17,7 +17,17 @@ The concept behind using EventLog is to gather information about application act
 - Collecting statistics on user controls and application features to improve the UI
 - Analyzing what happens in the application through API invocation and data changes for internal investigations
 
-### Usage Example in Code  
+## 2. Table of Contents
+
+* [1. Event Log](#event-log)
+* [2. Table of Contents](#2-table-of-contents)
+* [3. Usage Example in Code](#usage-example-in-code)
+* [4. Database Result Output](#database-result-output)
+* [5. Sample Project]
+* [6. How to use]
+  * [6.1. Define TEventType, TEntityType, and TPropertyType empty enums](#6.1.-define-tEventType,-tEntityType,-and-tPropertyType-empty-enums)
+
+## 3. Usage Example in Code  
 As an example, imagine the following code is an API endpoint that creates a domain model, **Book**, and saves it in storage.  
 As a wrapper, **EventLog** records the ```AddBooksOnShelf``` event, adds some detailed information to the ```EventLogEntry```, executes the initial repository method while simultaneously adding an ```EntityLogEntry``` related to the ```EventLogEntry```, and records the ```Book``` property value states.  
 
@@ -51,14 +61,14 @@ await services.EventLog.CreateEventScopeAndRun(
     });
 ```
 
-### Database Result Output  
+## 4. Database Result Output  
 As a result, **EventLog** table data can be viewed and analysed using [SQL queries](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts).
 Expand below text to see the examples.  
 
 <details>
 <summary>Analyse all recorded application events</summary>
 
-#### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllEvents.sql)
+#### 4.1. [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllEvents.sql)
 
 | **Id** | **Initiator** | **EventType** | **Status** | **CreatedAt** | **DurationInMs** | **Details** | **FailureDetails** |
 |---|---|---|---|---|---|---|---|
@@ -75,7 +85,7 @@ Expand below text to see the examples.
 <details>
 <summary>Analyse application event statistics</summary>
 
-#### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/Statistics.sql)
+#### 4.2. [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/Statistics.sql)
 
 | **EventType** | **TotalCount** | **ErrorCount** | **MedianInMs** | **MeanInMs** |
 |---|---|---|---|---|
@@ -87,7 +97,7 @@ Expand below text to see the examples.
 <details>
 <summary>Track application domain model properties changing</summary>
 	
-#### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/TrackPropertyChanging.sql)
+#### 4.3. [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/TrackPropertyChanging.sql)
 
 | **CreatedAt** | **Action** | **EntityId** | **Entity** | **Property** | **Value** | **ValueType** | **InitiatorId** | **Event** |
 |---|---|---|---|---|---|---|---|---|
@@ -103,14 +113,14 @@ Expand below text to see the examples.
 | 2025-04-05 13:22:59 | Update | 7 | Book | FirstSale | 2025-04-06 13:22:59.2832817 | DateTime | 3 | Update books |
 </details>
 
-## Sample Project
+## 5. Sample Project
 [Bookstore](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample) is a sample console application to demonstrate the way of configuring EventLog and the most common use cases.  
 
-## How to use
+## 6. How to use
 
-### 1. Define TEventType, TEntityType, and TPropertyType empty enums
+### 6.1. Define TEventType, TEntityType, and TPropertyType empty enums
 These enums will be filled later, when required event and property logging is added to the code. It is desirable to follow the next suggestions.
-* Explicitly numerate enum members to avoid damaging the log in the future
+* 6.1.1. Explicitly numerate enum members to avoid damaging the log in the future
 ```cs
 // Preferable to use the short underlying type to keep EventLog data compact 
 internal enum EventType : short
@@ -124,7 +134,7 @@ internal enum EventType : short
     DeleteShelf = 2002,
 }
 ```
-* Group enum members to simplify further maintenance and extends types
+* 6.1.2. Group enum members to simplify further maintenance and extends types
 ```cs
 // Preferable to use the short underlying type to keep EventLog data compact 
 internal enum PropertyType : short
@@ -142,7 +152,7 @@ internal enum PropertyType : short
     // Shelf = 2000
     ShelfHeight = 2001
 ```
-* Make consistency numeration between TEntityType and TPropertyType
+* 6.1.3. Make consistency numeration between TEntityType and TPropertyType
 ```cs
 // Preferable to use the short underlying type to keep EventLog data compact 
 internal enum EntityType ; short
@@ -152,7 +162,7 @@ internal enum EntityType ; short
 }
 ```
 
-### 2. Embed EventLog tables to the application database context
+### 6.2. Embed EventLog tables to the application database context
 * Add `modelBuilder.ApplyEventLogConfigurations<EventType, EntityType, PropertyType>();` to the overriden OnModelCreating method in the application database context class. Make sure it goes first in the settings in roder to apply all database schemes correctly
 ```cs
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -165,7 +175,7 @@ internal enum EntityType ; short
 ```
 * Create and apply the new migration with EventLog convfigurations
 
-### 3. Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using
+### 6.3. Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using
 ```cs
 internal static class ObservableProperties
 {
@@ -184,12 +194,12 @@ internal static class ObservableProperties
 }
 ```
 
-### 4. Register EventLog service
+### 6.4. Register EventLog service
 ```cs
 services.AddEventLog<BookstoreDbContext, EventType, EntityType, PropertyType>();
 ```
 
-### 5. Configure EventLog service on the application startup
+### 6.5. Configure EventLog service on the application startup
 See more detail example in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
 
 Setting up enum member custom names is a convenient way to make look of SQL query results more user-friendly.
@@ -221,7 +231,7 @@ EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<Book
         });
 ```
 
-### 6. Add EventLog recording
+### 6.6. Add EventLog recording
 See more examples in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
 
 All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Inside this method entities must be only updated in repository and saves.
@@ -249,7 +259,7 @@ All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Ins
         );
 ```
 
-### 7. Use SQL queries for log investigation
+### 6.7. Use SQL queries for log investigation
 All samples of SQL queries can be found [here](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts):
 - [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllEvents.sql)
 - [ShowAllFailedEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllFailedEvents.sql)
