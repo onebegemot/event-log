@@ -9,16 +9,14 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
     where TEntityType : struct, Enum
     where TPropertyType : struct, Enum
 {
-    private readonly IApplicationRepository _applicationRepository;
-    
-    public EventLogScope(
-        EventLogEntry<TEventType,TEntityType,TPropertyType> eventLogEntry,
-        IApplicationRepository applicationRepository)
-    {
-        ArgumentNullException.ThrowIfNull(eventLogEntry);
+    private readonly IEventLog<TEventType, TEntityType, TPropertyType> _eventLog;
 
+    public EventLogScope(
+        IEventLog<TEventType, TEntityType, TPropertyType> eventLog,
+        EventLogEntry<TEventType,TEntityType,TPropertyType> eventLogEntry)
+    {
+        _eventLog = eventLog;
         EventLogEntry = eventLogEntry;
-        _applicationRepository = applicationRepository;
     }
     
     public EventLogEntry<TEventType,TEntityType,TPropertyType> EventLogEntry { get; }
@@ -33,7 +31,7 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
     {
         ArgumentNullException.ThrowIfNull(repositoryActionAsync);
         
-        var entityLogConfiguration = new EntityLogConfiguration<TEventType, TEntityType, TPropertyType>(_applicationRepository);
+        var entityLogConfiguration = new EntityLogConfiguration<TEventType, TEntityType, TPropertyType>(_eventLog);
         optionsBuilder?.Invoke(entityLogConfiguration);
         var logEntityUnits = entityLogConfiguration.LogEntityUnits;
         
@@ -49,7 +47,7 @@ public class EventLogScope<TEventType, TEntityType, TPropertyType>
                     .ToList();
         }
         
-        await _applicationRepository.AddOrUpdateEventLogAsync(EventLogEntry);
+        await _eventLog.ApplicationRepository.AddOrUpdateEventLogAsync(EventLogEntry);
 
         return;
         

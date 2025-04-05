@@ -13,11 +13,11 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
 {
-    private readonly IApplicationRepository _applicationRepository;
+    private readonly IEventLog<TEventType, TEntityType, TPropertyType> _eventLog;
 
-    public EntityLogConfiguration(IApplicationRepository applicationRepository)
+    public EntityLogConfiguration(IEventLog<TEventType, TEntityType, TPropertyType> eventLog)
     {
-        _applicationRepository = applicationRepository;
+        _eventLog = eventLog;
     }
     
     private readonly List<LogEntityUnit<TEventType, TEntityType, TPropertyType>> _logEntityUnits = new();
@@ -42,7 +42,7 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
         EntityLogInfo<TEntity, TPropertyType> logInfo)
             where TEntity : class
     {
-        var entityType = EventLogServiceConfiguration<TEventType, TEntityType, TPropertyType>.GetEntityType(logInfo);
+        var entityType = _eventLog.Configuration.GetEntityType(logInfo);
 
         return logInfo.Entities
             .Select(entity =>
@@ -61,11 +61,11 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
                         AddPropertyLogEntries(entity, property, entityLogEntry);
                 }
 
-                return new LogEntityUnit<TEventType, TEntityType, TPropertyType>(entity, entityLogEntry);
+                return new LogEntityUnit<TEventType, TEntityType, TPropertyType>(entity, _eventLog.Configuration.GetEntityId, entityLogEntry);
                 
                 bool IsNew()
                 {
-                    var id = EventLogServiceConfiguration<TEventType, TEntityType, TPropertyType>.GetEntityId(entity);
+                    var id = _eventLog.Configuration.GetEntityId(entity);
                     return id == 0;
                 }
             })
@@ -76,8 +76,8 @@ public class EntityLogConfiguration<TEventType, TEntityType, TPropertyType> :
         EntityLogEntry<TEventType, TEntityType, TPropertyType> entityLogEntry)
             where TEntity : class
     {
-        var propertyValues = EventLogServiceConfiguration<TEventType, TEntityType, TPropertyType>.GetPropertyInfo(
-            entity, property, _applicationRepository.GetOriginalPropertyValue);
+        var propertyValues = _eventLog.Configuration.GetPropertyInfo(
+            entity, property, _eventLog.ApplicationRepository.GetOriginalPropertyValue);
 
         var indicativeProperty = propertyValues.New ?? propertyValues.Original;
         

@@ -1,9 +1,8 @@
-﻿using AHSW.EventLog.Extensions;
+﻿using AHSW.EventLog;
+using AHSW.EventLog.Extensions;
 using AHSW.EventLog.Interfaces;
-using AHSW.EventLog.Models.Configurations;
 using AHSW.EventLog.Models.Enums;
 using Bookstore.Sample.Configurations;
-using Bookstore.Sample.DatabaseContext;
 using Bookstore.Sample.Interfaces;
 using Bookstore.Sample.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,15 +19,17 @@ internal static class Program
         
         var host = Host.Create(recreateDatabase, context =>
         {
-            EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
+            EventLogService<EventType, EntityType, PropertyType>.Configure(
                 configurationBuilder => configurationBuilder
                     .UseCustomTypeDescriptions(context,
                         options => options
                             .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books")
                             .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books")
                             .AddEventTypeDescription(EventType.AddShelf, "Add shelf")
+                            
                             .AddEntityTypeDescription(EntityType.Book, "Book")
                             .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
+                            
                             .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
                             .AddPropertyTypeDescription(PropertyType.BookCondition, "Condition")
                             .AddPropertyTypeDescription(PropertyType.BookLabels, "Labels")

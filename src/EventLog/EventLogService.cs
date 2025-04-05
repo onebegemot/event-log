@@ -3,18 +3,22 @@ using System.Text.Json.Serialization;
 using AHSW.EventLog.Extensions;
 using AHSW.EventLog.Interfaces;
 using AHSW.EventLog.Models;
+using AHSW.EventLog.Models.Configurations;
 using AHSW.EventLog.Models.Entities;
 using AHSW.EventLog.Models.Enums;
 
 namespace AHSW.EventLog;
 
 public class EventLogService<TEventType, TEntityType, TPropertyType> :
-    IEventLogService<TEventType, TEntityType, TPropertyType>
+    IEventLogService<TEventType, TEntityType, TPropertyType>,
+    IEventLog<TEventType, TEntityType, TPropertyType>
         where TEventType : struct, Enum
         where TEntityType : struct, Enum
         where TPropertyType : struct, Enum
+
 {
-    private static readonly JsonSerializerOptions _serializerOptions;
+    private static EventLogConfiguration<TEventType, TEntityType, TPropertyType> _configuration;
+    private static JsonSerializerOptions _serializerOptions;
     
     private readonly IApplicationRepository _applicationRepository;
 
@@ -31,6 +35,16 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         _applicationRepository = applicationRepository;
     }
     
+    public static void Configure(Action<EventLogConfiguration<TEventType, TEntityType, TPropertyType>> configurationBuilder = null)
+    {
+        _configuration = new EventLogConfiguration<TEventType, TEntityType, TPropertyType>();
+        configurationBuilder?.Invoke(_configuration);
+    }
+
+    EventLogConfiguration<TEventType, TEntityType, TPropertyType> IEventLog<TEventType, TEntityType, TPropertyType>.Configuration => _configuration;
+    
+    IApplicationRepository IEventLog<TEventType, TEntityType, TPropertyType>.ApplicationRepository => _applicationRepository;
+    
     public async Task CreateEventScopeAndRun(TEventType eventLogType,
         Func<EventLogScope<TEventType, TEntityType, TPropertyType>, Task> workUnitAction)
     {
@@ -39,8 +53,7 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         try
         {
             await workUnitAction(
-                new EventLogScope<TEventType, TEntityType, TPropertyType>(
-                    eventLogEntry, _applicationRepository));
+                new EventLogScope<TEventType, TEntityType, TPropertyType>(this, eventLogEntry));
             
             if (eventLogEntry.Status != EventStatus.HandledException)
                 eventLogEntry.Status = EventStatus.Successful;
@@ -67,8 +80,7 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
         try
         {
             var result = await workUnitAction(
-                new EventLogScope<TEventType, TEntityType, TPropertyType>(
-                    eventLogEntry, _applicationRepository));
+                new EventLogScope<TEventType, TEntityType, TPropertyType>(this, eventLogEntry));
             
             if (eventLogEntry.Status != EventStatus.HandledException)
                 eventLogEntry.Status = EventStatus.Successful;

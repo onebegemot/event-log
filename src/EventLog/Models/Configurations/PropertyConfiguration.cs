@@ -8,14 +8,14 @@ public class PropertyConfiguration<TEntity, TPropertyType> :
         where TEntity : class
         where TPropertyType : struct, Enum
 {
-    private readonly Dictionary<TPropertyType, IPropertyInfo> _properties = new();
+    private readonly Dictionary<TPropertyType, IPropertyInfo> _propertyInfos = new();
 
-    public IReadOnlyDictionary<TPropertyType, IPropertyInfo> Properties => _properties;
+    public IReadOnlyDictionary<TPropertyType, IPropertyInfo> PropertyInfos => _propertyInfos;
     
-    public IPropertyConfigurator<TEntity, TPropertyType> RegisterProperty(TPropertyType property,
+    public IPropertyConfigurator<TEntity, TPropertyType> RegisterProperty(TPropertyType propertyType,
         Func<TEntity, object> propertyGetter, string propertyName)
     {
-        _properties[property] = new PropertyInfo<TEntity>(propertyGetter, propertyName);
+        _propertyInfos[propertyType] = new PropertyInfo<TEntity>(propertyGetter, propertyName);
         return this;
     }
 }
