@@ -223,6 +223,10 @@ All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Ins
 ```
 
 ### 7. Use SQL queries for log investigation
-Samples of SQL queries can be found [here](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts).
+Samples of SQL queries can be found [here](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts):
+- [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllEvents.sql)
+- [ShowAllFailedEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllFailedEvents.sql)
+- [TrackPropertyChanges.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/TrackPropertyChanges.sql)
+- [EventStatistics.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/EventStatistics.sql)
 
 ### 8. Use log tables in any way in code for extend application functionality
