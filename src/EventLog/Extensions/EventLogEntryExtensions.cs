@@ -14,9 +14,6 @@ public static class EventLogEntryExtensions
             where TEntityType : struct, Enum
             where TPropertyType : struct, Enum
     {
-        if (failedStatus == EventStatus.NotDefined)
-            throw new ArgumentException($"The event status cannot be {Enum.GetName(failedStatus)}.", nameof(failedStatus));
-        
         model.Status = failedStatus;
         model.ExplicitlyThrownException = explicitlyThrownException;
         

@@ -20,7 +20,7 @@ public class BoolPropertyLogEntryConfiguration<TEventType, TEntityType, TPropert
                 EventLogPersistenceConstants.BoolPropertyLogTableName,
                 EventLogPersistenceConstants.EventLogSchema);
         
-        MapEnumTypeToaColumnType(builder.Property(x => x.PropertyType));
+        MapEnumColumnType(builder.Property(x => x.PropertyType));
         
         builder.HasIndex(x => x.PropertyType);
     }

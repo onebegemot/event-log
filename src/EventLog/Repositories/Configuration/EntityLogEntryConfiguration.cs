@@ -56,8 +56,8 @@ public class EntityLogEntryConfiguration<TEventType, TEntityType, TPropertyType>
             .HasForeignKey(x => x.EntityLogEntryId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        MapEnumTypeToaColumnType(builder.Property(x => x.EntityType));
-        MapEnumTypeToaColumnType(builder.Property(x => x.ActionType));
+        MapEnumColumnType(builder.Property(x => x.EntityType));
+        MapEnumColumnType(builder.Property(x => x.ActionType));
         
         builder.HasIndex(x => x.EntityId);
     }

@@ -20,7 +20,7 @@ public class DoublePropertyLogEntryConfiguration<TEventType, TEntityType, TPrope
                 EventLogPersistenceConstants.DoublePropertyLogTableName,
                 EventLogPersistenceConstants.EventLogSchema);
         
-        MapEnumTypeToaColumnType(builder.Property(x => x.PropertyType));
+        MapEnumColumnType(builder.Property(x => x.PropertyType));
         
         builder.HasIndex(x => x.PropertyType);
     }

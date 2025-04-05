@@ -20,7 +20,7 @@ public class DecimalPropertyLogEntryConfiguration<TEventType, TEntityType, TProp
                 EventLogPersistenceConstants.DecimalPropertyLogTableName,
                 EventLogPersistenceConstants.EventLogSchema);
         
-        MapEnumTypeToaColumnType(builder.Property(x => x.PropertyType));
+        MapEnumColumnType(builder.Property(x => x.PropertyType));
         
         builder.HasIndex(x => x.PropertyType);
     }

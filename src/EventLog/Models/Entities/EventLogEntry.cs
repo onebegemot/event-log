@@ -15,7 +15,6 @@ public class EventLogEntry<TEventType, TEntityType, TPropertyType> : ReadOnlyEnt
     
     public EventLogEntry(TEventType eventType)
     {
-        Status = EventStatus.NotDefined;
         EventType = eventType;
         CreatedAt = DateTime.UtcNow;
     }

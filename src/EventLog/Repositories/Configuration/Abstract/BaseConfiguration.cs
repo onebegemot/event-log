@@ -5,7 +5,7 @@ namespace AHSW.EventLog.Repositories.Configuration.Abstract;
 
 public abstract class BaseConfiguration
 {
-    protected static void MapEnumTypeToaColumnType<T>(PropertyBuilder<T> propertyBuilder)
+    protected static void MapEnumColumnType<T>(PropertyBuilder<T> propertyBuilder)
         where T : struct, Enum
     {
         var underlyingType = Enum.GetUnderlyingType(typeof(T));
