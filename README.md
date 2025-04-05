@@ -22,18 +22,27 @@ As an example, imagine the following code is an API endpoint that creates a doma
 As a wrapper, **EventLog** records the ```AddBooksOnShelf``` event, adds some detailed information to the ```EventLogEntry```, executes the initial repository method while simultaneously adding an ```EntityLogEntry``` related to the ```EventLogEntry```, and records the ```Book``` property value states.  
 
 ```cs
-var book = CreateBookEntity();
+var book = GetBookEntity();
 
+// Create event scope. For example, it can be API endpoint
 await services.EventLog.CreateEventScopeAndRun(
+    // Define event type
     EventType.AddBooksOnShelf,
     async eventLogScope =>
     {
+	// Addtional usefule data can be added to the event log record 
 	eventLogScope.EventLogEntry.CreatedBy = userId;
 	eventLogScope.EventLogEntry.Details = "Adding a book";
-    
+
+	// Trackable object is changed
+	book.Title = "Book Title - Rev1";
+
+	// Gathering object delta changing and save object and then event
 	await eventLogScope.SaveAndLogEntitiesAsync(
+	    // Invoke object saving by EF data context 
 	    () => services.BookRepository.AddOrUpdateAsync(book),
 	    options => options
+		// Define tracked objects and define tracked properties
 		.AddEntityLogging(
 		    new[] { book },
 		    PropertyType.BookTitle,
@@ -42,62 +51,56 @@ await services.EventLog.CreateEventScopeAndRun(
 ```
 
 ### Database Result Output  
-As a result, **EventLog** tables will contain the following data:  
+As a result, **EventLog** table data can be viewed and analysed using [SQL queries](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts).
+Expand below text to see the examples.  
 
 <details>
-
-<summary>Show all recorded application events</summary>
+<summary>Analyse all recorded application events</summary>
 
 #### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllEvents.sql)
 
-| **Id** | **Initiator** | **EventType** | **Status** | **CreatedAt**               | **DurationInMs** | **Details**                               | **FailureDetails** |
-|--------|---------------|---------------|------------|-----------------------------|------------------|-------------------------------------------|--------------------|
-| 8      | 3             | Update books  | Successful | 2025-04-05 13:18:49.4857455 | 2                | No one observable property is not changed |                    |
-| 7      | 3             | Update books  | Successful | 2025-04-05 13:18:49.4789733 | 5                | Observable property is changed            |                    |
-| 6      | 3             | Add books     | Successful | 2025-04-05 13:18:49.4722871 | 5                | Adding a book                             |                    |
-| 5      | 3             | Add books     | Successful | 2025-04-05 13:18:49.4557589 | 15               | Adding a shelf and 2 books                |                    |
-| 4      | 3             | Add books     | Successful | 2025-04-05 13:18:49.4498311 | 4                | Adding a book                             |                    |
-| 3      | 3             | Add books     | Successful | 2025-04-05 13:18:49.39908   | 49               | Adding a book                             |                    |
-| 2      | 3             | AddShelf      | Successful | 2025-04-05 13:18:49.3250159 | 73               | Adding a shelf                            |                    |
-| 1      | 3             | Add books     | Successful | 2025-04-05 13:18:49.1209684 | 202              | Adding a shelf and 2 books                |                    |
-
-
+| **Id** | **Initiator** | **EventType** | **Status** | **CreatedAt** | **DurationInMs** | **Details** | **FailureDetails** |
+|---|---|---|---|---|---|---|---|
+| 8 | 3 | Update books | Successful | 2025-04-05 13:22:59.2916081 | 2 | No one observable property is not changed |  |
+| 7 | 3 | Update books | Successful | 2025-04-05 13:22:59.2836144 | 5 | Observable property is changed |  |
+| 6 | 3 | Add books | Successful | 2025-04-05 13:22:59.2754546 | 7 | Adding a book |  |
+| 5 | 3 | Add books | Successful | 2025-04-05 13:22:59.2566239 | 16 | Adding a shelf and 2 books |  |
+| 4 | 3 | Add books | Successful | 2025-04-05 13:22:59.2509625 | 3 | Adding a book |  |
+| 3 | 3 | Add books | Successful | 2025-04-05 13:22:59.1869002 | 63 | Adding a book |  |
+| 2 | 3 | Add shelf | Successful | 2025-04-05 13:22:59.0944167 | 91 | Adding a shelf |  |
+| 1 | 3 | Add books | Successful | 2025-04-05 13:22:58.9072985 | 185 | Adding a shelf and 2 books |  |
 </details>
 
-| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EventLog_Raw.png"/> | 
-|:--:| 
-| <b>Figure 1.1 - EventLog table content</b> |
+<details>
+<summary>Analyse application event statistics</summary>
 
-| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EntityLog_Raw.png"/> | 
-|:--:| 
-| <b>Figure 1.2 - EntityLog table content</b> |
+#### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/Statistics.sql)
 
-| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/StringPropertyLog_Raw.png"/> | 
-|:--:| 
-| <b>Figure 1.3 - StringPropertyLog table content</b> |
+| **EventType** | **TotalCount** | **ErrorCount** | **MedianInMs** | **MeanInMs** |
+|---|---|---|---|---|
+| Add books | 7 | 2 | 63 | 81 |
+| Add shelf | 1 | 0 | 92 | 92 |
+| Update books | 2 | 0 | 4 | 4 |
+</details>
 
-| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/Int32PropertyLog_Raw.png"/> | 
-|:--:| 
-| <b>Figure 1.4 - Int32PropertyLog table content</b> |
+<details>
+<summary>Track application domain model properties changing</summary>
+	
+#### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/TrackPropertyChanging.sql)
 
-### Database Result Output (User-Friendly View for Analytical Purposes)  
-Using join queries, the output might be more user-friendly:  
-
-| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EventLog_Pretty.png"/> | 
-|:--:| 
-| <b>Figure 1.1 - EventLog table view</b> |
-
-| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EntityLog_Pretty.png"/> | 
-|:--:| 
-| <b>Figure 1.2 - EntityLog table view</b> |
-
-| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/StringPropertyLog_Pretty.png"/> | 
-|:--:| 
-| <b>Figure 1.3 - StringPropertyLog table view</b> |
-
-| <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/Int32PropertyLog_Pretty.png"/> | 
-|:--:| 
-| <b>Figure 1.4 - Int32PropertyLog table view</b> |
+| **CreatedAt** | **Action** | **EntityId** | **Entity** | **Property** | **Value** | **ValueType** | **InitiatorId** | **Event** |
+|---|---|---|---|---|---|---|---|---|
+| 2025-04-05 13:22:59 | Create | 8 | Book | Title | EventLog Manual - 43 Edition | String | 3 | Add books |
+| 2025-04-05 13:22:59 | Create | 8 | Book | Published | 2025-04-05 13:22:59.2968132 | DateTime | 3 | Add books |
+| 2025-04-05 13:22:59 | Create | 8 | Book | IsAvailable | 1 | Bool | 3 | Add books |
+| 2025-04-05 13:22:59 | Create | 8 | Book | Condition | 1 | Int32 | 3 | Add books |
+| 2025-04-05 13:22:59 | Create | 8 | Book | Labels | 3 | Int32 | 3 | Add books |
+| 2025-04-05 13:22:59 | Create | 8 | Book | LikeCount | 96 | Int32 | 3 | Add books |
+| 2025-04-05 13:22:59 | Create | 8 | Book | Price | 43.0 | Double | 3 | Add books |
+| 2025-04-05 13:22:59 | Update | 7 | Book | Title | EventLog Manual - 63 Edition - Revision_1 | String | 3 | Update books |
+| 2025-04-05 13:22:59 | Update | 7 | Book | Published | 2025-04-05 13:22:59.2832816 | DateTime | 3 | Update books |
+| 2025-04-05 13:22:59 | Update | 7 | Book | FirstSale | 2025-04-06 13:22:59.2832817 | DateTime | 3 | Update books |
+</details>
 
 ## Sample Project
 [Bookstore](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample) is a sample console application to demonstrate the way of configuring EventLog and the most common use cases.  
@@ -243,7 +246,7 @@ All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Ins
 ```
 
 ### 7. Use SQL queries for log investigation
-Samples of SQL queries can be found [here](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts):
+All samples of SQL queries can be found [here](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts):
 - [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllEvents.sql)
 - [ShowAllFailedEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllFailedEvents.sql)
 - [TrackPropertyChanges.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/TrackPropertyChanges.sql)
