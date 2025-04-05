@@ -216,29 +216,33 @@ All observable properties and appropriate entities must be resigtered in the ser
 See more detail example in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
 
 ```cs
-EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
-                configurationBuilder => configurationBuilder
-                    .UseCustomTypeDescriptions(context,
-                        options => options
-                            .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books on a shelf")
-                            .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books on a shelf")
-                            .AddEntityTypeDescription(EntityType.Book, "Book")
-                            .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
-                            .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
-                            .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Height")
-                    )
-                    .RegisterEntity<BookEntity>(EntityType.Book, x => ((BookEntity)x).Id,
-                        options => options
-                            .RegisterProperty(PropertyType.BookTitle,
-                                x => x.Title, nameof(BookEntity.Title))
-                    )
-                    .RegisterEntity<ShelfEntity>(EntityType.Shelf, x => ((ShelfEntity)x).Id,
-                        options => options
-                            .RegisterProperty(PropertyType.ShelfHeight,
-                                x => x.Height, nameof(ShelfEntity.Height))
-                    )
-            );
-        });
+EventLogService<EventType, EntityType, PropertyType>.Configure(
+	configurationBuilder => configurationBuilder
+	    // Optional customization
+	    .UseCustomTypeDescriptions(context,
+		options => options
+		    // Customize event type descriptions
+		    .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books on a shelf")
+		    .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books on a shelf")
+		    // Customize entity type descriptions
+		    .AddEntityTypeDescription(EntityType.Book, "Book")
+		    .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
+		    // Customize ptoperty type descriptions
+		    .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")
+		    .AddPropertyTypeDescription(PropertyType.ShelfHeight, "Height")
+	    )
+	    .RegisterEntity<BookEntity>(EntityType.Book, x => ((BookEntity)x).Id,
+		options => options
+		    .RegisterProperty(PropertyType.BookTitle,
+			x => x.Title, nameof(BookEntity.Title))
+	    )
+	    .RegisterEntity<ShelfEntity>(EntityType.Shelf, x => ((ShelfEntity)x).Id,
+		options => options
+		    .RegisterProperty(PropertyType.ShelfHeight,
+			x => x.Height, nameof(ShelfEntity.Height))
+	    )
+    );
+});
 ```
 
 ### 4.6. Add EventLog recording
