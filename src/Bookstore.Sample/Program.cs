@@ -24,8 +24,9 @@ internal static class Program
                 configurationBuilder => configurationBuilder
                     .UseCustomTypeDescriptions(context,
                         options => options
-                            .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books on a shelf")
-                            .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books on a shelf")
+                            .AddEventTypeDescription(EventType.AddBooksOnShelf, "Add books")
+                            .AddEventTypeDescription(EventType.UpdateBooksOnShelf, "Update books")
+                            .AddEventTypeDescription(EventType.AddShelf, "Add shelf")
                             .AddEntityTypeDescription(EntityType.Book, "Book")
                             .AddEntityTypeDescription(EntityType.Shelf, "Shelf")
                             .AddPropertyTypeDescription(PropertyType.BookTitle, "Title")

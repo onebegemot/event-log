@@ -14,6 +14,7 @@ FROM EventLog as EventLog
      LEFT OUTER JOIN EventStatusDescriptions as EventStatusDescriptions on EventLog.Status = EventStatusDescriptions.EnumId
 where
     (julianday(CreatedAt) - julianday('2025-03-31')) * 86400 > 0
+    --and EventStatusDescriptions.Description = 'Successful'
 order by EventLog.CreatedAt desc
 
 -- Helper query
