@@ -38,6 +38,7 @@ await services.EventLog.CreateEventScopeAndRun(
 	book.Title = "Book Title - Rev1";
 
 	// Gathering object delta changing and save object and then event
+	// IMPORTANT: data modification must be completed before this invocation
 	await eventLogScope.SaveAndLogEntitiesAsync(
 	    // Invoke object saving by EF data context 
 	    () => services.BookRepository.AddOrUpdateAsync(book),
