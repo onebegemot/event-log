@@ -31,7 +31,7 @@ jobs:
   compare_strings:
     name: Check project version
     runs-on: ubuntu-24.04
-    if: github.event.repository.fork == false
+    #if: github.event.repository.fork == false
     outputs:
       is_release: ${{ steps.compare_versions.outputs.is_release }}
     steps:
@@ -55,14 +55,15 @@ jobs:
         
       - name: Compare Strings
         id: compare_versions
-        run: |         
-          if [[ "$VERSION" == "${LATEST_TAG#v}" ]]; then
-            echo "The project version is not incremented"
-            echo "is_release=false" >> $GITHUB_OUTPUT
-          else
+        run: |
+          GREATER_VERSION=$(printf "%s\n%s" "$VERSION" "${LATEST_TAG#v}" | sort -V | tail -n 1)
+          if [[ "$VERSION" == "$GREATER_VERSION" && "$VERSION" !== "${LATEST_TAG#v}" ]]; then
             echo "The new release version is ${LATEST_TAG#v}"
             IS_RELEASE=true
             echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "The project version is not incremented"
+            echo "is_release=false" >> $GITHUB_OUTPUT
           fi
                     
   tag_and_push:
