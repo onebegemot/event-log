@@ -1,4 +1,4 @@
-﻿-- View all property changes (SQLite adaptation)
+﻿-- Track property changes (SQLite adaptation)
 
 with EventAndEntityLog as (
     select
@@ -46,4 +46,4 @@ order by EventAndEntityLog.CreatedAt desc
 -- select * from EntityTypeDescriptions
 -- select * from PropertyTypeDescriptions
 
--- View all property changes
+-- Track property changes
