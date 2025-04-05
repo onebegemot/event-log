@@ -44,6 +44,26 @@ await services.EventLog.CreateEventScopeAndRun(
 ### Database Result Output  
 As a result, **EventLog** tables will contain the following data:  
 
+<details>
+
+<summary>Show all recorded application events</summary>
+
+#### [ShowAllEvents.sql](https://github.com/cat-begemot/event-log/tree/master/src/Bookstore.Sample/Scripts/ShowAllEvents.sql)
+
+| **Id** | **Initiator** | **EventType** | **Status** | **CreatedAt**               | **DurationInMs** | **Details**                               | **FailureDetails** |
+|--------|---------------|---------------|------------|-----------------------------|------------------|-------------------------------------------|--------------------|
+| 8      | 3             | Update books  | Successful | 2025-04-05 13:18:49.4857455 | 2                | No one observable property is not changed |                    |
+| 7      | 3             | Update books  | Successful | 2025-04-05 13:18:49.4789733 | 5                | Observable property is changed            |                    |
+| 6      | 3             | Add books     | Successful | 2025-04-05 13:18:49.4722871 | 5                | Adding a book                             |                    |
+| 5      | 3             | Add books     | Successful | 2025-04-05 13:18:49.4557589 | 15               | Adding a shelf and 2 books                |                    |
+| 4      | 3             | Add books     | Successful | 2025-04-05 13:18:49.4498311 | 4                | Adding a book                             |                    |
+| 3      | 3             | Add books     | Successful | 2025-04-05 13:18:49.39908   | 49               | Adding a book                             |                    |
+| 2      | 3             | AddShelf      | Successful | 2025-04-05 13:18:49.3250159 | 73               | Adding a shelf                            |                    |
+| 1      | 3             | Add books     | Successful | 2025-04-05 13:18:49.1209684 | 202              | Adding a shelf and 2 books                |                    |
+
+
+</details>
+
 | <img height="50" src="https://github.com/cat-begemot/event-log/blob/master/images/Samples/EventLog_Raw.png"/> | 
 |:--:| 
 | <b>Figure 1.1 - EventLog table content</b> |
