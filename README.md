@@ -21,8 +21,8 @@ The concept behind using EventLog is to gather information about application act
 
 * [Event Log](#event-log)
 * [Table of Contents](#table-of-contents)
-* [Usage Example in Code](##1-usage-example-in-code)
-* [Database Result Output]([#database-result-output](#2-database-result-output))
+* [Usage Example in Code](#1-usage-example-in-code)
+* [Database Result Output](#2-database-result-output)
 * [Sample Project](#3-sample-project)
 * [How to use](#4-how-to-use)
   * [Define TEventType, TEntityType, and TPropertyType empty enums](#41-define-teventtype-tentitytype-and-tpropertytype-empty-enums)
