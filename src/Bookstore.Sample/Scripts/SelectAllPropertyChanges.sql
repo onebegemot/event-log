@@ -1,102 +1,49 @@
-﻿select
-    EventLog.CreatedBy,
-    EventLog.CreatedAt,
-    EventTypeDescriptions.Description as Event,
-    case when EntityLog.ActionType = 1 then 'Create' when EntityLog.ActionType = 2 then 'Update' end as Action,
-    EntityLog.EntityId AS Id,
-    EntityTypeDescriptions.Description as Entity,
-    PropertyTypeDescriptions.Description as Property,
-    cast(Value as varchar(1024)) as Value,
-    'String' as Type
-from StringPropertyLog
-         left join EntityLog on EntityLog.Id = StringPropertyLog.EntityLogEntryId
-         left join EventLog on EventLog.Id = EntityLog.EventLogEntryId
-         left join EventTypeDescriptions ON EventLog.EventType = EventTypeDescriptions.EnumId
-         left join EntityTypeDescriptions ON EntityLog.EntityType = EntityTypeDescriptions.EnumId
-         left join PropertyTypeDescriptions ON StringPropertyLog.PropertyType = PropertyTypeDescriptions.EnumId
-union all
+﻿-- View all property changes (SQLite adaptation)
+
+with EventAndEntityLog as (
+    select
+        EventLog.Id as EventLogEntryId,
+        EntityLog.Id as EntityLogEntryId,
+        CreatedBy as InitiatorId,
+        EventLog.CreatedAt as CreatedAt,
+        EventTypeDescriptions.Description as EventDescription,
+        EntityTypeDescriptions.Description as EntityDescription,
+        EntityLog.EntityId as EntityId,
+        EntityLog.ActionType as EntityActionType
+    from EntityLog
+        left join EventLog on EntityLog.EventLogEntryId = EventLog.Id
+        left join EventTypeDescriptions on EventType = EventTypeDescriptions.EnumId
+        left join EntityTypeDescriptions on EntityLog.EntityType = EntityTypeDescriptions.EnumId
+)
+
 select
-    EventLog.CreatedBy,
-    EventLog.CreatedAt,
-    EventTypeDescriptions.Description as Event,
-    case when EntityLog.ActionType = 1 then 'Create' when EntityLog.ActionType = 2 then 'Update' end as Action,
-    EntityLog.EntityId AS Id,
-    EntityTypeDescriptions.Description as Entity,
-    PropertyTypeDescriptions.Description as Property,
-    cast(Value as varchar(1024)) as Value,
-    'DateTime' as Type
-from DateTimePropertyLog
-         left join EntityLog on EntityLog.Id = DateTimePropertyLog.EntityLogEntryId
-         left join EventLog on EventLog.Id = EntityLog.EventLogEntryId
-         left join EventTypeDescriptions ON EventLog.EventType = EventTypeDescriptions.EnumId
-         left join EntityTypeDescriptions ON EntityLog.EntityType = EntityTypeDescriptions.EnumId
-         left join PropertyTypeDescriptions ON DateTimePropertyLog.PropertyType = PropertyTypeDescriptions.EnumId
-union all
-select
-    EventLog.CreatedBy,
-    EventLog.CreatedAt,
-    EventTypeDescriptions.Description as Event,
-    case when EntityLog.ActionType = 1 then 'Create' when EntityLog.ActionType = 2 then 'Update' end as Action,
-    EntityLog.EntityId AS Id,
-    EntityTypeDescriptions.Description as Entity,
-    PropertyTypeDescriptions.Description as Property,
-    cast(Value as varchar(1024)) as Value,
-    'Bool' as Type
-from BoolPropertyLog
-         left join EntityLog on EntityLog.Id = BoolPropertyLog.EntityLogEntryId
-         left join EventLog on EventLog.Id = EntityLog.EventLogEntryId
-         left join EventTypeDescriptions ON EventLog.EventType = EventTypeDescriptions.EnumId
-         left join EntityTypeDescriptions ON EntityLog.EntityType = EntityTypeDescriptions.EnumId
-         left join PropertyTypeDescriptions ON BoolPropertyLog.PropertyType = PropertyTypeDescriptions.EnumId
-union all
-select
-    EventLog.CreatedBy,
-    EventLog.CreatedAt,
-    EventTypeDescriptions.Description as Event,
-    case when EntityLog.ActionType = 1 then 'Create' when EntityLog.ActionType = 2 then 'Update' end as Action,
-    EntityLog.EntityId AS Id,
-    EntityTypeDescriptions.Description as Entity,
-    PropertyTypeDescriptions.Description as Property,
-    cast(Value as varchar(1024)) as Value,
-    'Int32' as Type
-from Int32PropertyLog
-         left join EntityLog on EntityLog.Id = Int32PropertyLog.EntityLogEntryId
-         left join EventLog on EventLog.Id = EntityLog.EventLogEntryId
-         left join EventTypeDescriptions ON EventLog.EventType = EventTypeDescriptions.EnumId
-         left join EntityTypeDescriptions ON EntityLog.EntityType = EntityTypeDescriptions.EnumId
-         left join PropertyTypeDescriptions ON Int32PropertyLog.PropertyType = PropertyTypeDescriptions.EnumId
-union all
-select
-    EventLog.CreatedBy,
-    EventLog.CreatedAt,
-    EventTypeDescriptions.Description as Event,
-    case when EntityLog.ActionType = 1 then 'Create' when EntityLog.ActionType = 2 then 'Update' end as Action,
-    EntityLog.EntityId AS Id,
-    EntityTypeDescriptions.Description as Entity,
-    PropertyTypeDescriptions.Description as Property,
-    cast(Value as varchar(1024)) as Value,
-    'Double' as Type
-from DoublePropertyLog
-         left join EntityLog on EntityLog.Id = DoublePropertyLog.EntityLogEntryId
-         left join EventLog on EventLog.Id = EntityLog.EventLogEntryId
-         left join EventTypeDescriptions ON EventLog.EventType = EventTypeDescriptions.EnumId
-         left join EntityTypeDescriptions ON EntityLog.EntityType = EntityTypeDescriptions.EnumId
-         left join PropertyTypeDescriptions ON DoublePropertyLog.PropertyType = PropertyTypeDescriptions.EnumId
-union all
-select
-    EventLog.CreatedBy,
-    EventLog.CreatedAt,
-    EventTypeDescriptions.Description as Event,
-    case when EntityLog.ActionType = 1 then 'Create' when EntityLog.ActionType = 2 then 'Update' end as Action,
-    EntityLog.EntityId AS Id,
-    EntityTypeDescriptions.Description as Entity,
-    PropertyTypeDescriptions.Description as Property,
-    cast(Value as varchar(1024)) as Value,
-    'Decimal' as Type
-from DecimalPropertyLog
-         left join EntityLog on EntityLog.Id = DecimalPropertyLog.EntityLogEntryId
-         left join EventLog on EventLog.Id = EntityLog.EventLogEntryId
-         left join EventTypeDescriptions ON EventLog.EventType = EventTypeDescriptions.EnumId
-         left join EntityTypeDescriptions ON EntityLog.EntityType = EntityTypeDescriptions.EnumId
-         left join PropertyTypeDescriptions ON DecimalPropertyLog.PropertyType = PropertyTypeDescriptions.EnumId
-order by CreatedAt
+    EventAndEntityLog.CreatedAt,
+    case when EventAndEntityLog.EntityActionType = 1 then 'Create' when EventAndEntityLog.EntityActionType = 2 then 'Update' end as Action,
+    EventAndEntityLog.EntityId as EntityId,
+    EventAndEntityLog.EntityDescription as Entity,
+    PropertyTypeDescriptions.Description as PropertyDescription,
+    PropertyLog.Value as Value,
+    PropertyLog.Type as ValueType,
+    EventAndEntityLog.InitiatorId as InitiatorId,
+    EventAndEntityLog.EventDescription,
+    EventAndEntityLog.EventLogEntryId
+from (
+     select PropertyType, cast(Value as varchar(1024)) as Value, EntityLogEntryid, 'String' as Type from StringPropertyLog union all
+     select PropertyType, cast(Value as varchar(26)) as Value, EntityLogEntryid, 'DateTime' as Type from DateTimePropertyLog union all
+     select PropertyType, cast(Value as varchar(1)) as Value, EntityLogEntryid, 'Bool' as Type from BoolPropertyLog union all
+     select PropertyType, cast(Value as varchar(20)) as Value, EntityLogEntryid, 'Int32' as Type from Int32PropertyLog union all
+     select PropertyType, cast(Value as varchar(30)) as Value, EntityLogEntryid, 'Decimal' as Type from DecimalPropertyLog union all
+     select PropertyType, cast(Value as varchar(30)) as Value, EntityLogEntryid, 'Double' as Type from DoublePropertyLog
+) as PropertyLog
+     join EventAndEntityLog on EventAndEntityLog.EntityLogEntryId = PropertyLog.EntityLogEntryId
+     join PropertyTypeDescriptions ON PropertyLog.PropertyType = PropertyTypeDescriptions.EnumId
+where
+    (julianday(CreatedAt) - julianday('2025-03-31')) * 86400 > 0
+order by EventAndEntityLog.CreatedAt desc
+
+-- Helper queries
+-- select * from EventTypeDescriptions
+-- select * from EntityTypeDescriptions
+-- select * from PropertyTypeDescriptions
+
+-- View all property changes

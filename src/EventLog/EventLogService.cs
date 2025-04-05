@@ -42,7 +42,8 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
                     eventLogEntry, _applicationRepository));
             
-            eventLogEntry.Status = EventStatus.Successful;
+            if (eventLogEntry.Status != EventStatus.HandledException)
+                eventLogEntry.Status = EventStatus.Successful;
             
             await AddOrUpdateEventLogAsync(eventLogEntry);
         }
@@ -69,7 +70,8 @@ public class EventLogService<TEventType, TEntityType, TPropertyType> :
                 new EventLogScope<TEventType, TEntityType, TPropertyType>(
                     eventLogEntry, _applicationRepository));
             
-            eventLogEntry.Status = EventStatus.Successful;
+            if (eventLogEntry.Status != EventStatus.HandledException)
+                eventLogEntry.Status = EventStatus.Successful;
             
             await AddOrUpdateEventLogAsync(eventLogEntry);
 
