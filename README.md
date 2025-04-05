@@ -3,7 +3,7 @@
 ![NugetDownloads](https://img.shields.io/nuget/dt/AHSW.EventLog)
 
 <a href="https://github.com/cat-begemot/event-log/tree/master/src/EventLog">
-	<img width="111" height="111" src="https://github.com/cat-begemot/event-log/blob/master/images/logo-1.png"/>
+	<img width="111" height="111" src="https://github.com/cat-begemot/event-log/blob/master/images/logo.png"/>
 </a>
 
 ## Event Log

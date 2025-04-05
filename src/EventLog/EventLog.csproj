@@ -20,7 +20,7 @@
     <Description>
       EventLog is a library that identifies application events, records diagnostic and statistical information about them, and stores them in a relational database for further analysis. Within the scope of an application event, it has the ability to track the state of application domain models.
     </Description>
-    <PackageIcon>logo-1.png</PackageIcon>
+    <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/cat-begemot/event-log</RepositoryUrl>
     <PackageTags>eventlog, ef, useractivity, events, diagnostic, tracking, library</PackageTags>
@@ -32,7 +32,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Include="..\..\images\logo-1.png" Pack="true" PackagePath="\"/>
+    <None Include="..\..\images\logo.png" Pack="true" PackagePath="\"/>
     <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
     <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
