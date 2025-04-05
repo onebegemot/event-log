@@ -120,7 +120,7 @@ Expand below text to see the examples.
 
 ### 4.1. Define TEventType, TEntityType, and TPropertyType empty enums
 These enums will be filled later, when required event and property logging is added to the code. It is desirable to follow the next suggestions.
-* 641.1. Explicitly numerate enum members to avoid damaging the log in the future
+* 4.1.1. Explicitly numerate enum members to avoid damaging the log in the future
 ```cs
 // Preferable to use the short underlying type to keep EventLog data compact 
 internal enum EventType : short
@@ -163,7 +163,7 @@ internal enum EntityType ; short
 ```
 
 ### 4.2. Embed EventLog tables to the application database context
-* Add `modelBuilder.ApplyEventLogConfigurations<EventType, EntityType, PropertyType>();` to the overriden OnModelCreating method in the application database context class. Make sure it goes first in the settings in roder to apply all database schemes correctly
+* 4.2.1. Add `modelBuilder.ApplyEventLogConfigurations<EventType, EntityType, PropertyType>();` to the overriden OnModelCreating method in the application database context class. Make sure it goes first in the settings in roder to apply all database schemes correctly
 ```cs
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -173,7 +173,7 @@ internal enum EntityType ; short
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(BookstoreDbContext).Assembly);
     }
 ```
-* Create and apply the new migration with EventLog convfigurations
+* 4.2.2. Create and apply the new migration with EventLog convfigurations
 
 ### 4.3. Add ObservableProperties static class with predefined methods with observable property collection for convenient and consistent using
 ```cs
@@ -200,11 +200,12 @@ services.AddEventLog<BookstoreDbContext, EventType, EntityType, PropertyType>();
 ```
 
 ### 4.5. Configure EventLog service on the application startup
-See more detail example in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
-
 Setting up enum member custom names is a convenient way to make look of SQL query results more user-friendly.
 
 All observable properties and appropriate entities must be resigtered in the service configuration.
+
+See more detail example in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
+
 ```cs
 EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<BookstoreDbContext>(
                 configurationBuilder => configurationBuilder
@@ -232,9 +233,10 @@ EventLogServiceConfiguration<EventType, EntityType, PropertyType>.Configure<Book
 ```
 
 ### 4.6. Add EventLog recording
+All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Inside this method entities must be only updated in repository and saves.
+
 See more examples in the [Program.cs](https://github.com/cat-begemot/event-log/blob/master/src/Bookstore.Sample/Program.cs).
 
-All entity changes must be made before SaveAndLogEntitiesAsync() invocation. Inside this method entities must be only updated in repository and saves.
 ```cs
         var book = CreateBookEntity();
 
