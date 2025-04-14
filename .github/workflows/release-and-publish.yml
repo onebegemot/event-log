@@ -18,8 +18,13 @@ jobs:
     name: Run tests
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup .NET
-        uses: ./.github/actions/setup-dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '7.0.x'
 
       - name: Run tests
         shell: pwsh
@@ -121,8 +126,13 @@ jobs:
     needs: tag_and_push
     if: success()
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup .NET
-        uses: ./.github/actions/setup-dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '7.0.x'
 
       - name: Pack
         shell: pwsh
