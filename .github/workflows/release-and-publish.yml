@@ -26,6 +26,8 @@ jobs:
         
   run_test:
     name: Run tests
+    needs: setup_env_vars
+    if: success()
     runs-on: ${{ needs.setup_env_vars.outputs.host_os }}
     steps:
       - name: Checkout repository
@@ -40,8 +42,9 @@ jobs:
   
   compare_strings:
     name: Check project version
+    needs: setup_env_vars
     runs-on: ${{ needs.setup_env_vars.outputs.host_os }}
-    if: github.event.repository.fork == false
+    if: ${{ success() && github.event.repository.fork == false }}
     outputs:
       is_release: ${{ steps.compare_versions.outputs.is_release }}
     steps:
