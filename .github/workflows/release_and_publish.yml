@@ -37,8 +37,7 @@ jobs:
   compare_strings:
     name: Check project version
     runs-on: ubuntu-24.04
-    needs: setup
-    if: ${{ success() && github.event.repository.fork == false }}
+    if: github.event.repository.fork == false
     outputs:
       is_release: ${{ steps.compare_versions.outputs.is_release }}
     steps:
