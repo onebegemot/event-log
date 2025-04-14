@@ -1,0 +1,10 @@
+﻿name: Setup .NET
+runs:
+  using: "composite"
+  steps:
+    steps:
+      - name: Get project version from .csproj
+        run: |
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
+          echo "Project version is $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV

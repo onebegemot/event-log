@@ -18,11 +18,8 @@ jobs:
     name: Run tests
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: ./.github/actions/setup-dotnet
         
       - name: Run tests
         shell: pwsh
@@ -39,11 +36,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get project version from .csproj
-        id: version
-        run: |
-          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
-          echo "Project version is $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV      
+        uses: ./.github/actions/get-project-version   
           
       - name: Get latest tag
         id: tag
@@ -84,12 +77,8 @@ jobs:
           git config --global user.email "${{ secrets.GIT_USER_EMAIL }}"
 
       - name: Get project version from .csproj
-        id: version
-        run: |
-          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
-          echo "Project version is $VERSION"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          
+        uses: ./.github/actions/get-project-version
+      
       - name: Fetch the latest changes from the remote repository
         run: |
           git fetch --tags
@@ -132,12 +121,9 @@ jobs:
     needs: tag_and_push
     if: success()
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-
+        uses: ./.github/actions/setup-dotnet
+      
       - name: Pack
         shell: pwsh
         run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
