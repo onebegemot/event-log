@@ -80,8 +80,8 @@ jobs:
 
       - name: Set up Git
         run: |
-          git config --global user.name "Alex Holenko"
-          git config --global user.email "cat-begemot@live.com"
+          git config --global user.name "${{ secrets.GIT_USER_NAME }}"
+          git config --global user.email "${{ secrets.GIT_USER_EMAIL }}"
 
       - name: Get project version from .csproj
         id: version
@@ -92,7 +92,7 @@ jobs:
           
       - name: Fetch the latest changes from the remote repository
         run: |
-          git fetch --all
+          git fetch --tags
           
       - name: Create and push tag
         run: |
@@ -155,7 +155,7 @@ jobs:
     needs: create_nuget
     if: success()
     steps:
-      - name: Checkout repository
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: nuget
