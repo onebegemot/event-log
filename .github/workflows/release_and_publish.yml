@@ -14,8 +14,8 @@ env:
   NuGetDirectory: ${{ github.workspace}}/nuget
     
 jobs:
-  setup:
-    name: Setup environment
+  run_test:
+    name: Run tests
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
@@ -24,12 +24,6 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         
-  run_test:
-    name: Run tests
-    runs-on: ubuntu-24.04
-    needs: setup
-    if: success()
-    steps:        
       - name: Run tests
         shell: pwsh
         run: dotnet test --configuration Release .\src\EventLog.UnitTests
@@ -41,6 +35,9 @@ jobs:
     outputs:
       is_release: ${{ steps.compare_versions.outputs.is_release }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Get project version from .csproj
         id: version
         run: |
@@ -78,7 +75,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       tag: ${{ github.ref_name }}
     steps:
-      - name: Config Git
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git
         run: |
           git config --global user.name "Alex Holenko"
           git config --global user.email "cat-begemot@live.com"
@@ -109,7 +109,10 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       tag: ${{ github.ref_name }}
-    steps: 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+            
       - name: Create GitHub release
         run: |
           git fetch --tags
@@ -129,6 +132,12 @@ jobs:
     needs: tag_and_push
     if: success()
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
       - name: Pack
         shell: pwsh
         run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
@@ -146,11 +155,14 @@ jobs:
     needs: create_nuget
     if: success()
     steps:
-      - name: Download artifact
+      - name: Checkout repository
         uses: actions/download-artifact@v4
         with:
           name: nuget
           path: ${{ env.NuGetDirectory }}
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
 
       - name: Publish NuGet package
         shell: pwsh
