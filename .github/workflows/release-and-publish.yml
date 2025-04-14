@@ -13,12 +13,20 @@ env:
   DOTNET_NOLOGO: true
   NuGetDirectory: ${{ github.workspace}}/nuget
 
-x-runner: &host_os ubuntu-24.04
-
 jobs:
+  setup_env_vars:
+    name: Set env variables
+    runs-on: ubuntu-24.04
+    outputs:
+      host_os: ${{ steps.host-os.outputs.host_os }}
+    steps:
+      - name: Set host OS
+        id: host-os
+        run: echo "HOST_OS=ubuntu-24.04" >> $GITHUB_ENV
+        
   run_test:
     name: Run tests
-    runs-on: *host_os
+    runs-on: ${{ needs.setup_env_vars.outputs.host_os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,7 +40,7 @@ jobs:
   
   compare_strings:
     name: Check project version
-    runs-on: *host_os
+    runs-on: ${{ needs.setup_env_vars.outputs.host_os }}
     if: github.event.repository.fork == false
     outputs:
       is_release: ${{ steps.compare_versions.outputs.is_release }}
@@ -66,7 +74,7 @@ jobs:
   
   tag_and_push:
     name: Create and push release tag
-    runs-on: *host_os
+    runs-on: ${{ needs.setup_env_vars.outputs.host_os }}
     needs: [run_test, compare_strings]
     if: ${{ success() && needs.compare_strings.outputs.is_release == 'true' }}
     env:
@@ -97,7 +105,7 @@ jobs:
   
   release:
     name: Create release
-    runs-on: *host_os
+    runs-on: ${{ needs.setup_env_vars.outputs.host_os }}
     needs: tag_and_push
     if: success()
     env:
@@ -122,7 +130,7 @@ jobs:
   
   create_nuget:
     name: Create NuGet
-    runs-on: *host_os
+    runs-on: ${{ needs.setup_env_vars.outputs.host_os }}
     needs: tag_and_push
     if: success()
     steps:
@@ -145,7 +153,7 @@ jobs:
   
   deploy:
     name: Deploy NuGet
-    runs-on: *host_os
+    runs-on: ${{ needs.setup_env_vars.outputs.host_os }}
     needs: create_nuget
     if: success()
     steps:
