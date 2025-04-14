@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Set host OS
         id: host-os
-        run: echo "HOST_OS=ubuntu-24.04" >> $GITHUB_ENV
+        run: echo "host_os=ubuntu-24.04" >> $GITHUB_OUTPUT
         
   run_test:
     name: Run tests
