@@ -7,8 +7,9 @@ on:
     branches:
       - 'test'
 
-permissions:
-  contents: write
+env:
+  RunnerImage: ubuntu-24.04
+  NuGetDirectory: ${{ github.workspace}}/nuget
   
 jobs:
   # Уникальный референс индентификатор джобы
@@ -16,7 +17,7 @@ jobs:
     # Юзер френдли имя джобы, которое будет отображаться на UI
     name: Create NuGet
     # Среда исполения. Каждая джоба выполняется изолировано в своей среде
-    runs-on: ubuntu-24.04
+    runs-on: ${{ RunnerImage }}
     # Перечень последовательно запускаемых команд
     steps:
       # Чекаут на комит ветки для доступа к исходному коду
@@ -42,7 +43,7 @@ jobs:
 
   deploy:
     name: Deploy NuGet
-    runs-on: ubuntu-24.04
+    runs-on: ${{ RunnerImage }}
     # Перед публикацией необходим готовый артефакт.
     # Поэтому эта джоба ждет завершения выполнения джобы create_nuget
     needs: create_nuget
