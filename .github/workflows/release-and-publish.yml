@@ -17,6 +17,9 @@ jobs:
     name: Create NuGet
     # Среда исполения. Каждая джоба выполняется изолировано в своей среде
     runs-on: ubuntu-24.04
+    # Save path to the NuGet directory in the environment variable
+    env:
+      NuGetDirectory: ${{ github.workspace}}/nuget
     # Перечень последовательно запускаемых команд
     steps:
       # Чекаут на комит ветки для доступа к исходному коду
@@ -48,6 +51,9 @@ jobs:
     needs: create_nuget
     # Выполнить, если успешно завершилось выполнение create_nuget
     if: success()
+    # Save path to the NuGet directory in the environment variable
+    env:
+      NuGetDirectory: ${{ github.workspace}}/nuget
     steps:
       # Загружаем содержимое хранилища
       - name: Download artifact
