@@ -5,4 +5,10 @@ name: Create release and publish NuGet
 on:
   push:
     branches:
-      - 'master'
+      - 'test'
+
+jobs:
+  test_pipeline:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "Completed!"
