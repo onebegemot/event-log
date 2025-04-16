@@ -7,7 +7,6 @@ on:
     branches:
       - 'test'
 
-# Сюда будут добавлены джобы в соответствии с требованиями
 jobs:
   run_test:
     name: Run tests
@@ -70,6 +69,10 @@ jobs:
   tag_and_push:
      name: Create and push release tag
      runs-on: ubuntu-24.04
+     # Джоба ожидает выполнения указанных в условии других джоб
+     needs: [run_test, check_version]
+     # Создаем  тег после того, как убедились, что юнит тесты пройдены и проверка версии завершена успешно
+     if: ${{ success() && needs.check_version.outputs.is_valid == 'true' }}
      steps:
        - name: Checkout repository
          uses: actions/checkout@v4
@@ -103,6 +106,8 @@ jobs:
   release:
      name: Create release
      runs-on: ubuntu-24.04
+     needs: tag_and_push
+     if: success()
      steps:
        - name: Checkout repository
          uses: actions/checkout@v4
@@ -127,6 +132,8 @@ jobs:
       # Среда исполения. Каждая джоба выполняется изолировано в своей среде
       runs-on: ubuntu-24.04
       # Save path to the NuGet directory in the environment variable
+      needs: tag_and_push
+      if: success()
       env:
         NuGetDirectory: ${{ github.workspace}}/nuget
       # Перечень последовательно запускаемых команд
