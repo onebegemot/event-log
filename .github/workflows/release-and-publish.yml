@@ -5,7 +5,7 @@ name: Create release and publish NuGet
 on:
   push:
     branches:
-      - 'master'
+      - 'test'
 
 # Сюда будут добавлены джобы в соответствии с требованиями
 jobs:
@@ -67,118 +67,118 @@ jobs:
             echo "is_valid=false" >> $GITHUB_OUTPUT
           fi
 
- tag_and_push:
-   name: Create and push release tag
-   runs-on: ubuntu-24.04
-   steps:
-     - name: Checkout repository
-       uses: actions/checkout@v4
-
-     # Наконфигурируем в настроцках Git текущей джобы имя и адрес почты автора для тега
-     - name: Set up Git
-       run: |
-         git config --global user.name "${{ secrets.GIT_USER_NAME }}"
-         git config --global user.email "${{ secrets.GIT_USER_EMAIL }}"
-
-     # Используя второй раз один и тот же код, неплохо его было бы вынести в отдельный action
-     # Для упрощения, оставим дубляж как есть
-     - name: Get project version from .csproj
-       shell: bash
-       run: |
-         VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
-         echo "Project version is $VERSION"
-         echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-     - name: Fetch the latest changes from the remote repository
-       run: |
-         git fetch --tags
-
-     - name: Create and push tag
-       run: |
-         NEW_TAG="v$VERSION"
-         git tag $NEW_TAG
-         echo "Tag created: $NEW_TAG"
-         git push origin $NEW_TAG
-
- release:
-   name: Create release
-   runs-on: ubuntu-24.04
-   steps:
-     - name: Checkout repository
-       uses: actions/checkout@v4
-
-     - name: Create GitHub release
-       run: |
-         git fetch --tags
-         NEW_TAG=$(git describe --tags --abbrev=0 origin/master)
-         echo "Latest tag on master: $NEW_TAG"
-         gh release create $NEW_TAG \
-             --repo="$GITHUB_REPOSITORY" \
-             --title="${NEW_TAG#v}" \
-             --generate-notes \
-             --generate-notes \
-             --verify-tag \
-             --latest
-
+  tag_and_push:
+     name: Create and push release tag
+     runs-on: ubuntu-24.04
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v4
+  
+       # Наконфигурируем в настроцках Git текущей джобы имя и адрес почты автора для тега
+       - name: Set up Git
+         run: |
+           git config --global user.name "${{ secrets.GIT_USER_NAME }}"
+           git config --global user.email "${{ secrets.GIT_USER_EMAIL }}"
+  
+       # Используя второй раз один и тот же код, неплохо его было бы вынести в отдельный action
+       # Для упрощения, оставим дубляж как есть
+       - name: Get project version from .csproj
+         shell: bash
+         run: |
+           VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ./src/EventLog/EventLog.csproj)
+           echo "Project version is $VERSION"
+           echo "VERSION=$VERSION" >> $GITHUB_ENV
+  
+       - name: Fetch the latest changes from the remote repository
+         run: |
+           git fetch --tags
+  
+       - name: Create and push tag
+         run: |
+           NEW_TAG="v$VERSION"
+           git tag $NEW_TAG
+           echo "Tag created: $NEW_TAG"
+           git push origin $NEW_TAG
+  
+  release:
+     name: Create release
+     runs-on: ubuntu-24.04
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v4
+  
+       - name: Create GitHub release
+         run: |
+           git fetch --tags
+           NEW_TAG=$(git describe --tags --abbrev=0 origin/master)
+           echo "Latest tag on master: $NEW_TAG"
+           gh release create $NEW_TAG \
+               --repo="$GITHUB_REPOSITORY" \
+               --title="${NEW_TAG#v}" \
+               --generate-notes \
+               --generate-notes \
+               --verify-tag \
+               --latest
+  
   # Уникальный референс индентификатор джобы
   create_nuget:
-    # Юзер френдли имя джобы, которое будет отображаться на UI
-    name: Create NuGet
-    # Среда исполения. Каждая джоба выполняется изолировано в своей среде
-    runs-on: ubuntu-24.04
-    # Save path to the NuGet directory in the environment variable
-    env:
-      NuGetDirectory: ${{ github.workspace}}/nuget
-    # Перечень последовательно запускаемых команд
-    steps:
-      # Чекаут на комит ветки для доступа к исходному коду
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      # Установка SDK 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-
-      # Сборка и упаковка пакета
-      - name: Pack
-        shell: pwsh
-        run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
-
-      # Загрузка артефакта в хранилище для доступа к нему из других джоб
-      - uses: actions/upload-artifact@v4
-        with:
-          name: nuget
-          if-no-files-found: error
-          retention-days: 7
-          path: ${{ env.NuGetDirectory }}/*.nupkg
-   
+      # Юзер френдли имя джобы, которое будет отображаться на UI
+      name: Create NuGet
+      # Среда исполения. Каждая джоба выполняется изолировано в своей среде
+      runs-on: ubuntu-24.04
+      # Save path to the NuGet directory in the environment variable
+      env:
+        NuGetDirectory: ${{ github.workspace}}/nuget
+      # Перечень последовательно запускаемых команд
+      steps:
+        # Чекаут на комит ветки для доступа к исходному коду
+        - name: Checkout repository
+          uses: actions/checkout@v4
+        
+        # Установка SDK 
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+  
+        # Сборка и упаковка пакета
+        - name: Pack
+          shell: pwsh
+          run: dotnet pack .\src\EventLog --configuration Release --output ${{ env.NuGetDirectory }}
+  
+        # Загрузка артефакта в хранилище для доступа к нему из других джоб
+        - uses: actions/upload-artifact@v4
+          with:
+            name: nuget
+            if-no-files-found: error
+            retention-days: 7
+            path: ${{ env.NuGetDirectory }}/*.nupkg
+     
   deploy:
-    name: Deploy NuGet
-    runs-on: ubuntu-24.04
-    # Перед публикацией необходим готовый артефакт.
-    # Поэтому эта джоба ждет завершения выполнения джобы create_nuget
-    needs: create_nuget
-    # Выполнить, если успешно завершилось выполнение create_nuget
-    if: success()
-    # Save path to the NuGet directory in the environment variable
-    env:
-      NuGetDirectory: ${{ github.workspace}}/nuget
-    steps:
-      # Загружаем содержимое хранилища
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: nuget
-          path: ${{ env.NuGetDirectory }}
-
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
-
-      # С помощью dotnet утилиты nuget публикуе пакет
-      - name: Publish NuGet package
-        shell: pwsh
-        run: |
-          foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
-              dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-          }
+      name: Deploy NuGet
+      runs-on: ubuntu-24.04
+      # Перед публикацией необходим готовый артефакт.
+      # Поэтому эта джоба ждет завершения выполнения джобы create_nuget
+      needs: create_nuget
+      # Выполнить, если успешно завершилось выполнение create_nuget
+      if: success()
+      # Save path to the NuGet directory in the environment variable
+      env:
+        NuGetDirectory: ${{ github.workspace}}/nuget
+      steps:
+        # Загружаем содержимое хранилища
+        - name: Download artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: nuget
+            path: ${{ env.NuGetDirectory }}
+  
+        - name: Setup .NET Core
+          uses: actions/setup-dotnet@v4
+  
+        # С помощью dotnet утилиты nuget публикуе пакет
+        - name: Publish NuGet package
+          shell: pwsh
+          run: |
+            foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
+                dotnet nuget push $file --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+            }
 
