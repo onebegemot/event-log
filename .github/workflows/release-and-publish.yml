@@ -108,6 +108,8 @@ jobs:
      runs-on: ubuntu-24.04
      needs: tag_and_push
      if: success()
+     env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
      steps:
        - name: Checkout repository
          uses: actions/checkout@v4
