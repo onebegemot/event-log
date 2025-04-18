@@ -112,7 +112,7 @@ jobs:
     needs: tag_and_push
     if: success()
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
       tag: ${{ github.ref_name }}
     steps:
       - name: Checkout repository
