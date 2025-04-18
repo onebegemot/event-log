@@ -115,7 +115,7 @@ jobs:
        - name: Create GitHub release
          run: |
            git fetch --tags
-           NEW_TAG=$(git describe --tags --abbrev=0 origin/master)
+           NEW_TAG=$(git describe --tags --abbrev=0 origin/test)
            echo "Latest tag on master: $NEW_TAG"
            gh release create $NEW_TAG \
                --repo="$GITHUB_REPOSITORY" \
